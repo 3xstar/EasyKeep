@@ -68,7 +68,7 @@
 
 ### Статус последней сессии
 - **Активный агент:** OpenCode (DeepSeek V4.1 Flash Free)
-- **Последний коммит Git:** `3015d9e` — `feat: добавлены сущности EF Core и контекст EasyKeep`; после него `231b35b` — `docs: зафиксирован хэш коммита EF Core слоя`; текущий коммит микрошага 1.6 — `feat: добавлен ADO.NET репозиторий движений с транзакциями`
+- **Последний коммит Git:** `976aa14` — `feat: добавлен ADO.NET репозиторий движений с транзакциями`; перед ним `231b35b` — `docs: зафиксирован хэш коммита EF Core слоя`
 - **Что сделано:**
   - **Микрошаги 1.1–1.4:** изучены шаблоны, созданы `database/schema.sql`, `database/seed.sql`, `src/EasyKeep.sln`, WPF-проект и `Data/AppConfig.cs`.
   - **Микрошаг 1.5:** созданы 6 сущностей EF Core и `Data/EasyKeepContext.cs`; проверены `AsNoTracking`, `Include/ThenInclude`, `GroupBy` и проекции.
