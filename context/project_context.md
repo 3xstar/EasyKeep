@@ -68,14 +68,14 @@
 
 ### Статус последней сессии
 - **Активный агент:** OpenCode (DeepSeek V4.1 Flash Free)
-- **Последний коммит Git:** `14c6743` — `feat: создан каркас WPF-приложения EasyKeep`; перед ним `d1e6e4d` — `docs: зафиксирован хэш коммита тестовых данных`
+- **Последний коммит Git:** `8fdf0bf` — `docs: зафиксирован хэш коммита каркаса приложения` (сущностный коммит 1.4 — `14c6743`); текущий коммит микрошага 1.5 — `feat: добавлены сущности EF Core и контекст EasyKeep`
 - **Что сделано:**
-  - **Микрошаги 1.1–1.3:** изучены шаблоны, созданы `database/schema.sql` и `database/seed.sql`. БД `EasyKeep` наполняется с нуля, 28 движений / 129 строк / 43 остатка, повторный seed безопасен.
-  - **Микрошаг 1.4:** созданы `src/EasyKeep.sln` и WPF-проект `src/EasyKeep/EasyKeep.csproj` (`net10.0-windows`). Подключены `Microsoft.EntityFrameworkCore.SqlServer 10.0.15` и `Microsoft.Data.SqlClient 7.1.1` (SDK .NET 10.0.404).
-  - Добавлены `appsettings.json` (без секретов), `appsettings.Local.example.json` и локальный `appsettings.Local.json` (в `.gitignore`); оба копируются в выходную папку.
-  - `Data/AppConfig.cs` читает строку подключения через `System.Text.Json` без DI: сначала `appsettings.Local.json`, затем `appsettings.json`; при отсутствии выдаёт понятное сообщение.
-  - Стартовое окно перенесено в `Views/MainWindow.xaml`, показывает статус настройки подключения. `dotnet build src/EasyKeep.sln` — 0 ошибок, 0 предупреждений.
-  - В `AGENTS.md` и `QWEN.md` исправлены пути на `context/project_context.md` и `context/project.md`.
+  - **Микрошаги 1.1–1.4:** изучены шаблоны, созданы `database/schema.sql`, `database/seed.sql`, `src/EasyKeep.sln`, WPF-проект и `Data/AppConfig.cs`.
+  - **Микрошаг 1.5:** в `src/EasyKeep/Data/Entities/` созданы 6 сущностей (`Category`, `Item`, `Warehouse`, `Stock`, `Movement`, `MovementItem`) и константы `MovementTypes`; создан `Data/EasyKeepContext.cs`.
+  - Аннотации `[Table]`/`[Column]` повторяют имена SQL-таблиц и колонок; навигационные свойства настроены явно в `OnModelCreating` (два склада у движения, каскад строк документа, запрет удаления справочников).
+  - Уникальные индексы повторяют БД: `categories.name`, `items.sku`, `warehouses.name`, `stocks(warehouse_id,item_id)`, `movement_items(movement_id,item_id)`; добавлены индексы поиска.
+  - Контекст проверен на LocalDB через временный console-harness: прочитаны 7 категорий, 19 товаров, 4 склада, 28 движений, 43 остатка; отработали `AsNoTracking`, `Include/ThenInclude`, `GroupBy`, расчёт стоимости и поиск дефицита.
+  - `dotnet build src/EasyKeep.sln` — 0 ошибок, 0 предупреждений.
 
 ### Контракты и сигнатуры (накопительная база — не стирать рабочее)
 
@@ -124,8 +124,8 @@ src/EasyKeep/
 ├── AssemblyInfo.cs
 ├── Data/
 │   ├── AppConfig.cs                # строка подключения из appsettings*.json
-│   ├── Entities/                   # появится в 1.5
-│   ├── EasyKeepContext.cs          # появится в 1.5
+│   ├── Entities/                   # Category, Item, Warehouse, Stock, Movement, MovementItem
+│   ├── EasyKeepContext.cs          # EF Core: DbSet, связи, индексы, AsNoTracking в запросах
 │   └── AdoNetMovementRepository.cs # появится в 1.6
 ├── Services/                       # Светофор, авто-балансировка, валидация
 ├── Views/
@@ -157,10 +157,25 @@ src/EasyKeep/
 - 43 строки `stocks` рассчитываются из движений через CTE `stock_deltas`; расхождений с историей нет, отрицательных остатков нет.
 - Демо-сценарии: `Торговый зал/MILK-001 = 36` при `min_stock = 40` (красный), `Торговый зал/COF-001 = 25` (жёлтый по прогнозу), `Основной склад/SUP-004 = 0`, `TEA-001/TEA-002` без расхода (неликвид), `Склад брака` для перемещения и утилизации.
 
+#### 6. Слой Data на EF Core (реализован в микрошаге 1.5)
+- `Data/Entities/Category.cs`: `Id`, `Name`, `List<Item> Items`.
+- `Data/Entities/Item.cs`: `Id`, `Sku`, `Name`, `CategoryId`, `Unit`, `Price`, `MinStock`, `Category`, `List<Stock> Stocks`, `List<MovementItem> MovementItems`.
+- `Data/Entities/Warehouse.cs`: `Id`, `Name`, `Address?`, `List<Stock> Stocks`.
+- `Data/Entities/Stock.cs`: `Id`, `WarehouseId`, `ItemId`, `Quantity`, `Warehouse`, `Item`.
+- `Data/Entities/Movement.cs`: `Id`, `Type`, `FromWarehouseId?`, `ToWarehouseId?`, `CreatedAt`, `Comment?`, `FromWarehouse`, `ToWarehouse`, `List<MovementItem> Items`; константы `MovementTypes.In/Out/Transfer`.
+- `Data/Entities/MovementItem.cs`: `Id`, `MovementId`, `ItemId`, `Quantity`, `Movement`, `Item`.
+- `Data/EasyKeepContext.cs`: `DbSet` для 6 таблиц; конструкторы `()` и `(DbContextOptions<EasyKeepContext>)`; `OnConfiguring` использует `AppConfig.GetConnectionString()`, если опции не переданы; `OnModelCreating` настраивает уникальные индексы и связи (`DeleteBehavior.Restrict` для справочников, `Cascade` для строк движения).
+- Проверка на LocalDB: `AsNoTracking`, `Include/ThenInclude`, `GroupBy` и проекции работают; дефицит находится корректно.
+
 ### Известные баги / незавершенные места
-- Нет. БД и каркас WPF собираются; сущности EF Core, контекст и ADO.NET-репозиторий ещё не созданы.
+- Нет. EF Core слой собирается и читает данные; `AdoNetMovementRepository` ещё не создан.
 
 ### ТОЧНЫЙ СЛЕДУЮЩИЙ ШАГ (ЗАДАЧА №1 ДЛЯ СЛЕДУЮЩЕГО АГЕНТА)
-1. **Микрошаг 1.5 (EF Core):** создать `Data/Entities/` с 6 сущностями (`Category`, `Item`, `Warehouse`, `Stock`, `Movement`, `MovementItem`), настроить навигационные свойства и `Data/EasyKeepContext.cs` (`DbSet`, имена таблиц/колонок, связи, `OnDelete` как в SQL, уникальные индексы). Проверить выборку `AsNoTracking` из LocalDB, обновить память и сделать коммит `feat: добавлены сущности EF Core и контекст EasyKeep`.
-2. **Микрошаг 1.6 (ADO.NET):** создать `Data/AdoNetMovementRepository.cs`: `SqlTransaction`, `WITH (UPDLOCK, ROWLOCK)`, проведение `IN/OUT/TRANSFER`, проверка остатка, `Commit/Rollback`, методы чтения журнала и JOIN-отчётов. Все параметры — через `SqlParameter`, соединение — через `AppConfig`. Коммит `feat: добавлен ADO.NET репозиторий движений с транзакциями`.
-3. **Микрошаг 1.7 (Сервисы):** «Светофор дефицита», авто-балансировка, умная валидация остатков. Коммит `feat: добавлены сервисы дефицита и авто-балансировки`.
+1. **Микрошаг 1.6 (ADO.NET):** создать `Data/AdoNetMovementRepository.cs`:
+   - `CreateMovement(Movement movement)` в `SqlTransaction`: шапка + строки, `WITH (UPDLOCK, ROWLOCK)` при чтении остатка, проверка `quantity >= @qty`, `UPDATE`/`INSERT` остатков, `Commit`/`Rollback`;
+   - `IN` — увеличить остаток получателя, `OUT` — уменьшить у источника, `TRANSFER` — уменьшить источник и увеличить получатель;
+   - методы чтения журнала с `JOIN` (склад/товар) и агрегированного отчёта;
+   - все значения — через `SqlParameter`, соединение — через `AppConfig`, понятные исключения без строки подключения.
+   Проверить успешное проведение и откат при нехватке остатка, обновить память и сделать коммит `feat: добавлен ADO.NET репозиторий движений с транзакциями`.
+2. **Микрошаг 1.7 (Сервисы):** «Светофор дефицита», авто-балансировка, умная валидация остатков. Коммит `feat: добавлены сервисы дефицита и авто-балансировки`.
+3. **Микрошаг 1.8 (UI):** экраны «Каталог», «Остатки», «Движения», «Отчёт» с поиском, фильтрами, подтверждениями и «Рентгеном товара».
