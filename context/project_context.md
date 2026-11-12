@@ -68,7 +68,7 @@
 
 ### Статус последней сессии
 - **Активный агент:** OpenCode (DeepSeek V4.1 Flash Free)
-- **Последний коммит Git:** `8fdf0bf` — `docs: зафиксирован хэш коммита каркаса приложения` (сущностный коммит 1.4 — `14c6743`); текущий коммит микрошага 1.5 — `feat: добавлены сущности EF Core и контекст EasyKeep`
+- **Последний коммит Git:** `3015d9e` — `feat: добавлены сущности EF Core и контекст EasyKeep`; перед ним `8fdf0bf` — `docs: зафиксирован хэш коммита каркаса приложения`
 - **Что сделано:**
   - **Микрошаги 1.1–1.4:** изучены шаблоны, созданы `database/schema.sql`, `database/seed.sql`, `src/EasyKeep.sln`, WPF-проект и `Data/AppConfig.cs`.
   - **Микрошаг 1.5:** в `src/EasyKeep/Data/Entities/` созданы 6 сущностей (`Category`, `Item`, `Warehouse`, `Stock`, `Movement`, `MovementItem`) и константы `MovementTypes`; создан `Data/EasyKeepContext.cs`.
