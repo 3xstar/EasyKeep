@@ -68,11 +68,11 @@
 
 ### Статус последней сессии
 - **Активный агент:** OpenCode (DeepSeek V4.1 Flash Free)
-- **Последний коммит Git:** `37707d5` — `Initial commit` (базовый шаблон преподавателя); далее — коммит микрошага 1.1 `docs: изучены шаблоны репозитория и зафиксирована структура проекта`
+- **Последний коммит Git:** `2031587` — `docs: изучены шаблоны репозитория и зафиксирована структура проекта`; текущий коммит микрошага 1.2 — `db: создана схема базы данных EasyKeep из 6 таблиц`
 - **Что сделано:**
-  - Просканированы все папки репозитория и прочитаны `context/project.md`, `context/project_context.md`, корневой `README.md`, `START_HERE.md`, `AGENTS.md`, `QWEN.md`, а также локальные `README.md` в `database/`, `src/`, `screenshots/` и все заготовки `docs/requirements.md`, `docs/database-schema.md`, `docs/testing.md`, `database/schema.sql`, `database/seed.sql`.
-  - Требования шаблона и фактическая структура папок зафиксированы в блоке «Контракты и сигнатуры».
-  - Отмечен первый пункт Чек-листа. Код приложения и SQL-объекты ещё не создавались.
+  - **Микрошаг 1.1:** просканированы все папки и прочитаны `context/project.md`, `context/project_context.md`, корневой `README.md`, `START_HERE.md`, `AGENTS.md`, `QWEN.md`, локальные `README.md` в `database/`, `src/`, `screenshots/`, а также заготовки `docs/requirements.md`, `docs/database-schema.md`, `docs/testing.md`, `database/schema.sql`, `database/seed.sql`. Требования и структура зафиксированы в блоке «Контракты и сигнатуры», первый пункт Чек-листа отмечен.
+  - **Микрошаг 1.2:** создан `database/schema.sql` — 6 таблиц, PK/FK, UNIQUE/CHECK, индексы; скрипт идемпотентен, создаёт БД `EasyKeep` только при отсутствии и не удаляет данные.
+  - Скрипт проверен на SQL Server LocalDB: выполнен дважды без ошибок; негативные проверки ограничений (`quantity >= 0`, `quantity > 0`, допустимые типы, склады TRANSFER, уникальность пары склад/товар и товара в документе) отработали корректно, тестовые строки отменены через `ROLLBACK`.
   - Замечание: файлы `project.md` и `project_context.md` физически находятся в `context/`, хотя `AGENTS.md`/`QWEN.md` называют их корневыми. Работа ведётся с фактическими путями `context/...`.
 
 ### Контракты и сигнатуры (накопительная база — не стирать рабочее)
@@ -131,18 +131,20 @@ docs/database-schema.png            # ER-диаграмма
 screenshots/*.png                   # 2–4 экрана
 ```
 
-#### 4. Зафиксированные контракты БД (из `project.md`, реализовать в 1.2)
-- `categories(id, name)`
-- `items(id, sku, name, category_id → categories, unit, price, min_stock)`
-- `warehouses(id, name, address)`
-- `stocks(id, warehouse_id → warehouses, item_id → items, quantity)`; `UNIQUE(warehouse_id, item_id)`, `CHECK(quantity >= 0)`
-- `movements(id, type IN|OUT|TRANSFER, from_warehouse_id → warehouses, to_warehouse_id → warehouses, created_at, comment)`; `CHECK` соответствия типа складам
-- `movement_items(id, movement_id → movements ON DELETE CASCADE, item_id → items, quantity)`; `CHECK(quantity > 0)`
+#### 4. Схема БД `database/schema.sql` (реализована в микрошаге 1.2)
+- База: `EasyKeep` (создаётся при отсутствии, `USE EasyKeep`), схема `dbo`, повторный запуск безопасен.
+- `dbo.categories`: `id INT IDENTITY PK`, `name NVARCHAR(100) NOT NULL`; `UQ_categories_name(name)`.
+- `dbo.items`: `id INT IDENTITY PK`, `sku NVARCHAR(50) NOT NULL` (`UQ_items_sku`), `name NVARCHAR(200) NOT NULL`, `category_id INT NOT NULL` (`FK_items_categories`), `unit NVARCHAR(20) NOT NULL`, `price DECIMAL(18,2) NOT NULL DEFAULT 0` (`CK_items_price >= 0`), `min_stock INT NOT NULL DEFAULT 0` (`CK_items_min_stock >= 0`); индекс `IX_items_name(name)`.
+- `dbo.warehouses`: `id INT IDENTITY PK`, `name NVARCHAR(100) NOT NULL` (`UQ_warehouses_name`), `address NVARCHAR(300) NULL`.
+- `dbo.stocks`: `id INT IDENTITY PK`, `warehouse_id INT NOT NULL` (`FK_stocks_warehouses`), `item_id INT NOT NULL` (`FK_stocks_items`), `quantity INT NOT NULL DEFAULT 0` (`CK_stocks_quantity >= 0`); `UQ_stocks_warehouse_item(warehouse_id, item_id)`, индекс `IX_stocks_item_id(item_id)`.
+- `dbo.movements`: `id INT IDENTITY PK`, `type NVARCHAR(10) NOT NULL` (`CK_movements_type IN ('IN','OUT','TRANSFER')`), `from_warehouse_id INT NULL` (`FK_movements_from_warehouse`), `to_warehouse_id INT NULL` (`FK_movements_to_warehouse`), `created_at DATETIME2(0) NOT NULL DEFAULT SYSDATETIME()`, `comment NVARCHAR(500) NULL`; `CK_movements_warehouses` требует: IN — только `to`, OUT — только `from`, TRANSFER — оба склада и `from <> to`; индексы `IX_movements_created_at(created_at DESC)`, `IX_movements_type(type)`.
+- `dbo.movement_items`: `id INT IDENTITY PK`, `movement_id INT NOT NULL` (`FK_movement_items_movements ON DELETE CASCADE`), `item_id INT NOT NULL` (`FK_movement_items_items`), `quantity INT NOT NULL` (`CK_movement_items_quantity > 0`); `UQ_movement_items_movement_item(movement_id, item_id)`, индекс `IX_movement_items_item_id(item_id)`.
+- Файл сохранён в UTF-8 с BOM (корректная кириллица в SSMS); в SQL-литералах нет зависимости от кодировки, кроме комментариев/`PRINT`.
 
 ### Известные баги / незавершенные места
-- Нет. На момент микрошага 1.1 приложение и БД ещё не созданы (это ожидаемое состояние).
+- Нет. Схема БД создана и проверена на LocalDB; `database/seed.sql` пока остаётся заготовкой.
 
 ### ТОЧНЫЙ СЛЕДУЮЩИЙ ШАГ (ЗАДАЧА №1 ДЛЯ СЛЕДУЮЩЕГО АГЕНТА)
-1. **Микрошаг 1.2 (Схема БД):** написать `database/schema.sql` для MS SQL Server с 6 таблицами (`categories`, `items` с `sku` и `min_stock`, `warehouses`, `stocks`, `movements` с `comment` и `created_at`, `movement_items`), PK/FK, уникальным индексом `(warehouse_id, item_id)`, `CHECK`-ограничениями и обоснованными индексами. Обновить `project_context.md` и сделать коммит `db: создана схема базы данных EasyKeep из 6 таблиц`.
-2. **Микрошаг 1.3 (Тестовые данные):** написать `database/seed.sql` с реалистичными данными (склады, товары, движения за последние 30 дней для прогноза и авто-балансировки, негативные сценарии). Обновить `project_context.md` и сделать коммит `db: добавлены тестовые и негативные данные для демонстрации`.
-3. **Микрошаг 1.4:** создать решение и WPF-проект `src/EasyKeep`, подключить EF Core + `Microsoft.Data.SqlClient`, настроить локальную конфигурацию подключения.
+1. **Микрошаг 1.3 (Тестовые данные):** написать `database/seed.sql` с реалистичными данными (3–4 склада, категории, 15–20 товаров, движения за последние 30 дней для прогноза и авто-балансировки, негативные сценарии). Обеспечить повторный запуск без дублей (например, `MERGE` или проверка `NOT EXISTS`), обновить `project_context.md` и сделать коммит `db: добавлены тестовые и негативные данные для демонстрации`.
+2. **Микрошаг 1.4:** создать решение и WPF-проект `src/EasyKeep`, подключить EF Core + `Microsoft.Data.SqlClient`, настроить локальную конфигурацию подключения.
+3. **Микрошаг 1.5:** описать сущности EF Core и `EasyKeepContext` (6 таблиц, связи, `AsNoTracking`).
