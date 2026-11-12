@@ -68,7 +68,7 @@
 
 ### Статус последней сессии
 - **Активный агент:** OpenCode (DeepSeek V4.1 Flash Free)
-- **Последний коммит Git:** `d1e6e4d` — `docs: зафиксирован хэш коммита тестовых данных` (сущностный коммит 1.3 — `4c10b2b`); текущий коммит микрошага 1.4 — `feat: создан каркас WPF-приложения EasyKeep`
+- **Последний коммит Git:** `14c6743` — `feat: создан каркас WPF-приложения EasyKeep`; перед ним `d1e6e4d` — `docs: зафиксирован хэш коммита тестовых данных`
 - **Что сделано:**
   - **Микрошаги 1.1–1.3:** изучены шаблоны, созданы `database/schema.sql` и `database/seed.sql`. БД `EasyKeep` наполняется с нуля, 28 движений / 129 строк / 43 остатка, повторный seed безопасен.
   - **Микрошаг 1.4:** созданы `src/EasyKeep.sln` и WPF-проект `src/EasyKeep/EasyKeep.csproj` (`net10.0-windows`). Подключены `Microsoft.EntityFrameworkCore.SqlServer 10.0.15` и `Microsoft.Data.SqlClient 7.1.1` (SDK .NET 10.0.404).
