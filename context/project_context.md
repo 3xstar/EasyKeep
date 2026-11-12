@@ -57,7 +57,7 @@
 - [x] Изучены `project.md`, все шаблоны и `README.md` в папках репозитория
 - [x] `database/schema.sql` и `database/seed.sql` (6 таблиц, `sku`, `min_stock`, тестовые + негативные данные + история за 30 дней для прогноза)
 - [x] Слой `Data`: сущности + `EasyKeepContext` (EF Core) и `AdoNetMovementRepository` (чистый ADO.NET с `SqlTransaction`, блокировкой `UPDLOCK` и `JOIN`-отчетами)
-- [ ] Слой `Services`: логика «Светофора дефицита», «Авто-балансировки складов» и валидации остатков
+- [x] Слой `Services`: логика «Светофора дефицита», «Авто-балансировки складов» и валидации остатков
 - [ ] Главное окно WPF + экраны: Каталог (с «Рентгеном товара»), Остатки (со «Светофором»), Движения (с «Командной строкой» и «Авто-балансировкой»), Отчёт (остатки по складам + топ активных товаров)
 - [ ] Поиск, фильтрация, умная валидация, подтверждение операций и сообщения об ошибках/пустых списках
 - [ ] Заполнена вся документация по шаблонам (`README.md`, `docs/requirements.md`, `docs/testing.md`, ER-схема)
@@ -68,14 +68,14 @@
 
 ### Статус последней сессии
 - **Активный агент:** OpenCode (DeepSeek V4.1 Flash Free)
-- **Последний коммит Git:** `976aa14` — `feat: добавлен ADO.NET репозиторий движений с транзакциями`; перед ним `231b35b` — `docs: зафиксирован хэш коммита EF Core слоя`
+- **Последний коммит Git:** `64ce292` — `docs: зафиксирован хэш коммита ADO.NET слоя` (сущностный коммит 1.6 — `976aa14`); текущий коммит микрошага 1.7 — `feat: реализованы сервисы светофора дефицита, авто-балансировки и валидации`
 - **Что сделано:**
-  - **Микрошаги 1.1–1.4:** изучены шаблоны, созданы `database/schema.sql`, `database/seed.sql`, `src/EasyKeep.sln`, WPF-проект и `Data/AppConfig.cs`.
-  - **Микрошаг 1.5:** созданы 6 сущностей EF Core и `Data/EasyKeepContext.cs`; проверены `AsNoTracking`, `Include/ThenInclude`, `GroupBy` и проекции.
-  - **Микрошаг 1.6:** создан `Data/AdoNetMovementRepository.cs` — проведение `IN/OUT/TRANSFER` в `SqlTransaction`, блокировка `WITH (UPDLOCK, ROWLOCK)`, проверка остатка, `Commit`/`Rollback`, журнал с JOIN, сводка по складам, топ товаров и история товара.
-  - Добавлен `Data/InsufficientStockException` с доступным и запрошенным количеством для «умной валидации».
-  - Проверено на LocalDB: успешные приход/перемещение/расход, создание новой строки остатка, откат при нехватке, частичный откат (первая строка не сохранилась), пустая накладная и перемещение на тот же склад. После тестов БД восстановлена из `schema.sql` + `seed.sql` (28 движений, 129 строк, 43 остатка, 0 отрицательных).
-  - `dotnet build src/EasyKeep.sln` — 0 ошибок, 0 предупреждений.
+  - **Микрошаги 1.1–1.6:** созданы БД и тестовые данные, WPF-каркас, EF Core контекст и ADO.NET репозиторий движений.
+  - **Микрошаг 1.7:** создан слой `Services/`: `DeficitService` (светофор), `AutoBalanceService` (черновики перемещений), `MovementService` (проверка остатков и проведение). Добавлены DTO/исключения: `DeficitRow`, `DeficitStatus`, `AutoBalanceDraft`, `StockShortage`, `StockCheckResult`.
+  - Расход считается за 30 дней как `OUT` + исходящие `TRANSFER`; прогноз — остаток / среднедневной расход. Статусы: 🔴 ниже `min_stock` или ≤2 дней, 🟡 ≤10 дней, 🟢 >10 дней, ⚪ расход = 0.
+  - Проверено на LocalDB: 5 критичных, 3 «Внимание», 20 «Норма», 15 неликвидов; авто-балансировка сформировала 2 черновика (Торговый зал: кофе 10 + молоко 4; Кофейня: маффины 7) с учётом излишка основного склада.
+  - `MovementService`: проверка остатка вернула доступный максимум, `PostMovementAsync` провёл IN и TRANSFER, при нехватке бросил `InsufficientStockException` без изменения документа и остатка.
+  - `dotnet build src/EasyKeep.sln` — 0 ошибок, 0 предупреждений. После тестов БД восстановлена из `schema.sql` + `seed.sql` (28 движений, 129 строк, 43 остатка).
 
 ### Контракты и сигнатуры (накопительная база — не стирать рабочее)
 
@@ -127,7 +127,11 @@ src/EasyKeep/
 │   ├── Entities/                   # Category, Item, Warehouse, Stock, Movement, MovementItem
 │   ├── EasyKeepContext.cs          # EF Core: DbSet, связи, индексы, AsNoTracking в запросах
 │   └── AdoNetMovementRepository.cs # ADO.NET: SqlTransaction, UPDLOCK, JOIN-отчёты
-├── Services/                       # Светофор, авто-балансировка, валидация
+├── Services/
+│   ├── DeficitService.cs           # светофор дефицита и прогноз
+│   ├── AutoBalanceService.cs       # черновики перемещений
+│   ├── MovementService.cs          # проверка остатков и проведение
+│   └── DTO: DeficitRow, AutoBalanceDraft, StockCheckResult, StockShortage
 ├── Views/
 │   └── MainWindow.xaml(.cs)        # стартовое окно-каркас
 ├── appsettings.json                # пустая строка подключения, без секретов
@@ -179,14 +183,30 @@ src/EasyKeep/
 - DTO отчётов: `Data/Reports/MovementJournalRow`, `WarehouseStockRow`, `TopItemRow`, `ItemMovementRow`.
 - Проверено: `IN` +10, `TRANSFER` -4/+4, `OUT` -3, создание нового остатка, откат при нехватке, частичный откат второй строки, пустая накладная, совпадение складов.
 
+#### 8. Слой бизнес-логики `Services/` (реализован в микрошаге 1.7)
+- `DeficitService(EasyKeepContext context)`:
+  - `Task<List<DeficitRow>> GetDeficitRowsAsync(int? warehouseId = null)` — строки светофора по всем складам или одному; сортировка: критичные → внимание → норма → неликвид.
+  - Анализ за 30 дней, расход = `OUT` + исходящие `TRANSFER`; `AverageDailyConsumption`, `DaysLeft`, `Status`, `StatusText`, `DaysLeftText`.
+  - Статусы: `Critical` — остаток < `min_stock` или ≤2 дней; `Warning` — ≤10 дней; `Normal` — >10 дней; `NonLiquid` — расход 0.
+- `AutoBalanceService(EasyKeepContext context)`:
+  - `Task<List<AutoBalanceDraft>> BuildDraftsAsync()` — по одному черновику `TRANSFER` на торговую точку; основной склад ищется по имени «Основной склад», склад брака исключается.
+  - Пополнение до `min_stock`; учитывается излишек основного склада (`quantity - min_stock`); один товар не распределяется дважды.
+  - `AutoBalanceDraft`: `ToWarehouseId`, `ToWarehouseName`, `Movement`, `LinesCount`, `TotalQuantity`.
+- `MovementService(EasyKeepContext context)`:
+  - `Task<StockCheckResult> CheckStockAsync(Movement movement)` — проверка остатка на складе-отправителе; для `IN` всегда достаточно; возвращает `StockShortage` с `Available`/`Requested` и подсказкой.
+  - `Task<int> PostMovementAsync(Movement movement)` — проверяет остаток, при нехватке бросает `InsufficientStockException`, иначе вызывает `AdoNetMovementRepository.CreateMovement`.
+  - `Task<int> GetAvailableQuantityAsync(int warehouseId, int itemId)` — доступный максимум для интерфейса.
+- `StockCheckResult(bool IsEnough, IReadOnlyList<StockShortage> Shortages)`, `StockShortage.Message` содержит доступный максимум.
+
 ### Известные баги / незавершенные места
-- Нет. Слой Data готов и проверен; сервисы и экраны ещё не созданы.
+- Нет. Слои Data и Services готовы и проверены; WPF-экраны ещё не созданы.
 
 ### ТОЧНЫЙ СЛЕДУЮЩИЙ ШАГ (ЗАДАЧА №1 ДЛЯ СЛЕДУЮЩЕГО АГЕНТА)
-1. **Микрошаг 1.7 (Сервисы):** создать `Services/`:
-   - `DeficitService` — «Светофор дефицита»: средний расход за 14–30 дней, прогноз дней до нуля, статусы 🟢/🟡/🔴/⚪ и учёт `min_stock`;
-   - `AutoBalanceService` — черновик перемещения дефицитных товаров с основного склада в торговые точки;
-   - `StockValidationService` — проверка доступного остатка и подсказка максимального количества.
-   Использовать EF Core для чтения, проверить на тестовых данных, обновить память и сделать коммит `feat: добавлены сервисы дефицита и авто-балансировки`.
-2. **Микрошаг 1.8 (UI):** главное окно с навигацией и экраны «Каталог», «Остатки», «Движения», «Отчёт»; поиск, фильтры, подтверждения, «Рентген товара» и «Командная строка склада».
-3. **Микрошаг 1.9 (Документация):** заполнить `README.md`, `docs/requirements.md`, `docs/database-schema.md` + ER-диаграмма, `docs/testing.md`; скриншоты.
+1. **Микрошаг 1.8 (UI):** сверстать главное окно и экраны:
+   - «Каталог» — список товаров с категориями, поиском и боковой панелью «Рентген товара» (`AdoNetMovementRepository.GetItemHistory`);
+   - «Остатки» — таблица со «Светофором» (`DeficitService.GetDeficitRowsAsync`), фильтр по складу;
+   - «Движения» — журнал (`GetJournal`), форма IN/OUT/TRANSFER, «Командная строка склада» (SKU + Enter = +1), «Авто-балансировка» (`BuildDraftsAsync`), подтверждение и обработка `InsufficientStockException`;
+   - «Отчёт» — `GetStockReport` и `GetTopItems`.
+   Соблюдать `UI → Services → Data`, не размещать SQL в code-behind, проверить сборку и сделать коммит `feat: сверстаны экраны каталога, остатков, движений и отчёта`.
+2. **Микрошаг 1.9 (Документация):** заполнить `README.md`, `docs/requirements.md`, `docs/database-schema.md` + ER-диаграмма, `docs/testing.md`; добавить скриншоты.
+3. **Микрошаг 1.10 (Финальная проверка):** прогнать 5–8 тест-кейсов, включая отрицательные, обновить статусы и подготовить защиту.
