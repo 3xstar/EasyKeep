@@ -68,14 +68,14 @@
 
 ### Статус последней сессии
 - **Активный агент:** OpenCode (DeepSeek V4.1 Flash Free)
-- **Последний коммит Git:** `4c10b2b` — `db: добавлены тестовые и негативные данные для демонстрации`; перед ним `ef3abde` — `docs: обновлены пути к файлам контекста в инструкциях агентов`
+- **Последний коммит Git:** `d1e6e4d` — `docs: зафиксирован хэш коммита тестовых данных` (сущностный коммит 1.3 — `4c10b2b`); текущий коммит микрошага 1.4 — `feat: создан каркас WPF-приложения EasyKeep`
 - **Что сделано:**
-  - **Микрошаг 1.1:** просканированы все папки и прочитаны `context/project.md`, `context/project_context.md`, корневой `README.md`, `START_HERE.md`, `AGENTS.md`, `QWEN.md`, локальные `README.md` в `database/`, `src/`, `screenshots/`, а также заготовки `docs/requirements.md`, `docs/database-schema.md`, `docs/testing.md`, `database/schema.sql`, `database/seed.sql`. Требования и структура зафиксированы в блоке «Контракты и сигнатуры», первый пункт Чек-листа отмечен.
-  - **Микрошаг 1.2:** создан `database/schema.sql` — 6 таблиц, PK/FK, UNIQUE/CHECK, индексы; скрипт идемпотентен, создаёт БД `EasyKeep` только при отсутствии и не удаляет данные. Проверен на SQL Server LocalDB, все CHECK/UNIQUE отработали.
-  - **Микрошаг 1.3:** создан `database/seed.sql` — 7 категорий, 19 товаров, 4 склада, 28 документов и 129 строк движений за 30 дней. Остатки (`43` строки) рассчитываются из движений, поэтому история и `stocks` согласованы (0 расхождений, 0 отрицательных остатков).
-  - Проверен полный цикл с нуля: `DROP DATABASE` → `schema.sql` → `seed.sql` → повторный `seed.sql`. Повторный запуск печатает сообщение и не меняет данные.
+  - **Микрошаги 1.1–1.3:** изучены шаблоны, созданы `database/schema.sql` и `database/seed.sql`. БД `EasyKeep` наполняется с нуля, 28 движений / 129 строк / 43 остатка, повторный seed безопасен.
+  - **Микрошаг 1.4:** созданы `src/EasyKeep.sln` и WPF-проект `src/EasyKeep/EasyKeep.csproj` (`net10.0-windows`). Подключены `Microsoft.EntityFrameworkCore.SqlServer 10.0.15` и `Microsoft.Data.SqlClient 7.1.1` (SDK .NET 10.0.404).
+  - Добавлены `appsettings.json` (без секретов), `appsettings.Local.example.json` и локальный `appsettings.Local.json` (в `.gitignore`); оба копируются в выходную папку.
+  - `Data/AppConfig.cs` читает строку подключения через `System.Text.Json` без DI: сначала `appsettings.Local.json`, затем `appsettings.json`; при отсутствии выдаёт понятное сообщение.
+  - Стартовое окно перенесено в `Views/MainWindow.xaml`, показывает статус настройки подключения. `dotnet build src/EasyKeep.sln` — 0 ошибок, 0 предупреждений.
   - В `AGENTS.md` и `QWEN.md` исправлены пути на `context/project_context.md` и `context/project.md`.
-  - Замечание: файлы `project.md` и `project_context.md` физически находятся в `context/`, хотя `AGENTS.md`/`QWEN.md` называют их корневыми. Работа ведётся с фактическими путями `context/...`.
 
 ### Контракты и сигнатуры (накопительная база — не стирать рабочее)
 
@@ -115,23 +115,28 @@ EasyKeep/
 - **Безопасность:** строка подключения только в `appsettings.Local.json` или `.env` (уже в `.gitignore`); в Git — пример без секретов; сообщения об ошибках без паролей и деталей строки подключения.
 - **Git:** последовательная история, атомарные коммиты по микрошагам, без секретов.
 
-#### 3. Целевая структура кода (по конституции проекта)
+#### 3. Структура кода (создана в микрошаге 1.4)
 ```text
 src/EasyKeep.sln
 src/EasyKeep/
-├── App.xaml, App.xaml.cs, EasyKeep.csproj
+├── EasyKeep.csproj                 # net10.0-windows, EF Core 10.0.15, SqlClient 7.1.1
+├── App.xaml, App.xaml.cs
+├── AssemblyInfo.cs
 ├── Data/
-│   ├── Entities/ (Category, Item, Warehouse, Stock, Movement, MovementItem)
-│   ├── EasyKeepContext.cs          # EF Core: справочники, AsNoTracking, Select, Include/GroupBy
-│   └── AdoNetMovementRepository.cs # ADO.NET: SqlTransaction, UPDLOCK, JOIN-отчёты
-├── Services/                       # Светофор, авто-балансировка, валидация остатков
-├── Views/                          # Каталог, Остатки, Движения, Отчёт (+ диалоги)
-│   └── Code-behind
-├── appsettings.json                # шаблон без секретов
-└── appsettings.Local.json          # реальное подключение (в .gitignore)
-docs/database-schema.png            # ER-диаграмма
-screenshots/*.png                   # 2–4 экрана
+│   ├── AppConfig.cs                # строка подключения из appsettings*.json
+│   ├── Entities/                   # появится в 1.5
+│   ├── EasyKeepContext.cs          # появится в 1.5
+│   └── AdoNetMovementRepository.cs # появится в 1.6
+├── Services/                       # Светофор, авто-балансировка, валидация
+├── Views/
+│   └── MainWindow.xaml(.cs)        # стартовое окно-каркас
+├── appsettings.json                # пустая строка подключения, без секретов
+├── appsettings.Local.example.json  # пример настройки для другого ПК
+└── appsettings.Local.json          # реальное подключение, в .gitignore
 ```
+- `AppConfig.GetConnectionString()`: сначала читает `appsettings.Local.json`, затем `appsettings.json`; JSON допускает комментарии и запятые в конце.
+- `MainWindow` вызывает `AppConfig` и показывает только факт настройки, без вывода строки подключения.
+- Сборка: `dotnet build src/EasyKeep.sln` → 0 ошибок, 0 предупреждений (SDK 10.0.404).
 
 #### 4. Схема БД `database/schema.sql` (реализована в микрошаге 1.2)
 - База: `EasyKeep` (создаётся при отсутствии, `USE EasyKeep`), схема `dbo`, повторный запуск безопасен.
@@ -153,9 +158,9 @@ screenshots/*.png                   # 2–4 экрана
 - Демо-сценарии: `Торговый зал/MILK-001 = 36` при `min_stock = 40` (красный), `Торговый зал/COF-001 = 25` (жёлтый по прогнозу), `Основной склад/SUP-004 = 0`, `TEA-001/TEA-002` без расхода (неликвид), `Склад брака` для перемещения и утилизации.
 
 ### Известные баги / незавершенные места
-- Нет. БД `EasyKeep` создаётся и наполняется с нуля, `seed.sql` идемпотентен. Слой приложения ещё не создан.
+- Нет. БД и каркас WPF собираются; сущности EF Core, контекст и ADO.NET-репозиторий ещё не созданы.
 
 ### ТОЧНЫЙ СЛЕДУЮЩИЙ ШАГ (ЗАДАЧА №1 ДЛЯ СЛЕДУЮЩЕГО АГЕНТА)
-1. **Микрошаг 1.4 (Каркас приложения):** проверить `dotnet --version`, создать `src/EasyKeep.sln` и WPF-проект `src/EasyKeep/EasyKeep.csproj` (net10.0-windows), подключить `Microsoft.EntityFrameworkCore.SqlServer` и `Microsoft.Data.SqlClient`; добавить `appsettings.json`, `appsettings.Local.json` (в `.gitignore`) и простую загрузку строки подключения без DI. Проверить `dotnet build`, обновить память и сделать коммит `feat: создан каркас WPF-приложения EasyKeep`.
-2. **Микрошаг 1.5 (EF Core):** сущности 6 таблиц + `EasyKeepContext` (`DbSet`, связи, имена таблиц/колонок, `AsNoTracking` в выборках). Коммит `feat: добавлены сущности EF Core и контекст EasyKeep`.
-3. **Микрошаг 1.6 (ADO.NET):** `AdoNetMovementRepository` с `SqlTransaction`, `WITH (UPDLOCK, ROWLOCK)`, проведением `IN/OUT/TRANSFER`, откатом и JOIN-отчётами. Коммит `feat: добавлен ADO.NET репозиторий движений с транзакциями`.
+1. **Микрошаг 1.5 (EF Core):** создать `Data/Entities/` с 6 сущностями (`Category`, `Item`, `Warehouse`, `Stock`, `Movement`, `MovementItem`), настроить навигационные свойства и `Data/EasyKeepContext.cs` (`DbSet`, имена таблиц/колонок, связи, `OnDelete` как в SQL, уникальные индексы). Проверить выборку `AsNoTracking` из LocalDB, обновить память и сделать коммит `feat: добавлены сущности EF Core и контекст EasyKeep`.
+2. **Микрошаг 1.6 (ADO.NET):** создать `Data/AdoNetMovementRepository.cs`: `SqlTransaction`, `WITH (UPDLOCK, ROWLOCK)`, проведение `IN/OUT/TRANSFER`, проверка остатка, `Commit/Rollback`, методы чтения журнала и JOIN-отчётов. Все параметры — через `SqlParameter`, соединение — через `AppConfig`. Коммит `feat: добавлен ADO.NET репозиторий движений с транзакциями`.
+3. **Микрошаг 1.7 (Сервисы):** «Светофор дефицита», авто-балансировка, умная валидация остатков. Коммит `feat: добавлены сервисы дефицита и авто-балансировки`.

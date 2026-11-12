@@ -1,0 +1,31 @@
+<Window x:Class="EasyKeep.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="EasyKeep — умный складской учёт"
+        Height="600" Width="900"
+        WindowStartupLocation="CenterScreen"
+        Background="#F4F7FA">
+    <Grid>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="EasyKeep"
+                       FontSize="46"
+                       FontWeight="Bold"
+                       Foreground="#1F3A5F"
+                       HorizontalAlignment="Center" />
+            <TextBlock Text="Умный складской учёт без лишней сложности"
+                       FontSize="18"
+                       Foreground="#5A6B7B"
+                       Margin="0,8,0,28"
+                       HorizontalAlignment="Center" />
+            <Border Background="White"
+                    BorderBrush="#D9E2EC"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="24,18">
+                <TextBlock x:Name="ConfigurationStatusText"
+                           FontSize="14"
+                           Foreground="#2F4F4F" />
+            </Border>
+        </StackPanel>
+    </Grid>
+</Window>
