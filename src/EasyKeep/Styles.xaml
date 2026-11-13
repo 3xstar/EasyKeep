@@ -105,6 +105,8 @@
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="12" />
         <Setter Property="Padding" Value="18,16" />
+        <!-- Тень только на статичных карточках: карточки с DataGrid остаются без эффектов. -->
+        <Setter Property="Effect" Value="{DynamicResource CardShadowEffect}" />
     </Style>
 
     <Style x:Key="PillBorder" TargetType="Border">
@@ -393,7 +395,8 @@
                                 Background="{DynamicResource CardBackgroundBrush}"
                                 BorderBrush="{DynamicResource CardBorderBrush}"
                                 BorderThickness="1"
-                                CornerRadius="12" />
+                                CornerRadius="12"
+                                Effect="{DynamicResource CardShadowEffect}" />
                         <Border x:Name="HoverLayer"
                                 Background="{DynamicResource SurfaceRaisedBrush}"
                                 CornerRadius="12"
