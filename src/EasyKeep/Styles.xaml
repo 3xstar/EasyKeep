@@ -830,6 +830,38 @@
     <!-- ============================================================
          Таблицы
          ============================================================ -->
+    <!-- Шапка колонки: отступы (12,0) совпадают с ячейками, поэтому
+             заголовок стоит строго над значением при любой ширине. -->
+    <Style x:Key="GridColumnHeaderStyle" TargetType="DataGridColumnHeader">
+        <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeSmall}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridColumnHeader">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Числовые колонки: заголовок по правому краю в пару к TextAlignment="Right" ячейки -->
+    <Style x:Key="GridColumnHeaderRightStyle" TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderStyle}">
+        <Setter Property="HorizontalContentAlignment" Value="Right" />
+    </Style>
+
     <Style x:Key="ModernDataGrid" TargetType="DataGrid">
         <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}" />
         <Setter Property="BorderThickness" Value="0" />
@@ -852,38 +884,11 @@
         <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
         <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
         <Setter Property="EnableRowVirtualization" Value="True" />
-        <Setter Property="ColumnHeaderStyle">
-            <Setter.Value>
-                <Style TargetType="DataGridColumnHeader">
-                    <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}" />
-                    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
-                    <Setter Property="FontSize" Value="{DynamicResource FontSizeSmall}" />
-                    <Setter Property="FontWeight" Value="SemiBold" />
-                    <Setter Property="Padding" Value="10,0" />
-                    <Setter Property="BorderThickness" Value="0,0,0,1" />
-                    <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
-                    <Setter Property="HorizontalContentAlignment" Value="Left" />
-                    <Setter Property="VerticalContentAlignment" Value="Center" />
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="DataGridColumnHeader">
-                                <Border Background="{TemplateBinding Background}"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                        Padding="{TemplateBinding Padding}">
-                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                                </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="ColumnHeaderStyle" Value="{StaticResource GridColumnHeaderStyle}" />
         <Setter Property="CellStyle">
             <Setter.Value>
                 <Style TargetType="DataGridCell">
-                    <Setter Property="Padding" Value="10,0" />
+                    <Setter Property="Padding" Value="12,0" />
                     <Setter Property="BorderThickness" Value="0" />
                     <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
                     <Setter Property="VerticalContentAlignment" Value="Center" />

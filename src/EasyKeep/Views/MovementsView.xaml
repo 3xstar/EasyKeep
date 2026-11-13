@@ -7,6 +7,7 @@
         <Style x:Key="NumberCellText" TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="TextAlignment" Value="Right" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
         </Style>
     </UserControl.Resources>
 
@@ -139,6 +140,7 @@
                                                 Binding="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"
                                                 Width="*"
                                                 MinWidth="54"
+                                                HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                                 ElementStyle="{StaticResource NumberCellText}" />
                             <DataGridTextColumn Header="Ед."
                                                 Binding="{Binding Unit}"
@@ -360,11 +362,13 @@
                                                     Binding="{Binding ItemsCount}"
                                                     Width="*"
                                                     MinWidth="62"
+                                                    HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                                     ElementStyle="{StaticResource NumberCellText}" />
                                 <DataGridTextColumn Header="Единиц"
                                                     Binding="{Binding TotalQuantity}"
                                                     Width="*"
                                                     MinWidth="62"
+                                                    HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                                     ElementStyle="{StaticResource NumberCellText}" />
                                 <DataGridTextColumn Header="Комментарий"
                                                     Binding="{Binding Comment}"

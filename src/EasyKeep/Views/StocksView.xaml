@@ -210,21 +210,25 @@
                                             Binding="{Binding Quantity}"
                                             Width="*"
                                             MinWidth="70"
+                                            HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                             ElementStyle="{StaticResource NumberCellText}" />
                         <DataGridTextColumn Header="Минимум"
                                             Binding="{Binding MinStock}"
                                             Width="*"
                                             MinWidth="76"
+                                            HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                             ElementStyle="{StaticResource NumberCellText}" />
                         <DataGridTextColumn Header="Расход/день"
                                             Binding="{Binding AverageDailyConsumption, StringFormat={}{0:0.##}}"
                                             Width="*"
                                             MinWidth="84"
+                                            HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                             ElementStyle="{StaticResource NumberCellText}" />
                         <DataGridTextColumn Header="Прогноз"
                                             Binding="{Binding DaysLeftText}"
                                             Width="*"
                                             MinWidth="76"
+                                            HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                             ElementStyle="{StaticResource NumberCellText}" />
 
                         <DataGridTemplateColumn Header="Светофор" Width="Auto">

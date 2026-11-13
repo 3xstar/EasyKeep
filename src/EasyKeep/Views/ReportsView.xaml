@@ -173,16 +173,19 @@
                                                         Binding="{Binding ItemsCount}"
                                                         Width="*"
                                                         MinWidth="62"
+                                                        HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                                         ElementStyle="{StaticResource NumberCellText}" />
                                     <DataGridTextColumn Header="Кол-во"
                                                         Binding="{Binding TotalQuantity}"
                                                         Width="*"
                                                         MinWidth="70"
+                                                        HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                                         ElementStyle="{StaticResource NumberCellText}" />
                                     <DataGridTextColumn Header="Стоимость, ₽"
                                                         Binding="{Binding TotalValue, StringFormat={}{0:N2}}"
                                                         Width="*"
                                                         MinWidth="92"
+                                                        HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                                         ElementStyle="{StaticResource NumberCellText}" />
                                 </DataGrid.Columns>
                             </DataGrid>
@@ -275,16 +278,19 @@
                                                         Binding="{Binding OutQuantity}"
                                                         Width="*"
                                                         MinWidth="62"
+                                                        HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                                         ElementStyle="{StaticResource NumberCellText}" />
                                     <DataGridTextColumn Header="Перем."
                                                         Binding="{Binding TransferQuantity}"
                                                         Width="*"
                                                         MinWidth="58"
+                                                        HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                                         ElementStyle="{StaticResource NumberCellText}" />
                                     <DataGridTextColumn Header="Движ."
                                                         Binding="{Binding MovementsCount}"
                                                         Width="*"
                                                         MinWidth="56"
+                                                        HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                                         ElementStyle="{StaticResource NumberCellText}" />
                                 </DataGrid.Columns>
                             </DataGrid>

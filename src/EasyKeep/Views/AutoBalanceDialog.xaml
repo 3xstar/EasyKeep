@@ -12,6 +12,14 @@
         TextOptions.TextFormattingMode="Ideal"
         Background="{DynamicResource AppBackgroundBrush}">
 
+    <Window.Resources>
+        <Style x:Key="NumberCellText" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="TextAlignment" Value="Right" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+    </Window.Resources>
+
     <Grid Margin="24">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -51,7 +59,9 @@
                     <DataGridTextColumn Header="Количество"
                                         Binding="{Binding Quantity}"
                                         Width="*"
-                                        MinWidth="90" />
+                                        MinWidth="90"
+                                        HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
+                                        ElementStyle="{StaticResource NumberCellText}" />
                 </DataGrid.Columns>
             </DataGrid>
         </Border>

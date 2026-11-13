@@ -7,6 +7,7 @@
         <Style x:Key="NumberCellText" TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="TextAlignment" Value="Right" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
         </Style>
     </UserControl.Resources>
 
@@ -127,11 +128,13 @@
                                                     Binding="{Binding Price, StringFormat={}{0:0.00}}"
                                                     Width="*"
                                                     MinWidth="72"
+                                                    HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                                     ElementStyle="{StaticResource NumberCellText}" />
                                 <DataGridTextColumn Header="Мин."
                                                     Binding="{Binding MinStock}"
                                                     Width="*"
                                                     MinWidth="54"
+                                                    HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                                     ElementStyle="{StaticResource NumberCellText}" />
                             </DataGrid.Columns>
                         </DataGrid>
