@@ -124,8 +124,8 @@
                 Margin="0,14,0,0">
             <Grid>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.6*" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="220" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
@@ -136,6 +136,7 @@
                                Margin="0,0,0,6" />
                     <TextBox x:Name="SearchBox"
                              Style="{StaticResource FieldTextBox}"
+                             Height="{DynamicResource ControlHeight}"
                              TextChanged="SearchBox_TextChanged"
                              ToolTip="Введите артикул или часть названия товара" />
                 </StackPanel>
@@ -146,6 +147,7 @@
                                Margin="0,0,0,6" />
                     <ComboBox x:Name="WarehouseFilter"
                               Style="{StaticResource FieldComboBox}"
+                              Height="{DynamicResource ControlHeight}"
                               DisplayMemberPath="Name"
                               SelectionChanged="WarehouseFilter_SelectionChanged" />
                 </StackPanel>
@@ -153,6 +155,7 @@
                 <Button Grid.Column="2"
                         Content="Обновить"
                         Style="{StaticResource SecondaryButton}"
+                        Height="{DynamicResource ControlHeight}"
                         VerticalAlignment="Bottom"
                         Margin="0,0,12,0"
                         Click="RefreshButton_Click" />
@@ -181,34 +184,41 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="SKU"
                                             Binding="{Binding Sku}"
-                                            Width="100"
+                                            Width="*"
+                                            MinWidth="70"
                                             ElementStyle="{StaticResource CellText}" />
                         <DataGridTextColumn Header="Товар"
                                             Binding="{Binding ItemName}"
-                                            Width="*"
+                                            Width="2.5*"
+                                            MinWidth="150"
                                             ElementStyle="{StaticResource CellText}" />
                         <DataGridTextColumn Header="Склад"
                                             Binding="{Binding WarehouseName}"
-                                            Width="150"
+                                            Width="1.5*"
+                                            MinWidth="110"
                                             ElementStyle="{StaticResource CellText}" />
                         <DataGridTextColumn Header="Остаток"
                                             Binding="{Binding Quantity}"
-                                            Width="80"
+                                            Width="*"
+                                            MinWidth="70"
                                             ElementStyle="{StaticResource NumberCellText}" />
                         <DataGridTextColumn Header="Минимум"
                                             Binding="{Binding MinStock}"
-                                            Width="80"
+                                            Width="*"
+                                            MinWidth="76"
                                             ElementStyle="{StaticResource NumberCellText}" />
                         <DataGridTextColumn Header="Расход/день"
                                             Binding="{Binding AverageDailyConsumption, StringFormat={}{0:0.##}}"
-                                            Width="105"
+                                            Width="*"
+                                            MinWidth="84"
                                             ElementStyle="{StaticResource NumberCellText}" />
                         <DataGridTextColumn Header="Прогноз"
                                             Binding="{Binding DaysLeftText}"
-                                            Width="85"
+                                            Width="*"
+                                            MinWidth="76"
                                             ElementStyle="{StaticResource NumberCellText}" />
 
-                        <DataGridTemplateColumn Header="Светофор" Width="135">
+                        <DataGridTemplateColumn Header="Светофор" Width="Auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Border x:Name="StatusBadge"

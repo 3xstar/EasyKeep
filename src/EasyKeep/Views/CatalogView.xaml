@@ -12,8 +12,8 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="360" />
+            <ColumnDefinition Width="1.9*" MinWidth="420" />
+            <ColumnDefinition Width="*" MinWidth="290" />
         </Grid.ColumnDefinitions>
 
         <Grid>
@@ -30,8 +30,8 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="1.8*" MinWidth="170" />
+                        <ColumnDefinition Width="*" MinWidth="150" />
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Margin="0,0,12,0">
@@ -50,9 +50,8 @@
                                   SelectionChanged="CategoryFilter_SelectionChanged" />
                     </StackPanel>
 
-                    <StackPanel Grid.Row="1" Grid.ColumnSpan="2"
-                                Orientation="Horizontal"
-                                Margin="0,10,0,0">
+                    <WrapPanel Grid.Row="1" Grid.ColumnSpan="2"
+                               Margin="0,10,0,0">
                         <Button Content="Добавить товар"
                                 Style="{StaticResource PrimaryButton}"
                                 Margin="0,0,8,0"
@@ -68,7 +67,7 @@
                         <Button Content="Удалить"
                                 Style="{StaticResource DangerButton}"
                                 Click="DeleteItemButton_Click" />
-                    </StackPanel>
+                    </WrapPanel>
                 </Grid>
             </Border>
 
@@ -84,8 +83,16 @@
                     </Grid.RowDefinitions>
 
                     <Grid Margin="18,14,18,10">
-                        <TextBlock Text="Товары каталога" Style="{StaticResource SectionTitleText}" />
-                        <Border Style="{StaticResource PillBorder}" HorizontalAlignment="Right">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Товары каталога"
+                                   Style="{StaticResource SectionTitleText}"
+                                   TextWrapping="Wrap" />
+                        <Border Grid.Column="1"
+                                Style="{StaticResource PillBorder}"
+                                Margin="12,0,0,0">
                             <TextBlock x:Name="SummaryText"
                                        Style="{StaticResource CaptionText}"
                                        Foreground="{DynamicResource AccentBrush}"
@@ -101,23 +108,28 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="SKU"
                                                     Binding="{Binding Sku}"
-                                                    Width="95" />
+                                                    Width="*"
+                                                    MinWidth="70" />
                                 <DataGridTextColumn Header="Товар"
                                                     Binding="{Binding Name}"
-                                                    Width="*" />
+                                                    Width="2.5*"
+                                                    MinWidth="150" />
                                 <DataGridTextColumn Header="Категория"
                                                     Binding="{Binding Category.Name}"
-                                                    Width="120" />
+                                                    Width="1.4*"
+                                                    MinWidth="100" />
                                 <DataGridTextColumn Header="Ед."
                                                     Binding="{Binding Unit}"
-                                                    Width="50" />
+                                                    Width="Auto" />
                                 <DataGridTextColumn Header="Цена, ₽"
                                                     Binding="{Binding Price, StringFormat={}{0:0.00}}"
-                                                    Width="85"
+                                                    Width="*"
+                                                    MinWidth="72"
                                                     ElementStyle="{StaticResource NumberCellText}" />
                                 <DataGridTextColumn Header="Мин."
                                                     Binding="{Binding MinStock}"
-                                                    Width="60"
+                                                    Width="*"
+                                                    MinWidth="54"
                                                     ElementStyle="{StaticResource NumberCellText}" />
                             </DataGrid.Columns>
                         </DataGrid>

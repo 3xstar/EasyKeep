@@ -115,16 +115,24 @@
                     </Grid.RowDefinitions>
 
                     <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
                         <StackPanel>
-                            <TextBlock Text="Остатки по складам" Style="{StaticResource SectionTitleText}" />
+                            <TextBlock Text="Остатки по складам"
+                                       Style="{StaticResource SectionTitleText}"
+                                       TextWrapping="Wrap" />
                             <TextBlock Text="Распределение запасов, количество позиций и стоимость хранения."
                                        Style="{StaticResource CaptionText}"
                                        Margin="0,2,0,0" />
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Top">
+                        <StackPanel Grid.Column="1"
+                                    Orientation="Horizontal"
+                                    VerticalAlignment="Top"
+                                    Margin="12,0,0,0">
                             <Border Style="{StaticResource PillBorder}"
                                     Margin="0,0,8,0"
                                     VerticalAlignment="Center">
@@ -157,19 +165,23 @@
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Склад"
                                                         Binding="{Binding WarehouseName}"
-                                                        Width="*"
+                                                        Width="2*"
+                                                        MinWidth="130"
                                                         ElementStyle="{StaticResource CellText}" />
                                     <DataGridTextColumn Header="Позиций"
                                                         Binding="{Binding ItemsCount}"
-                                                        Width="70"
+                                                        Width="*"
+                                                        MinWidth="62"
                                                         ElementStyle="{StaticResource NumberCellText}" />
                                     <DataGridTextColumn Header="Кол-во"
                                                         Binding="{Binding TotalQuantity}"
-                                                        Width="95"
+                                                        Width="*"
+                                                        MinWidth="70"
                                                         ElementStyle="{StaticResource NumberCellText}" />
                                     <DataGridTextColumn Header="Стоимость, ₽"
                                                         Binding="{Binding TotalValue, StringFormat={}{0:N2}}"
-                                                        Width="115"
+                                                        Width="*"
+                                                        MinWidth="92"
                                                         ElementStyle="{StaticResource NumberCellText}" />
                                 </DataGrid.Columns>
                             </DataGrid>
@@ -226,8 +238,14 @@
                     </Grid>
 
                     <Grid Grid.Row="2" Margin="0,14,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
                         <TextBlock Text="Рейтинг по расходу" Style="{StaticResource CaptionText}" VerticalAlignment="Center" />
-                        <Border Style="{StaticResource PillBorder}" HorizontalAlignment="Right">
+                        <Border Grid.Column="1"
+                                Style="{StaticResource PillBorder}"
+                                Margin="12,0,0,0">
                             <TextBlock x:Name="TopSummaryText"
                                        Style="{StaticResource CaptionText}"
                                        Foreground="{DynamicResource AccentBrush}"
@@ -243,23 +261,28 @@
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="SKU"
                                                         Binding="{Binding Sku}"
-                                                        Width="66"
+                                                        Width="*"
+                                                        MinWidth="56"
                                                         ElementStyle="{StaticResource CellText}" />
                                     <DataGridTextColumn Header="Товар"
                                                         Binding="{Binding Name}"
-                                                        Width="*"
+                                                        Width="2*"
+                                                        MinWidth="130"
                                                         ElementStyle="{StaticResource CellText}" />
                                     <DataGridTextColumn Header="Расход"
                                                         Binding="{Binding OutQuantity}"
-                                                        Width="68"
+                                                        Width="*"
+                                                        MinWidth="62"
                                                         ElementStyle="{StaticResource NumberCellText}" />
                                     <DataGridTextColumn Header="Перем."
                                                         Binding="{Binding TransferQuantity}"
-                                                        Width="64"
+                                                        Width="*"
+                                                        MinWidth="58"
                                                         ElementStyle="{StaticResource NumberCellText}" />
                                     <DataGridTextColumn Header="Движ."
                                                         Binding="{Binding MovementsCount}"
-                                                        Width="58"
+                                                        Width="*"
+                                                        MinWidth="56"
                                                         ElementStyle="{StaticResource NumberCellText}" />
                                 </DataGrid.Columns>
                             </DataGrid>
