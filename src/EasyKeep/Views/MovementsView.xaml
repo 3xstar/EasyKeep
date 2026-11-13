@@ -89,7 +89,7 @@
                                Margin="0,4,0,0" />
                     <TextBlock Text="Enter добавляет позицию +1. Повторный ввод увеличивает количество."
                                Style="{StaticResource CaptionText}"
-                               Foreground="{StaticResource TextMutedBrush}"
+                               Foreground="{DynamicResource TextMutedBrush}"
                                FontSize="11" />
                 </StackPanel>
 
@@ -128,7 +128,7 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="✕"
-                                                   Foreground="{StaticResource TextMutedBrush}"
+                                                   Foreground="{DynamicResource TextMutedBrush}"
                                                    Cursor="Hand"
                                                    ToolTip="Удалить позицию"
                                                    HorizontalAlignment="Center"
@@ -251,7 +251,7 @@
                         <Border Style="{StaticResource PillBorder}" HorizontalAlignment="Right">
                             <TextBlock x:Name="JournalSummaryText"
                                        Style="{StaticResource CaptionText}"
-                                       Foreground="{StaticResource AccentBrush}"
+                                       Foreground="{DynamicResource AccentBrush}"
                                        FontWeight="SemiBold" />
                         </Border>
                     </Grid>
@@ -268,7 +268,7 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <Border x:Name="TypeBadge"
-                                                    Background="#F1F5F9"
+                                                    Background="{DynamicResource BadgeNeutralBackgroundBrush}"
                                                     CornerRadius="999"
                                                     Padding="8,3"
                                                     HorizontalAlignment="Left">
@@ -276,20 +276,23 @@
                                                            Text="{Binding TypeText}"
                                                            FontSize="11"
                                                            FontWeight="SemiBold"
-                                                           Foreground="#475569" />
+                                                           Foreground="{DynamicResource BadgeNeutralForegroundBrush}" />
                                             </Border>
                                             <DataTemplate.Triggers>
                                                 <DataTrigger Binding="{Binding Type}" Value="IN">
-                                                    <Setter TargetName="TypeBadge" Property="Background" Value="#F0FDF4" />
-                                                    <Setter TargetName="TypeLabel" Property="Foreground" Value="#15803D" />
+                                                    <Setter TargetName="TypeBadge" Property="Background" Value="{DynamicResource BadgeSuccessBackgroundBrush}" />
+                                                    <Setter TargetName="TypeBadge" Property="Effect" Value="{DynamicResource GlowSuccessEffect}" />
+                                                    <Setter TargetName="TypeLabel" Property="Foreground" Value="{DynamicResource BadgeSuccessForegroundBrush}" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Type}" Value="OUT">
-                                                    <Setter TargetName="TypeBadge" Property="Background" Value="#FEF2F2" />
-                                                    <Setter TargetName="TypeLabel" Property="Foreground" Value="#DC2626" />
+                                                    <Setter TargetName="TypeBadge" Property="Background" Value="{DynamicResource BadgeCriticalBackgroundBrush}" />
+                                                    <Setter TargetName="TypeBadge" Property="Effect" Value="{DynamicResource GlowCriticalEffect}" />
+                                                    <Setter TargetName="TypeLabel" Property="Foreground" Value="{DynamicResource BadgeCriticalForegroundBrush}" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Type}" Value="TRANSFER">
-                                                    <Setter TargetName="TypeBadge" Property="Background" Value="#EFF6FF" />
-                                                    <Setter TargetName="TypeLabel" Property="Foreground" Value="#2563EB" />
+                                                    <Setter TargetName="TypeBadge" Property="Background" Value="{DynamicResource BadgeInfoBackgroundBrush}" />
+                                                    <Setter TargetName="TypeBadge" Property="Effect" Value="{DynamicResource GlowSuccessEffect}" />
+                                                    <Setter TargetName="TypeLabel" Property="Foreground" Value="{DynamicResource BadgeInfoForegroundBrush}" />
                                                 </DataTrigger>
                                             </DataTemplate.Triggers>
                                         </DataTemplate>

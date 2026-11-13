@@ -6,7 +6,7 @@
         MinHeight="640" MinWidth="1080"
         WindowStartupLocation="CenterScreen"
         FontFamily="Segoe UI"
-        Background="{StaticResource AppBackgroundBrush}">
+        Background="{DynamicResource AppBackgroundBrush}">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -16,8 +16,8 @@
 
         <!-- Боковое меню навигации -->
         <Border Grid.Column="0"
-                Background="{StaticResource CardBackgroundBrush}"
-                BorderBrush="{StaticResource CardBorderBrush}"
+                Background="{DynamicResource CardBackgroundBrush}"
+                BorderBrush="{DynamicResource CardBorderBrush}"
                 BorderThickness="0,0,1,0">
             <Grid Margin="16,22,16,18">
                 <Grid.RowDefinitions>
@@ -34,10 +34,10 @@
                         <TextBlock Text="EasyKeep"
                                    FontSize="19"
                                    FontWeight="Bold"
-                                   Foreground="{StaticResource TextPrimaryBrush}" />
+                                   Foreground="{DynamicResource TextPrimaryBrush}" />
                         <TextBlock Text="Умный складской учёт"
                                    FontSize="11"
-                                   Foreground="{StaticResource TextSecondaryBrush}" />
+                                   Foreground="{DynamicResource TextSecondaryBrush}" />
                     </StackPanel>
                 </StackPanel>
 
@@ -46,7 +46,7 @@
                     <TextBlock Text="РАЗДЕЛЫ"
                                FontSize="11"
                                FontWeight="SemiBold"
-                               Foreground="{StaticResource TextMutedBrush}"
+                               Foreground="{DynamicResource TextMutedBrush}"
                                Margin="14,0,0,8" />
 
                     <RadioButton x:Name="StocksNav"
@@ -122,17 +122,17 @@
 
                 <!-- Подвал меню -->
                 <Border Grid.Row="3"
-                        Background="{StaticResource AppBackgroundBrush}"
+                        Background="{DynamicResource AppBackgroundBrush}"
                         CornerRadius="8"
                         Padding="12,10">
                     <StackPanel>
                         <TextBlock Text="Локальная база данных"
                                    FontSize="11"
                                    FontWeight="SemiBold"
-                                   Foreground="{StaticResource TextSecondaryBrush}" />
+                                   Foreground="{DynamicResource TextSecondaryBrush}" />
                         <TextBlock Text="SQL Server • EasyKeep"
                                    FontSize="11"
-                                   Foreground="{StaticResource TextMutedBrush}"
+                                   Foreground="{DynamicResource TextMutedBrush}"
                                    Margin="0,2,0,0" />
                     </StackPanel>
                 </Border>

@@ -7,7 +7,7 @@
         ResizeMode="NoResize"
         ShowInTaskbar="False"
         FontFamily="Segoe UI"
-        Background="{StaticResource AppBackgroundBrush}">
+        Background="{DynamicResource AppBackgroundBrush}">
 
     <Grid Margin="24">
         <Grid.RowDefinitions>
@@ -62,7 +62,7 @@
 
                 <TextBlock Text="Минимальный остаток используется «Светофором дефицита» как неснижаемый порог."
                            Style="{StaticResource CaptionText}"
-                           Foreground="{StaticResource TextMutedBrush}"
+                           Foreground="{DynamicResource TextMutedBrush}"
                            FontSize="11"
                            Margin="0,14,0,0" />
             </StackPanel>

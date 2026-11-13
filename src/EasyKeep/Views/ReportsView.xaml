@@ -10,16 +10,16 @@
         </Style>
 
         <Style x:Key="MetricCard" TargetType="Border">
-            <Setter Property="Background" Value="{StaticResource AppBackgroundBrush}" />
-            <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}" />
+            <Setter Property="Background" Value="{DynamicResource AppBackgroundBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius" Value="10" />
             <Setter Property="Padding" Value="14,12" />
         </Style>
 
         <Style x:Key="TableBorder" TargetType="Border">
-            <Setter Property="Background" Value="{StaticResource CardBackgroundBrush}" />
-            <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}" />
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius" Value="10" />
         </Style>
@@ -90,7 +90,7 @@
                                        Text="—"
                                        FontSize="19"
                                        FontWeight="Bold"
-                                       Foreground="{StaticResource AccentBrush}"
+                                       Foreground="{DynamicResource AccentBrush}"
                                        Margin="0,8,0,0"
                                        TextTrimming="CharacterEllipsis" />
                         </StackPanel>
@@ -176,7 +176,7 @@
                     <Border Style="{StaticResource PillBorder}" HorizontalAlignment="Right">
                         <TextBlock x:Name="TopSummaryText"
                                    Style="{StaticResource CaptionText}"
-                                   Foreground="{StaticResource AccentBrush}"
+                                   Foreground="{DynamicResource AccentBrush}"
                                    FontWeight="SemiBold" />
                     </Border>
                 </Grid>

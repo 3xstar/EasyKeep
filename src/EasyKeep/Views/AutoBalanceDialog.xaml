@@ -7,7 +7,7 @@
         ResizeMode="NoResize"
         ShowInTaskbar="False"
         FontFamily="Segoe UI"
-        Background="{StaticResource AppBackgroundBrush}">
+        Background="{DynamicResource AppBackgroundBrush}">
 
     <Grid Margin="24">
         <Grid.RowDefinitions>

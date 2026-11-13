@@ -59,7 +59,7 @@
                         Margin="0,0,0,2">
                     <TextBlock x:Name="SummaryText"
                                Style="{StaticResource CaptionText}"
-                               Foreground="{StaticResource AccentBrush}"
+                               Foreground="{DynamicResource AccentBrush}"
                                FontWeight="SemiBold" />
                 </Border>
             </Grid>
@@ -105,7 +105,7 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Border x:Name="StatusBadge"
-                                            Background="#F1F5F9"
+                                            Background="{DynamicResource BadgeNeutralBackgroundBrush}"
                                             CornerRadius="999"
                                             Padding="10,4"
                                             HorizontalAlignment="Left">
@@ -113,24 +113,28 @@
                                                    Text="{Binding StatusText}"
                                                    FontSize="12"
                                                    FontWeight="SemiBold"
-                                                   Foreground="#475569" />
+                                                   Foreground="{DynamicResource BadgeNeutralForegroundBrush}" />
                                     </Border>
                                     <DataTemplate.Triggers>
                                         <DataTrigger Binding="{Binding Status}" Value="Critical">
-                                            <Setter TargetName="StatusBadge" Property="Background" Value="#FEF2F2" />
-                                            <Setter TargetName="StatusLabel" Property="Foreground" Value="#DC2626" />
+                                            <Setter TargetName="StatusBadge" Property="Background" Value="{DynamicResource BadgeCriticalBackgroundBrush}" />
+                                            <Setter TargetName="StatusBadge" Property="Effect" Value="{DynamicResource GlowCriticalEffect}" />
+                                            <Setter TargetName="StatusLabel" Property="Foreground" Value="{DynamicResource BadgeCriticalForegroundBrush}" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="Warning">
-                                            <Setter TargetName="StatusBadge" Property="Background" Value="#FFFBEB" />
-                                            <Setter TargetName="StatusLabel" Property="Foreground" Value="#B45309" />
+                                            <Setter TargetName="StatusBadge" Property="Background" Value="{DynamicResource BadgeWarningBackgroundBrush}" />
+                                            <Setter TargetName="StatusBadge" Property="Effect" Value="{DynamicResource GlowWarningEffect}" />
+                                            <Setter TargetName="StatusLabel" Property="Foreground" Value="{DynamicResource BadgeWarningForegroundBrush}" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="Normal">
-                                            <Setter TargetName="StatusBadge" Property="Background" Value="#F0FDF4" />
-                                            <Setter TargetName="StatusLabel" Property="Foreground" Value="#15803D" />
+                                            <Setter TargetName="StatusBadge" Property="Background" Value="{DynamicResource BadgeSuccessBackgroundBrush}" />
+                                            <Setter TargetName="StatusBadge" Property="Effect" Value="{DynamicResource GlowSuccessEffect}" />
+                                            <Setter TargetName="StatusLabel" Property="Foreground" Value="{DynamicResource BadgeSuccessForegroundBrush}" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="NonLiquid">
-                                            <Setter TargetName="StatusBadge" Property="Background" Value="#F8FAFC" />
-                                            <Setter TargetName="StatusLabel" Property="Foreground" Value="#64748B" />
+                                            <Setter TargetName="StatusBadge" Property="Background" Value="{DynamicResource BadgeMutedBackgroundBrush}" />
+                                            <Setter TargetName="StatusBadge" Property="Effect" Value="{DynamicResource GlowMutedEffect}" />
+                                            <Setter TargetName="StatusLabel" Property="Foreground" Value="{DynamicResource BadgeMutedForegroundBrush}" />
                                         </DataTrigger>
                                     </DataTemplate.Triggers>
                                 </DataTemplate>

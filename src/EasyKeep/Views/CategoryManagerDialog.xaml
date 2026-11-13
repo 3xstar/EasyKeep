@@ -7,7 +7,7 @@
         ResizeMode="NoResize"
         ShowInTaskbar="False"
         FontFamily="Segoe UI"
-        Background="{StaticResource AppBackgroundBrush}"
+        Background="{DynamicResource AppBackgroundBrush}"
         Loaded="CategoryManagerDialog_Loaded">
 
     <Grid Margin="24">
@@ -80,11 +80,11 @@
                                         </Border>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="Root" Property="Background" Value="{StaticResource RowHoverBrush}" />
+                                                <Setter TargetName="Root" Property="Background" Value="{DynamicResource RowHoverBrush}" />
                                             </Trigger>
                                             <Trigger Property="IsSelected" Value="True">
-                                                <Setter TargetName="Root" Property="Background" Value="{StaticResource AccentSoftBrush}" />
-                                                <Setter Property="Foreground" Value="{StaticResource AccentBrush}" />
+                                                <Setter TargetName="Root" Property="Background" Value="{DynamicResource AccentSoftBrush}" />
+                                                <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
                                                 <Setter Property="FontWeight" Value="SemiBold" />
                                             </Trigger>
                                         </ControlTemplate.Triggers>
