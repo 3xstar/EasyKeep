@@ -161,7 +161,8 @@
                         <Grid>
                             <DataGrid x:Name="StockGrid"
                                       Style="{StaticResource ModernDataGrid}"
-                                      BorderThickness="0">
+                                      BorderThickness="0"
+                                      MinHeight="180">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Склад"
                                                         Binding="{Binding WarehouseName}"
@@ -187,7 +188,7 @@
                             </DataGrid>
 
                             <TextBlock x:Name="StockStateText"
-                                       Style="{StaticResource EmptyStateText}" />
+                                       Style="{StaticResource TableEmptyStateText}" />
                         </Grid>
                     </Border>
                 </Grid>
@@ -221,12 +222,12 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Margin="0,0,10,0">
-                            <TextBlock Text="С даты" Style="{StaticResource CaptionText}" Margin="0,0,0,6" />
+                            <TextBlock Text="С даты" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
                             <DatePicker x:Name="FromDatePicker" />
                         </StackPanel>
 
                         <StackPanel Grid.Column="1" Margin="0,0,10,0">
-                            <TextBlock Text="По дату" Style="{StaticResource CaptionText}" Margin="0,0,0,6" />
+                            <TextBlock Text="По дату" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
                             <DatePicker x:Name="ToDatePicker" />
                         </StackPanel>
 
@@ -257,7 +258,8 @@
                         <Grid>
                             <DataGrid x:Name="TopItemsGrid"
                                       Style="{StaticResource ModernDataGrid}"
-                                      BorderThickness="0">
+                                      BorderThickness="0"
+                                      MinHeight="180">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="SKU"
                                                         Binding="{Binding Sku}"
@@ -288,7 +290,7 @@
                             </DataGrid>
 
                             <TextBlock x:Name="TopStateText"
-                                       Style="{StaticResource EmptyStateText}" />
+                                       Style="{StaticResource TableEmptyStateText}" />
                         </Grid>
                     </Border>
                 </Grid>

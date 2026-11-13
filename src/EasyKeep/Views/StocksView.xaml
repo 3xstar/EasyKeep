@@ -188,7 +188,8 @@
             <Grid>
                 <DataGrid x:Name="StocksGrid"
                           Style="{StaticResource ModernDataGrid}"
-                          BorderThickness="0">
+                          BorderThickness="0"
+                          MinHeight="180">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="SKU"
                                             Binding="{Binding Sku}"
@@ -269,7 +270,7 @@
                 </DataGrid>
 
                 <TextBlock x:Name="StateText"
-                           Style="{StaticResource EmptyStateText}" />
+                           Style="{StaticResource TableEmptyStateText}" />
             </Grid>
         </Border>
     </Grid>

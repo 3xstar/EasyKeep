@@ -8,7 +8,8 @@
         ShowInTaskbar="False"
         FontFamily="Segoe UI"
         UseLayoutRounding="True"
-        TextOptions.TextFormattingMode="Display"
+        SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Ideal"
         Background="{DynamicResource AppBackgroundBrush}">
 
     <Grid Margin="24">
@@ -32,29 +33,40 @@
                 Margin="0,18,0,0">
             <DataGrid x:Name="DraftsGrid"
                       Style="{StaticResource ModernDataGrid}"
-                      BorderThickness="0">
+                      BorderThickness="0"
+                      MinHeight="180">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Торговая точка"
                                         Binding="{Binding WarehouseName}"
-                                        Width="190" />
+                                        Width="1.6*"
+                                        MinWidth="140" />
                     <DataGridTextColumn Header="SKU"
                                         Binding="{Binding Sku}"
-                                        Width="120" />
+                                        Width="*"
+                                        MinWidth="80" />
                     <DataGridTextColumn Header="Товар"
                                         Binding="{Binding ItemName}"
-                                        Width="*" />
+                                        Width="2*"
+                                        MinWidth="140" />
                     <DataGridTextColumn Header="Количество"
                                         Binding="{Binding Quantity}"
-                                        Width="110" />
+                                        Width="*"
+                                        MinWidth="90" />
                 </DataGrid.Columns>
             </DataGrid>
         </Border>
 
         <Grid Grid.Row="2" Margin="0,18,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
             <TextBlock x:Name="SummaryText"
                        Style="{StaticResource CaptionText}"
                        VerticalAlignment="Center" />
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <StackPanel Grid.Column="1"
+                        Orientation="Horizontal"
+                        Margin="12,0,0,0">
                 <Button Content="Отмена"
                         Style="{StaticResource SecondaryButton}"
                         Margin="0,0,10,0"

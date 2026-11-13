@@ -8,7 +8,8 @@
         ShowInTaskbar="False"
         FontFamily="Segoe UI"
         UseLayoutRounding="True"
-        TextOptions.TextFormattingMode="Display"
+        SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Ideal"
         Background="{DynamicResource AppBackgroundBrush}"
         Loaded="CategoryManagerDialog_Loaded">
 

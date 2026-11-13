@@ -35,7 +35,7 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Margin="0,0,12,0">
-                        <TextBlock Text="Поиск по SKU или названию" Style="{StaticResource CaptionText}" Margin="0,0,0,6" />
+                        <TextBlock Text="Поиск по SKU или названию" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
                         <TextBox x:Name="SearchBox"
                                  Style="{StaticResource FieldTextBox}"
                                  TextChanged="SearchBox_TextChanged"
@@ -43,7 +43,7 @@
                     </StackPanel>
 
                     <StackPanel Grid.Column="1">
-                        <TextBlock Text="Категория" Style="{StaticResource CaptionText}" Margin="0,0,0,6" />
+                        <TextBlock Text="Категория" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
                         <ComboBox x:Name="CategoryFilter"
                                   Style="{StaticResource FieldComboBox}"
                                   DisplayMemberPath="Name"
@@ -105,6 +105,7 @@
                         <DataGrid x:Name="ItemsGrid"
                                   Style="{StaticResource ModernDataGrid}"
                                   BorderThickness="0"
+                                  MinHeight="180"
                                   SelectionChanged="ItemsGrid_SelectionChanged">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="SKU"
@@ -136,7 +137,7 @@
                         </DataGrid>
 
                         <TextBlock x:Name="StateText"
-                                   Style="{StaticResource EmptyStateText}" />
+                                   Style="{StaticResource TableEmptyStateText}" />
                     </Grid>
                 </Grid>
             </Border>
