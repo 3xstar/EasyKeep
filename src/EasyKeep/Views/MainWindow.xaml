@@ -276,44 +276,53 @@
             </Grid>
         </Border>
 
-        <!-- Рабочая область -->
+        <!-- Рабочая область: вертикальный скролл появляется, только когда
+             содержимое не влезает при сжатии окна или крупном масштабе.
+             MinHeight по высоте вьюпорта: пока всё помещается, контент
+             растягивается на всю высоту без прокрутки. -->
         <Grid Grid.Column="1" Margin="28,24,28,24">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled"
+                          Focusable="False">
+                <Grid MinHeight="{Binding ViewportHeight, RelativeSource={RelativeSource AncestorType=ScrollViewer}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
 
-            <StackPanel>
-                <TextBlock x:Name="PageTitleText" Style="{StaticResource PageTitleText}" />
-                <TextBlock x:Name="PageSubtitleText"
-                           Style="{StaticResource CaptionText}"
-                           Margin="0,4,0,0" />
-            </StackPanel>
-
-            <Grid Grid.Row="1" Margin="0,18,0,0">
-                <!-- Заглушка для разделов, которые ещё не подключены -->
-                <Border x:Name="PlaceholderPanel" Style="{StaticResource CardBorder}">
-                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="440">
-                        <Image Source="{StaticResource EasyKeepLogo}"
-                               Width="64" Height="64"
-                               HorizontalAlignment="Center" />
-                        <TextBlock x:Name="PlaceholderTitle"
-                                   Style="{StaticResource SectionTitleText}"
-                                   HorizontalAlignment="Center"
-                                   Margin="0,16,0,0" />
-                        <TextBlock Text="Раздел будет подключён на следующем шаге разработки."
+                    <StackPanel>
+                        <TextBlock x:Name="PageTitleText" Style="{StaticResource PageTitleText}" />
+                        <TextBlock x:Name="PageSubtitleText"
                                    Style="{StaticResource CaptionText}"
-                                   TextAlignment="Center"
-                                   Margin="0,6,0,0" />
+                                   Margin="0,4,0,0" />
                     </StackPanel>
-                </Border>
 
-                <ContentControl x:Name="ContentArea" Visibility="Collapsed">
-                    <ContentControl.RenderTransform>
-                        <TranslateTransform x:Name="ContentShift" Y="0" />
-                    </ContentControl.RenderTransform>
-                </ContentControl>
-            </Grid>
+                    <Grid Grid.Row="1" Margin="0,18,0,0">
+                        <!-- Заглушка для разделов, которые ещё не подключены -->
+                        <Border x:Name="PlaceholderPanel" Style="{StaticResource CardBorder}">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="440">
+                                <Image Source="{StaticResource EasyKeepLogo}"
+                                       Width="64" Height="64"
+                                       HorizontalAlignment="Center" />
+                                <TextBlock x:Name="PlaceholderTitle"
+                                           Style="{StaticResource SectionTitleText}"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,16,0,0" />
+                                <TextBlock Text="Раздел будет подключён на следующем шаге разработки."
+                                           Style="{StaticResource CaptionText}"
+                                           TextAlignment="Center"
+                                           Margin="0,6,0,0" />
+                            </StackPanel>
+                        </Border>
+
+                        <ContentControl x:Name="ContentArea" Visibility="Collapsed">
+                            <ContentControl.RenderTransform>
+                                <TranslateTransform x:Name="ContentShift" Y="0" />
+                            </ContentControl.RenderTransform>
+                        </ContentControl>
+                    </Grid>
+                </Grid>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </Window>
