@@ -14,6 +14,7 @@ public partial class StocksView : UserControl
 {
     private List<DeficitRow> _rows = new();
     private bool _isReady;
+    private string _statusFilter = "all";
 
     public StocksView()
     {
@@ -71,32 +72,77 @@ public partial class StocksView : UserControl
         }
     }
 
-    /// <summary>Поиск выполняется по загруженным строкам, без запросов к БД.</summary>
+    /// <summary>Поиск и быстрый фильтр по виджету выполняются по загруженным строкам, без запросов к БД.</summary>
     private void ApplyFilter()
     {
         string search = SearchBox.Text.Trim();
 
         List<DeficitRow> visible = _rows
-            .Where(row => search.Length == 0
-                          || row.Sku.Contains(search, StringComparison.OrdinalIgnoreCase)
-                          || row.ItemName.Contains(search, StringComparison.OrdinalIgnoreCase))
+            .Where(row => MatchesStatus(row) && MatchesSearch(row, search))
             .ToList();
 
         StocksGrid.ItemsSource = visible;
 
+        UpdateKpiCards();
+
         int criticalCount = visible.Count(row => row.Status == DeficitStatus.Critical);
-        SummaryText.Text = $"Позиций: {visible.Count} · критично: {criticalCount}";
+        SummaryText.Text = _statusFilter == "all"
+            ? $"Позиций: {visible.Count} · критично: {criticalCount}"
+            : $"Показано: {visible.Count} из {_rows.Count}";
 
         StateText.Text = _rows.Count == 0
             ? "На выбранном складе пока нет остатков."
-            : "По вашему запросу ничего не найдено. Измените поиск или фильтр.";
+            : "По вашему запросу ничего не найдено. Измените поиск, склад или виджет.";
         StateText.Visibility = visible.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private bool MatchesSearch(DeficitRow row, string search)
+    {
+        return search.Length == 0
+               || row.Sku.Contains(search, StringComparison.OrdinalIgnoreCase)
+               || row.ItemName.Contains(search, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private bool MatchesStatus(DeficitRow row)
+    {
+        return _statusFilter switch
+        {
+            "critical" => row.Status == DeficitStatus.Critical,
+            "warning" => row.Status == DeficitStatus.Warning,
+            "nonliquid" => row.Status == DeficitStatus.NonLiquid,
+            _ => true
+        };
+    }
+
+    /// <summary>Счётчики KPI берутся из уже загруженных строк — без новых SQL-запросов.</summary>
+    private void UpdateKpiCards()
+    {
+        KpiAllText.Text = _rows.Count.ToString("N0");
+        KpiCriticalText.Text = _rows.Count(row => row.Status == DeficitStatus.Critical).ToString("N0");
+        KpiWarningText.Text = _rows.Count(row => row.Status == DeficitStatus.Warning).ToString("N0");
+        KpiNonLiquidText.Text = _rows.Count(row => row.Status == DeficitStatus.NonLiquid).ToString("N0");
+    }
+
+    private void KpiFilter_Checked(object sender, RoutedEventArgs e)
+    {
+        if (sender is not RadioButton { Tag: string filter })
+            return;
+
+        _statusFilter = filter;
+
+        // На старте элементы панели фильтров ещё не созданы — данные придут из LoadRowsAsync.
+        if (_isReady && SearchBox is not null)
+            ApplyFilter();
     }
 
     private void ShowLoadError()
     {
         StocksGrid.ItemsSource = null;
         SummaryText.Text = "Нет данных";
+        KpiAllText.Text = "—";
+        KpiCriticalText.Text = "—";
+        KpiWarningText.Text = "—";
+        KpiNonLiquidText.Text = "—";
         StateText.Text = "Не удалось загрузить остатки. Проверьте подключение к базе данных.";
         StateText.Visibility = Visibility.Visible;
     }
@@ -111,7 +157,8 @@ public partial class StocksView : UserControl
 
     private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
     {
-        ApplyFilter();
+        if (_isReady)
+            ApplyFilter();
     }
 
     private async void RefreshButton_Click(object sender, RoutedEventArgs e)

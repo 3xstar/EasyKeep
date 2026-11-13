@@ -788,7 +788,7 @@
                     <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
                     <Setter Property="FontSize" Value="11" />
                     <Setter Property="FontWeight" Value="SemiBold" />
-                    <Setter Property="Padding" Value="12,0" />
+                    <Setter Property="Padding" Value="10,0" />
                     <Setter Property="BorderThickness" Value="0,0,0,1" />
                     <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
                     <Setter Property="HorizontalContentAlignment" Value="Left" />
@@ -812,7 +812,7 @@
         <Setter Property="CellStyle">
             <Setter.Value>
                 <Style TargetType="DataGridCell">
-                    <Setter Property="Padding" Value="12,0" />
+                    <Setter Property="Padding" Value="10,0" />
                     <Setter Property="BorderThickness" Value="0" />
                     <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
                     <Setter Property="VerticalContentAlignment" Value="Center" />

@@ -7,17 +7,121 @@
         <Style x:Key="NumberCellText" TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="TextAlignment" Value="Right" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+
+        <Style x:Key="CellText" TargetType="TextBlock">
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
     </UserControl.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
+        <!-- KPI-виджеты: клик мгновенно фильтрует таблицу -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <RadioButton x:Name="KpiAll"
+                         Grid.Column="0"
+                         Style="{StaticResource KpiCard}"
+                         GroupName="StockKpi"
+                         Tag="all"
+                         IsChecked="True"
+                         Margin="0,0,12,0"
+                         AutomationProperties.Name="Всего позиций"
+                         Checked="KpiFilter_Checked">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="7" Height="7"
+                                 Fill="{DynamicResource AccentBrush}"
+                                 VerticalAlignment="Center" />
+                        <TextBlock Text="Всего позиций"
+                                   Style="{StaticResource KpiLabelText}"
+                                   Margin="8,0,0,0" />
+                    </StackPanel>
+                    <TextBlock x:Name="KpiAllText" Text="—" Style="{StaticResource KpiValueText}" />
+                </StackPanel>
+            </RadioButton>
+
+            <RadioButton x:Name="KpiCritical"
+                         Grid.Column="1"
+                         Style="{StaticResource KpiCard}"
+                         GroupName="StockKpi"
+                         Tag="critical"
+                         Margin="0,0,12,0"
+                         AutomationProperties.Name="Критичный дефицит"
+                         Checked="KpiFilter_Checked">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="7" Height="7"
+                                 Fill="{DynamicResource DangerBrush}"
+                                 VerticalAlignment="Center" />
+                        <TextBlock Text="Критичный дефицит"
+                                   Style="{StaticResource KpiLabelText}"
+                                   Margin="8,0,0,0" />
+                    </StackPanel>
+                    <TextBlock x:Name="KpiCriticalText" Text="—" Style="{StaticResource KpiValueText}" />
+                </StackPanel>
+            </RadioButton>
+
+            <RadioButton x:Name="KpiWarning"
+                         Grid.Column="2"
+                         Style="{StaticResource KpiCard}"
+                         GroupName="StockKpi"
+                         Tag="warning"
+                         Margin="0,0,12,0"
+                         AutomationProperties.Name="Внимание"
+                         Checked="KpiFilter_Checked">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="7" Height="7"
+                                 Fill="{DynamicResource WarningBrush}"
+                                 VerticalAlignment="Center" />
+                        <TextBlock Text="Внимание"
+                                   Style="{StaticResource KpiLabelText}"
+                                   Margin="8,0,0,0" />
+                    </StackPanel>
+                    <TextBlock x:Name="KpiWarningText" Text="—" Style="{StaticResource KpiValueText}" />
+                </StackPanel>
+            </RadioButton>
+
+            <RadioButton x:Name="KpiNonLiquid"
+                         Grid.Column="3"
+                         Style="{StaticResource KpiCard}"
+                         GroupName="StockKpi"
+                         Tag="nonliquid"
+                         AutomationProperties.Name="Неликвид"
+                         Checked="KpiFilter_Checked">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="7" Height="7"
+                                 Fill="{DynamicResource TextMutedBrush}"
+                                 VerticalAlignment="Center" />
+                        <TextBlock Text="Неликвид"
+                                   Style="{StaticResource KpiLabelText}"
+                                   Margin="8,0,0,0" />
+                    </StackPanel>
+                    <TextBlock x:Name="KpiNonLiquidText" Text="—" Style="{StaticResource KpiValueText}" />
+                </StackPanel>
+            </RadioButton>
+        </Grid>
+
         <!-- Панель фильтров -->
-        <Border Style="{StaticResource CardBorder}" Padding="16">
+        <Border Grid.Row="1"
+                Style="{StaticResource CardBorder}"
+                Padding="16"
+                Margin="0,14,0,0">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -66,7 +170,7 @@
         </Border>
 
         <!-- Таблица остатков -->
-        <Border Grid.Row="1"
+        <Border Grid.Row="2"
                 Style="{StaticResource CardBorder}"
                 Padding="0"
                 Margin="0,16,0,0">
@@ -77,31 +181,34 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="SKU"
                                             Binding="{Binding Sku}"
-                                            Width="110" />
+                                            Width="100"
+                                            ElementStyle="{StaticResource CellText}" />
                         <DataGridTextColumn Header="Товар"
                                             Binding="{Binding ItemName}"
-                                            Width="*" />
+                                            Width="*"
+                                            ElementStyle="{StaticResource CellText}" />
                         <DataGridTextColumn Header="Склад"
                                             Binding="{Binding WarehouseName}"
-                                            Width="170" />
+                                            Width="150"
+                                            ElementStyle="{StaticResource CellText}" />
                         <DataGridTextColumn Header="Остаток"
                                             Binding="{Binding Quantity}"
-                                            Width="90"
+                                            Width="80"
                                             ElementStyle="{StaticResource NumberCellText}" />
                         <DataGridTextColumn Header="Минимум"
                                             Binding="{Binding MinStock}"
-                                            Width="90"
+                                            Width="80"
                                             ElementStyle="{StaticResource NumberCellText}" />
                         <DataGridTextColumn Header="Расход/день"
                                             Binding="{Binding AverageDailyConsumption, StringFormat={}{0:0.##}}"
-                                            Width="115"
+                                            Width="105"
                                             ElementStyle="{StaticResource NumberCellText}" />
                         <DataGridTextColumn Header="Прогноз"
                                             Binding="{Binding DaysLeftText}"
-                                            Width="95"
+                                            Width="85"
                                             ElementStyle="{StaticResource NumberCellText}" />
 
-                        <DataGridTemplateColumn Header="Светофор" Width="150">
+                        <DataGridTemplateColumn Header="Светофор" Width="135">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Border x:Name="StatusBadge"

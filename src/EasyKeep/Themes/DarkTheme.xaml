@@ -56,10 +56,10 @@
     <SolidColorBrush x:Key="SegmentThumbBrush" Color="#26303F" />
 
     <!-- Мягкое неоновое свечение индикаторов «Светофора». -->
-    <DropShadowEffect x:Key="GlowCriticalEffect" Color="#FB7185" BlurRadius="12" ShadowDepth="0" Opacity="0.45" />
-    <DropShadowEffect x:Key="GlowWarningEffect" Color="#FBBF24" BlurRadius="12" ShadowDepth="0" Opacity="0.4" />
-    <DropShadowEffect x:Key="GlowSuccessEffect" Color="#34D399" BlurRadius="12" ShadowDepth="0" Opacity="0.4" />
-    <DropShadowEffect x:Key="GlowMutedEffect" Color="#64748B" BlurRadius="10" ShadowDepth="0" Opacity="0.25" />
+    <DropShadowEffect x:Key="GlowCriticalEffect" Color="#FB7185" BlurRadius="10" ShadowDepth="0" Opacity="0.3" />
+    <DropShadowEffect x:Key="GlowWarningEffect" Color="#FBBF24" BlurRadius="10" ShadowDepth="0" Opacity="0.28" />
+    <DropShadowEffect x:Key="GlowSuccessEffect" Color="#34D399" BlurRadius="10" ShadowDepth="0" Opacity="0.28" />
+    <DropShadowEffect x:Key="GlowMutedEffect" Color="#64748B" BlurRadius="8" ShadowDepth="0" Opacity="0.2" />
 
     <!-- Тень всплывающих панелей -->
     <DropShadowEffect x:Key="PopupShadowEffect"
