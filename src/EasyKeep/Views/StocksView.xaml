@@ -7,6 +7,8 @@
         <Style x:Key="NumberCellText" TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="TextAlignment" Value="Right" />
+            <!-- Компенсация зоны индикатора сортировки в шапке (14 px) -->
+            <Setter Property="Margin" Value="0,0,14,0" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
         </Style>
 
@@ -14,6 +16,71 @@
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
+
+        <!-- Светофор, полный режим: бейдж со статусом -->
+        <DataTemplate x:Key="FullTrafficLightTemplate">
+            <Border x:Name="StatusBadge"
+                    Background="{DynamicResource BadgeNeutralBackgroundBrush}"
+                    CornerRadius="999"
+                    Padding="10,4"
+                    HorizontalAlignment="Left">
+                <TextBlock x:Name="StatusLabel"
+                           Text="{Binding StatusText}"
+                           FontSize="{DynamicResource FontSizeSmall}"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource BadgeNeutralForegroundBrush}" />
+            </Border>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding Status}" Value="Critical">
+                    <Setter TargetName="StatusBadge" Property="Background" Value="{DynamicResource BadgeCriticalBackgroundBrush}" />
+                    <Setter TargetName="StatusBadge" Property="Effect" Value="{DynamicResource GlowCriticalEffect}" />
+                    <Setter TargetName="StatusLabel" Property="Foreground" Value="{DynamicResource BadgeCriticalForegroundBrush}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="Warning">
+                    <Setter TargetName="StatusBadge" Property="Background" Value="{DynamicResource BadgeWarningBackgroundBrush}" />
+                    <Setter TargetName="StatusBadge" Property="Effect" Value="{DynamicResource GlowWarningEffect}" />
+                    <Setter TargetName="StatusLabel" Property="Foreground" Value="{DynamicResource BadgeWarningForegroundBrush}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="Normal">
+                    <Setter TargetName="StatusBadge" Property="Background" Value="{DynamicResource BadgeSuccessBackgroundBrush}" />
+                    <Setter TargetName="StatusBadge" Property="Effect" Value="{DynamicResource GlowSuccessEffect}" />
+                    <Setter TargetName="StatusLabel" Property="Foreground" Value="{DynamicResource BadgeSuccessForegroundBrush}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="NonLiquid">
+                    <Setter TargetName="StatusBadge" Property="Background" Value="{DynamicResource BadgeMutedBackgroundBrush}" />
+                    <Setter TargetName="StatusBadge" Property="Effect" Value="{DynamicResource GlowMutedEffect}" />
+                    <Setter TargetName="StatusLabel" Property="Foreground" Value="{DynamicResource BadgeMutedForegroundBrush}" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <!-- Светофор, компактный режим: только индикатор, статус и прогноз в подсказке -->
+        <DataTemplate x:Key="CompactTrafficLightTemplate">
+            <Ellipse x:Name="CompactDot"
+                     Width="11"
+                     Height="11"
+                     Fill="{DynamicResource TextMutedBrush}"
+                     HorizontalAlignment="Left"
+                     VerticalAlignment="Center">
+                <Ellipse.ToolTip>
+                    <StackPanel>
+                        <TextBlock Text="{Binding StatusText}" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding DaysLeftText}" />
+                    </StackPanel>
+                </Ellipse.ToolTip>
+            </Ellipse>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding Status}" Value="Critical">
+                    <Setter TargetName="CompactDot" Property="Fill" Value="{DynamicResource DangerBrush}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="Warning">
+                    <Setter TargetName="CompactDot" Property="Fill" Value="{DynamicResource WarningBrush}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="Normal">
+                    <Setter TargetName="CompactDot" Property="Fill" Value="{DynamicResource SuccessBrush}" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
     </UserControl.Resources>
 
     <Grid>
@@ -231,44 +298,37 @@
                                             HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                             ElementStyle="{StaticResource NumberCellText}" />
 
-                        <DataGridTemplateColumn Header="Светофор" Width="Auto">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Border x:Name="StatusBadge"
-                                            Background="{DynamicResource BadgeNeutralBackgroundBrush}"
-                                            CornerRadius="999"
-                                            Padding="10,4"
-                                            HorizontalAlignment="Left">
-                                        <TextBlock x:Name="StatusLabel"
-                                                   Text="{Binding StatusText}"
-                                                   FontSize="{DynamicResource FontSizeSmall}"
-                                                   FontWeight="SemiBold"
-                                                   Foreground="{DynamicResource BadgeNeutralForegroundBrush}" />
-                                    </Border>
-                                    <DataTemplate.Triggers>
-                                        <DataTrigger Binding="{Binding Status}" Value="Critical">
-                                            <Setter TargetName="StatusBadge" Property="Background" Value="{DynamicResource BadgeCriticalBackgroundBrush}" />
-                                            <Setter TargetName="StatusBadge" Property="Effect" Value="{DynamicResource GlowCriticalEffect}" />
-                                            <Setter TargetName="StatusLabel" Property="Foreground" Value="{DynamicResource BadgeCriticalForegroundBrush}" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Status}" Value="Warning">
-                                            <Setter TargetName="StatusBadge" Property="Background" Value="{DynamicResource BadgeWarningBackgroundBrush}" />
-                                            <Setter TargetName="StatusBadge" Property="Effect" Value="{DynamicResource GlowWarningEffect}" />
-                                            <Setter TargetName="StatusLabel" Property="Foreground" Value="{DynamicResource BadgeWarningForegroundBrush}" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Status}" Value="Normal">
-                                            <Setter TargetName="StatusBadge" Property="Background" Value="{DynamicResource BadgeSuccessBackgroundBrush}" />
-                                            <Setter TargetName="StatusBadge" Property="Effect" Value="{DynamicResource GlowSuccessEffect}" />
-                                            <Setter TargetName="StatusLabel" Property="Foreground" Value="{DynamicResource BadgeSuccessForegroundBrush}" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Status}" Value="NonLiquid">
-                                            <Setter TargetName="StatusBadge" Property="Background" Value="{DynamicResource BadgeMutedBackgroundBrush}" />
-                                            <Setter TargetName="StatusBadge" Property="Effect" Value="{DynamicResource GlowMutedEffect}" />
-                                            <Setter TargetName="StatusLabel" Property="Foreground" Value="{DynamicResource BadgeMutedForegroundBrush}" />
-                                        </DataTrigger>
-                                    </DataTemplate.Triggers>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn x:Name="TrafficLightColumn"
+                                                SortMemberPath="Status"
+                                                Width="Auto"
+                                                CellTemplate="{StaticResource FullTrafficLightTemplate}">
+                            <DataGridTemplateColumn.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Светофор" VerticalAlignment="Center" />
+                                    <Button x:Name="CompactModeButton"
+                                            Style="{StaticResource GhostButton}"
+                                            Padding="3,2"
+                                            Margin="6,0,0,0"
+                                            VerticalAlignment="Center"
+                                            ToolTip="Компактный вид светофора (только индикаторы)"
+                                            AutomationProperties.Name="Компактный вид светофора"
+                                            Click="CompactModeButton_Click">
+                                        <Canvas Width="16" Height="10" VerticalAlignment="Center">
+                                            <Ellipse Canvas.Left="0" Canvas.Top="2"
+                                                     Width="6" Height="6"
+                                                     Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+                                            <Ellipse Canvas.Left="5" Canvas.Top="2"
+                                                     Width="6" Height="6"
+                                                     Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                     Opacity="0.65" />
+                                            <Ellipse Canvas.Left="10" Canvas.Top="2"
+                                                     Width="6" Height="6"
+                                                     Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                     Opacity="0.35" />
+                                        </Canvas>
+                                    </Button>
+                                </StackPanel>
+                            </DataGridTemplateColumn.Header>
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>

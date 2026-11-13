@@ -7,6 +7,8 @@
         <Style x:Key="NumberCellText" TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="TextAlignment" Value="Right" />
+            <!-- Компенсация зоны индикатора сортировки в шапке (14 px) -->
+            <Setter Property="Margin" Value="0,0,14,0" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
         </Style>
     </UserControl.Resources>

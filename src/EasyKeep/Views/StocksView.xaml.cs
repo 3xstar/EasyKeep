@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using EasyKeep.Data;
 using EasyKeep.Data.Entities;
 using EasyKeep.Services;
@@ -164,5 +165,24 @@ public partial class StocksView : UserControl
     private async void RefreshButton_Click(object sender, RoutedEventArgs e)
     {
         await LoadRowsAsync();
+    }
+
+    private bool _isCompactTrafficLight;
+
+    /// <summary>Переключает «Светофор» между бейджами и компактными индикаторами.</summary>
+    private void CompactModeButton_Click(object sender, RoutedEventArgs e)
+    {
+        _isCompactTrafficLight = !_isCompactTrafficLight;
+
+        // Шаблон меняется у колонки целиком: виртуализация строк остаётся корректной.
+        TrafficLightColumn.CellTemplate = (DataTemplate)FindResource(
+            _isCompactTrafficLight ? "CompactTrafficLightTemplate" : "FullTrafficLightTemplate");
+
+        CompactModeButton.ToolTip = _isCompactTrafficLight
+            ? "Обычный вид светофора (бейджи со статусами)"
+            : "Компактный вид светофора (только индикаторы)";
+        CompactModeButton.Foreground = _isCompactTrafficLight
+            ? (Brush)FindResource("AccentBrush")
+            : (Brush)FindResource("TextSecondaryBrush");
     }
 }

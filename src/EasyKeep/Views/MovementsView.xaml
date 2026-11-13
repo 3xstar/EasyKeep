@@ -7,6 +7,8 @@
         <Style x:Key="NumberCellText" TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="TextAlignment" Value="Right" />
+            <!-- Компенсация зоны индикатора сортировки в шапке (14 px) -->
+            <Setter Property="Margin" Value="0,0,14,0" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
         </Style>
     </UserControl.Resources>
@@ -146,7 +148,7 @@
                                                 Binding="{Binding Unit}"
                                                 IsReadOnly="True"
                                                 Width="Auto" />
-                            <DataGridTemplateColumn Width="Auto">
+                            <DataGridTemplateColumn Width="Auto" CanUserSort="False">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="✕"
@@ -320,7 +322,7 @@
                                                     Binding="{Binding CreatedAt, StringFormat={}{0:dd.MM.yyyy HH:mm}}"
                                                     Width="*"
                                                     MinWidth="108" />
-                                <DataGridTemplateColumn Header="Тип" Width="Auto">
+                                <DataGridTemplateColumn Header="Тип" Width="Auto" SortMemberPath="Type">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <Border x:Name="TypeBadge"
