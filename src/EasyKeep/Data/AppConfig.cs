@@ -12,6 +12,10 @@ public static class AppConfig
     private const string LocalFileName = "appsettings.Local.json";
     private const string SharedFileName = "appsettings.json";
 
+    // Запасной вариант для учебного запуска: локальная база разработчика.
+    private const string FallbackConnectionString =
+        @"Server=(localdb)\MSSQLLocalDB;Database=EasyKeep;Trusted_Connection=True;TrustServerCertificate=True;";
+
     public static string GetConnectionString()
     {
         // Сначала пробуем локальный файл, затем общую конфигурацию.
@@ -23,9 +27,8 @@ public static class AppConfig
         if (!string.IsNullOrWhiteSpace(sharedValue))
             return sharedValue;
 
-        throw new InvalidOperationException(
-            "Строка подключения не настроена. Создайте appsettings.Local.json " +
-            "по образцу appsettings.Local.example.json.");
+        // Конфиг не найден или пуст — подключаемся к стандартной LocalDB.
+        return FallbackConnectionString;
     }
 
     private static string? ReadConnectionString(string fileName)

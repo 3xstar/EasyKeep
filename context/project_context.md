@@ -68,14 +68,14 @@
 
 ### Статус последней сессии
 - **Активный агент:** OpenCode (DeepSeek V4.1 Flash Free)
-- **Последний коммит Git:** `c13fa37` — `feat: реализованы сервисы светофора дефицита, авто-балансировки и валидации`; перед ним `64ce292` — `docs: зафиксирован хэш коммита ADO.NET слоя`
+- **Последний коммит Git:** `feat: созданы стили, главное окно навигации и фоллбэк подключения LocalDB` (хэш фиксируется следующим docs-коммитом); перед ним `33e9300` — `docs: зафиксирован хэш коммита сервисов`
 - **Что сделано:**
-  - **Микрошаги 1.1–1.6:** созданы БД и тестовые данные, WPF-каркас, EF Core контекст и ADO.NET репозиторий движений.
-  - **Микрошаг 1.7:** создан слой `Services/`: `DeficitService` (светофор), `AutoBalanceService` (черновики перемещений), `MovementService` (проверка остатков и проведение). Добавлены DTO/исключения: `DeficitRow`, `DeficitStatus`, `AutoBalanceDraft`, `StockShortage`, `StockCheckResult`.
-  - Расход считается за 30 дней как `OUT` + исходящие `TRANSFER`; прогноз — остаток / среднедневной расход. Статусы: 🔴 ниже `min_stock` или ≤2 дней, 🟡 ≤10 дней, 🟢 >10 дней, ⚪ расход = 0.
-  - Проверено на LocalDB: 5 критичных, 3 «Внимание», 20 «Норма», 15 неликвидов; авто-балансировка сформировала 2 черновика (Торговый зал: кофе 10 + молоко 4; Кофейня: маффины 7) с учётом излишка основного склада.
-  - `MovementService`: проверка остатка вернула доступный максимум, `PostMovementAsync` провёл IN и TRANSFER, при нехватке бросил `InsufficientStockException` без изменения документа и остатка.
-  - `dotnet build src/EasyKeep.sln` — 0 ошибок, 0 предупреждений. После тестов БД восстановлена из `schema.sql` + `seed.sql` (28 движений, 129 строк, 43 остатка).
+  - **Этап 1 (микрошаги 1.1–1.7):** БД, тестовые данные, WPF-каркас, EF Core контекст, ADO.NET репозиторий движений и слой `Services/` (светофор дефицита, авто-балансировка, проверка и проведение движений). Подробности — в разделах 4–8 ниже.
+  - **Этап 2, шаг 2.1 (UI):** создан `src/EasyKeep/Styles.xaml` — единый светлый дизайн (фон `#F8FAFC`, белые карточки `#FFFFFF` с рамкой `#E2E8F0`, акцент `#2563EB`); стили карточек, кнопок, полей ввода, таблиц `DataGrid`, бокового меню и типографики; векторный логотип `EasyKeepLogo` (`DrawingImage`).
+  - `App.xaml` подключает `Styles.xaml` через `MergedDictionaries`.
+  - `Views/MainWindow.xaml`: окно 1280×800 с боковым меню «Остатки / Движения / Каталог / Отчёт», логотипом и рабочей областью; выбранный раздел подсвечивается, заголовок и подпись меняются в code-behind. Пока для всех разделов показывается аккуратная заглушка `PlaceholderPanel` — реальные экраны подключаются на шагах 2.2–2.5 через `ContentArea`.
+  - `Data/AppConfig.cs`: добавлен запасной фоллбэк `FallbackConnectionString` — если `appsettings.Local.json` отсутствует/пуст и `appsettings.json` пуст, используется `Server=(localdb)\MSSQLLocalDB;Database=EasyKeep;Trusted_Connection=True;TrustServerCertificate=True;`.
+  - `dotnet build src/EasyKeep.sln` — 0 ошибок, 0 предупреждений; приложение запущено и окно успешно открылось (проверка runtime-ресурсов XAML). LocalDB доступна, в `dbo.items` 19 строк.
 
 ### Контракты и сигнатуры (накопительная база — не стирать рабочее)
 
@@ -121,6 +121,7 @@ src/EasyKeep.sln
 src/EasyKeep/
 ├── EasyKeep.csproj                 # net10.0-windows, EF Core 10.0.15, SqlClient 7.1.1
 ├── App.xaml, App.xaml.cs
+├── Styles.xaml                      # единая светлая дизайн-система и логотип
 ├── AssemblyInfo.cs
 ├── Data/
 │   ├── AppConfig.cs                # строка подключения из appsettings*.json
@@ -198,15 +199,32 @@ src/EasyKeep/
   - `Task<int> GetAvailableQuantityAsync(int warehouseId, int itemId)` — доступный максимум для интерфейса.
 - `StockCheckResult(bool IsEnough, IReadOnlyList<StockShortage> Shortages)`, `StockShortage.Message` содержит доступный максимум.
 
+#### 9. UI-каркас и дизайн-система (реализованы в шаге 2.1)
+- `src/EasyKeep/Styles.xaml`:
+  - Кисти: `AppBackgroundBrush` (`#F8FAFC`), `CardBackgroundBrush` (`#FFFFFF`), `CardBorderBrush` (`#E2E8F0`), `AccentBrush` (`#2563EB`), `AccentHoverBrush`, `AccentSoftBrush` (`#EFF6FF`), `TextPrimaryBrush` (`#0F172A`), `TextSecondaryBrush` (`#64748B`), `TextMutedBrush`, `SuccessBrush`, `WarningBrush`, `DangerBrush`, `RowHoverBrush`, `DividerBrush`.
+  - `EasyKeepLogo` (`DrawingImage`) — векторный логотип: синяя плитка с белым контуром коробки.
+  - Стили текста: `PageTitleText`, `SectionTitleText`, `BodyText`, `CaptionText`, `MetricValueText`, `EmptyStateText`.
+  - Контейнеры: `CardBorder` (белая карточка, рамка, радиус 12), `PillBorder`, `AppSeparator`.
+  - Кнопки: `PrimaryButton`, `SecondaryButton`, `DangerButton`, `NavButton` (RadioButton для меню).
+  - Ввод/таблицы: `FieldTextBox`, `FieldComboBox`, `ModernDataGrid` (стили заголовка, строки и ячейки).
+- `App.xaml`: `Styles.xaml` подключён через `ResourceDictionary.MergedDictionaries`.
+- `Views/MainWindow.xaml`:
+  - Колонки 248 px (меню) + рабочая область; логотип, пункты `StocksNav`, `MovementsNav`, `CatalogNav`, `ReportsNav` с `Tag` = `stocks|movements|catalog|reports`.
+  - `PageTitleText`, `PageSubtitleText`; `ContentArea` (`ContentControl`) и `PlaceholderPanel` для ещё не подключённых экранов.
+- `Views/MainWindow.xaml.cs`: `NavButton_Checked` → `ShowSection(string)`; по умолчанию выбран «Остатки». На шагах 2.2–2.5 в `ShowSection` добавляются реальные `UserControl`.
+- `Data/AppConfig.cs`: при отсутствии/пустой строке в `appsettings.Local.json` и `appsettings.json` возвращает `FallbackConnectionString` к `(localdb)\MSSQLLocalDB`, БД `EasyKeep`, Windows-аутентификация. Исключение больше не бросается.
+
 ### Известные баги / незавершенные места
-- Нет. Слои Data и Services готовы и проверены; WPF-экраны ещё не созданы.
+- Нет. Каркас UI собирается и запускается; экраны «Остатки», «Движения», «Каталог», «Отчёт» ещё не подключены (показывается заглушка).
 
 ### ТОЧНЫЙ СЛЕДУЮЩИЙ ШАГ (ЗАДАЧА №1 ДЛЯ СЛЕДУЮЩЕГО АГЕНТА)
-1. **Микрошаг 1.8 (UI):** сверстать главное окно и экраны:
-   - «Каталог» — список товаров с категориями, поиском и боковой панелью «Рентген товара» (`AdoNetMovementRepository.GetItemHistory`);
-   - «Остатки» — таблица со «Светофором» (`DeficitService.GetDeficitRowsAsync`), фильтр по складу;
-   - «Движения» — журнал (`GetJournal`), форма IN/OUT/TRANSFER, «Командная строка склада» (SKU + Enter = +1), «Авто-балансировка» (`BuildDraftsAsync`), подтверждение и обработка `InsufficientStockException`;
-   - «Отчёт» — `GetStockReport` и `GetTopItems`.
-   Соблюдать `UI → Services → Data`, не размещать SQL в code-behind, проверить сборку и сделать коммит `feat: сверстаны экраны каталога, остатков, движений и отчёта`.
-2. **Микрошаг 1.9 (Документация):** заполнить `README.md`, `docs/requirements.md`, `docs/database-schema.md` + ER-диаграмма, `docs/testing.md`; добавить скриншоты.
-3. **Микрошаг 1.10 (Финальная проверка):** прогнать 5–8 тест-кейсов, включая отрицательные, обновить статусы и подготовить защиту.
+1. **Этап 2, шаг 2.2 — экран «Остатки»:** создать `Views/StocksView.xaml(.cs)`:
+   - таблица `DeficitService.GetDeficitRowsAsync` с колонками: SKU, товар, склад, остаток, минимум, среднедневной расход, прогноз дней, статус;
+   - фильтр по складу (`ComboBox`, «Все склады» + список `Warehouses`), поиск по SKU/названию, пустое состояние при отсутствии результатов;
+   - цветовые индикаторы «Светофора» (🔴/🟡/🟢/⚪) через строковые подписи `StatusText` или конвертер;
+   - подключить экран в `MainWindow.ShowSection` (заменить заглушку для `stocks` на `new StocksView()`);
+   - SQL в code-behind не писать, только вызовы сервиса. Проверить `dotnet build src/EasyKeep.sln`, обновить контекст, коммит `feat: добавлен экран остатков со светофором дефицита`.
+2. **Шаг 2.3 — «Движения»:** журнал `GetJournal`, форма IN/OUT/TRANSFER, «Командная строка склада» (SKU + Enter = +1), «Авто-балансировка» (`BuildDraftsAsync`), подтверждение и обработка `InsufficientStockException`.
+3. **Шаг 2.4 — «Каталог»:** CRUD товаров и категорий с поиском, подтверждением удаления и боковой панелью «Рентген товара» (`GetItemHistory`).
+4. **Шаг 2.5 — «Отчёт»:** `GetStockReport` + `GetTopItems`.
+5. **Документация:** заполнить `README.md`, `docs/requirements.md`, `docs/database-schema.md` + ER-диаграмма, `docs/testing.md`; добавить скриншоты и прогнать тест-кейсы.

@@ -1,31 +1,47 @@
 using System.Windows;
-using EasyKeep.Data;
+using System.Windows.Controls;
 
 namespace EasyKeep.Views;
 
 /// <summary>
-/// Стартовое окно-каркас. Показывает, что приложение запустилось
-/// и что строка подключения к базе данных настроена.
+/// Главное окно EasyKeep: боковое меню и рабочая область экранов.
 /// </summary>
 public partial class MainWindow : Window
 {
     public MainWindow()
     {
         InitializeComponent();
-        ShowConfigurationStatus();
+
+        // По умолчанию открываем самый важный раздел — остатки.
+        StocksNav.IsChecked = true;
     }
 
-    private void ShowConfigurationStatus()
+    /// <summary>Переключает экран по пункту меню.</summary>
+    private void NavButton_Checked(object sender, RoutedEventArgs e)
     {
-        try
+        if (sender is not RadioButton { Tag: string section })
+            return;
+
+        ShowSection(section);
+    }
+
+    private void ShowSection(string section)
+    {
+        (string title, string subtitle) = section switch
         {
-            _ = AppConfig.GetConnectionString();
-            ConfigurationStatusText.Text = "Каркас приложения готов. Строка подключения настроена.";
-        }
-        catch (Exception ex)
-        {
-            // Показываем понятное сообщение без деталей строки подключения.
-            ConfigurationStatusText.Text = ex.Message;
-        }
+            "movements" => ("Движения", "Журнал операций и проведение прихода, расхода и перемещений."),
+            "catalog" => ("Каталог", "Товары, категории и полная история движений по каждой позиции."),
+            "reports" => ("Отчёт", "Сводка запасов по складам и рейтинг самых активных товаров."),
+            _ => ("Остатки", "Текущие остатки складов и «Светофор дефицита».")
+        };
+
+        PageTitleText.Text = title;
+        PageSubtitleText.Text = subtitle;
+
+        // Экран подключается отдельным шагом, пока показываем аккуратную заглушку.
+        ContentArea.Content = null;
+        ContentArea.Visibility = Visibility.Collapsed;
+        PlaceholderPanel.Visibility = Visibility.Visible;
+        PlaceholderTitle.Text = title;
     }
 }
