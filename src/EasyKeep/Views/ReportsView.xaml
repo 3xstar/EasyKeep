@@ -7,14 +7,12 @@
         <Style x:Key="NumberCellText" TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="TextAlignment" Value="Right" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
         </Style>
 
-        <Style x:Key="MetricCard" TargetType="Border">
-            <Setter Property="Background" Value="{DynamicResource AppBackgroundBrush}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="10" />
-            <Setter Property="Padding" Value="14,12" />
+        <Style x:Key="CellText" TargetType="TextBlock">
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
         <Style x:Key="TableBorder" TargetType="Border">
@@ -26,193 +24,252 @@
     </UserControl.Resources>
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1.12*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <!-- ==================== Остатки по складам ==================== -->
-        <Border Style="{StaticResource CardBorder}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+        <!-- ==================== Сводные метрики ==================== -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
+            <Border Style="{StaticResource StatCard}" Margin="0,0,12,0">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="7" Height="7"
+                                 Fill="{DynamicResource AccentBrush}"
+                                 VerticalAlignment="Center" />
+                        <TextBlock Text="Общий остаток"
+                                   Style="{StaticResource KpiLabelText}"
+                                   Margin="8,0,0,0" />
+                    </StackPanel>
+                    <TextBlock x:Name="TotalQuantityText"
+                               Text="—"
+                               Style="{StaticResource KpiValueText}" />
+                    <TextBlock Text="единиц на всех складах"
+                               Style="{StaticResource KpiHintText}" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="1"
+                    Style="{StaticResource StatCard}"
+                    Margin="0,0,12,0">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="7" Height="7"
+                                 Fill="{DynamicResource SuccessBrush}"
+                                 VerticalAlignment="Center" />
+                        <TextBlock Text="Общая стоимость запасов"
+                                   Style="{StaticResource KpiLabelText}"
+                                   Margin="8,0,0,0" />
+                    </StackPanel>
+                    <TextBlock x:Name="TotalValueText"
+                               Text="—"
+                               Style="{StaticResource KpiValueText}"
+                               Foreground="{DynamicResource AccentBrush}" />
+                    <TextBlock Text="по текущим остаткам"
+                               Style="{StaticResource KpiHintText}" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2"
+                    Style="{StaticResource StatCard}">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="7" Height="7"
+                                 Fill="{DynamicResource InfoBrush}"
+                                 VerticalAlignment="Center" />
+                        <TextBlock Text="Лидер оборота"
+                                   Style="{StaticResource KpiLabelText}"
+                                   Margin="8,0,0,0" />
+                    </StackPanel>
+                    <TextBlock x:Name="LeaderNameText"
+                               Text="—"
+                               Style="{StaticResource KpiValueText}"
+                               FontSize="20"
+                               TextWrapping="NoWrap" />
+                    <TextBlock x:Name="LeaderDetailText"
+                               Text="за выбранный период"
+                               Style="{StaticResource KpiHintText}" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- ==================== Отчёты ==================== -->
+        <Grid Grid.Row="1" Margin="0,16,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.08*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Остатки по складам -->
+            <Border Style="{StaticResource CardBorder}" Padding="18">
                 <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid>
+                        <StackPanel>
+                            <TextBlock Text="Остатки по складам" Style="{StaticResource SectionTitleText}" />
+                            <TextBlock Text="Распределение запасов, количество позиций и стоимость хранения."
+                                       Style="{StaticResource CaptionText}"
+                                       Margin="0,2,0,0" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top">
+                            <Border Style="{StaticResource PillBorder}"
+                                    Margin="0,0,8,0"
+                                    VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Складов:"
+                                               Style="{StaticResource CaptionText}"
+                                               Foreground="{DynamicResource AccentBrush}"
+                                               FontWeight="SemiBold" />
+                                    <TextBlock x:Name="WarehouseCountText"
+                                               Text="—"
+                                               Style="{StaticResource CaptionText}"
+                                               Foreground="{DynamicResource AccentBrush}"
+                                               FontWeight="SemiBold"
+                                               Margin="5,0,0,0" />
+                                </StackPanel>
+                            </Border>
+                            <Button Content="Обновить"
+                                    Style="{StaticResource SecondaryButton}"
+                                    FontSize="12"
+                                    Padding="12,7"
+                                    Click="RefreshStockButton_Click" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Border Grid.Row="1" Style="{StaticResource TableBorder}" Margin="0,14,0,0">
+                        <Grid>
+                            <DataGrid x:Name="StockGrid"
+                                      Style="{StaticResource ModernDataGrid}"
+                                      BorderThickness="0">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Склад"
+                                                        Binding="{Binding WarehouseName}"
+                                                        Width="*"
+                                                        ElementStyle="{StaticResource CellText}" />
+                                    <DataGridTextColumn Header="Позиций"
+                                                        Binding="{Binding ItemsCount}"
+                                                        Width="70"
+                                                        ElementStyle="{StaticResource NumberCellText}" />
+                                    <DataGridTextColumn Header="Кол-во"
+                                                        Binding="{Binding TotalQuantity}"
+                                                        Width="95"
+                                                        ElementStyle="{StaticResource NumberCellText}" />
+                                    <DataGridTextColumn Header="Стоимость, ₽"
+                                                        Binding="{Binding TotalValue, StringFormat={}{0:N2}}"
+                                                        Width="115"
+                                                        ElementStyle="{StaticResource NumberCellText}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                            <TextBlock x:Name="StockStateText"
+                                       Style="{StaticResource EmptyStateText}" />
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Топ активных товаров -->
+            <Border Grid.Column="1"
+                    Style="{StaticResource CardBorder}"
+                    Padding="18"
+                    Margin="16,0,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
                     <StackPanel>
-                        <TextBlock Text="Остатки по складам" Style="{StaticResource SectionTitleText}" />
-                        <TextBlock Text="Распределение запасов, количество позиций и стоимость хранения."
+                        <TextBlock Text="Топ активных товаров" Style="{StaticResource SectionTitleText}" />
+                        <TextBlock Text="Расход и перемещения за выбранный период."
                                    Style="{StaticResource CaptionText}"
                                    Margin="0,2,0,0" />
                     </StackPanel>
-                    <Button Content="Обновить"
-                            Style="{StaticResource SecondaryButton}"
-                            FontSize="12"
-                            Padding="12,7"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Top"
-                            Click="RefreshStockButton_Click" />
-                </Grid>
 
-                <Grid Grid.Row="1" Margin="0,14,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="1" Margin="0,14,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-                    <Border Style="{StaticResource MetricCard}" Margin="0,0,8,0">
-                        <StackPanel>
-                            <TextBlock Text="Складов" Style="{StaticResource CaptionText}" />
-                            <TextBlock x:Name="WarehouseCountText"
-                                       Text="—"
-                                       Style="{StaticResource MetricValueText}"
-                                       Margin="0,4,0,0" />
+                        <StackPanel Margin="0,0,10,0">
+                            <TextBlock Text="С даты" Style="{StaticResource CaptionText}" Margin="0,0,0,6" />
+                            <DatePicker x:Name="FromDatePicker" />
                         </StackPanel>
-                    </Border>
 
-                    <Border Style="{StaticResource MetricCard}" Margin="0,0,8,0">
-                        <StackPanel>
-                            <TextBlock Text="Всего единиц" Style="{StaticResource CaptionText}" />
-                            <TextBlock x:Name="TotalQuantityText"
-                                       Text="—"
-                                       Style="{StaticResource MetricValueText}"
-                                       Margin="0,4,0,0" />
+                        <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                            <TextBlock Text="По дату" Style="{StaticResource CaptionText}" Margin="0,0,0,6" />
+                            <DatePicker x:Name="ToDatePicker" />
                         </StackPanel>
-                    </Border>
 
-                    <Border Style="{StaticResource MetricCard}">
-                        <StackPanel>
-                            <TextBlock Text="Стоимость запасов" Style="{StaticResource CaptionText}" />
-                            <TextBlock x:Name="TotalValueText"
-                                       Text="—"
-                                       FontSize="19"
-                                       FontWeight="Bold"
+                        <Button Grid.Column="2"
+                                Content="Построить"
+                                Style="{StaticResource PrimaryButton}"
+                                VerticalAlignment="Bottom"
+                                Click="BuildTopButton_Click" />
+                    </Grid>
+
+                    <Grid Grid.Row="2" Margin="0,14,0,8">
+                        <TextBlock Text="Рейтинг по расходу" Style="{StaticResource CaptionText}" VerticalAlignment="Center" />
+                        <Border Style="{StaticResource PillBorder}" HorizontalAlignment="Right">
+                            <TextBlock x:Name="TopSummaryText"
+                                       Style="{StaticResource CaptionText}"
                                        Foreground="{DynamicResource AccentBrush}"
-                                       Margin="0,8,0,0"
-                                       TextTrimming="CharacterEllipsis" />
-                        </StackPanel>
+                                       FontWeight="SemiBold" />
+                        </Border>
+                    </Grid>
+
+                    <Border Grid.Row="3" Style="{StaticResource TableBorder}">
+                        <Grid>
+                            <DataGrid x:Name="TopItemsGrid"
+                                      Style="{StaticResource ModernDataGrid}"
+                                      BorderThickness="0">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="SKU"
+                                                        Binding="{Binding Sku}"
+                                                        Width="66"
+                                                        ElementStyle="{StaticResource CellText}" />
+                                    <DataGridTextColumn Header="Товар"
+                                                        Binding="{Binding Name}"
+                                                        Width="*"
+                                                        ElementStyle="{StaticResource CellText}" />
+                                    <DataGridTextColumn Header="Расход"
+                                                        Binding="{Binding OutQuantity}"
+                                                        Width="68"
+                                                        ElementStyle="{StaticResource NumberCellText}" />
+                                    <DataGridTextColumn Header="Перем."
+                                                        Binding="{Binding TransferQuantity}"
+                                                        Width="64"
+                                                        ElementStyle="{StaticResource NumberCellText}" />
+                                    <DataGridTextColumn Header="Движ."
+                                                        Binding="{Binding MovementsCount}"
+                                                        Width="58"
+                                                        ElementStyle="{StaticResource NumberCellText}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                            <TextBlock x:Name="TopStateText"
+                                       Style="{StaticResource EmptyStateText}" />
+                        </Grid>
                     </Border>
                 </Grid>
-
-                <Border Grid.Row="2" Style="{StaticResource TableBorder}" Margin="0,14,0,0">
-                    <Grid>
-                        <DataGrid x:Name="StockGrid"
-                                  Style="{StaticResource ModernDataGrid}"
-                                  BorderThickness="0">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Склад"
-                                                    Binding="{Binding WarehouseName}"
-                                                    Width="*" />
-                                <DataGridTextColumn Header="Позиций"
-                                                    Binding="{Binding ItemsCount}"
-                                                    Width="80"
-                                                    ElementStyle="{StaticResource NumberCellText}" />
-                                <DataGridTextColumn Header="Количество"
-                                                    Binding="{Binding TotalQuantity}"
-                                                    Width="105"
-                                                    ElementStyle="{StaticResource NumberCellText}" />
-                                <DataGridTextColumn Header="Стоимость, ₽"
-                                                    Binding="{Binding TotalValue, StringFormat={}{0:N2}}"
-                                                    Width="125"
-                                                    ElementStyle="{StaticResource NumberCellText}" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-
-                        <TextBlock x:Name="StockStateText"
-                                   Style="{StaticResource EmptyStateText}" />
-                    </Grid>
-                </Border>
-            </Grid>
-        </Border>
-
-        <!-- ==================== Топ активных товаров ==================== -->
-        <Border Grid.Column="1"
-                Style="{StaticResource CardBorder}"
-                Margin="16,0,0,0">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-
-                <StackPanel>
-                    <TextBlock Text="Топ активных товаров" Style="{StaticResource SectionTitleText}" />
-                    <TextBlock Text="Расход и перемещения за выбранный период."
-                               Style="{StaticResource CaptionText}"
-                               Margin="0,2,0,0" />
-                </StackPanel>
-
-                <Grid Grid.Row="1" Margin="0,14,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <StackPanel Margin="0,0,8,0">
-                        <TextBlock Text="С даты" Style="{StaticResource CaptionText}" Margin="0,0,0,6" />
-                        <DatePicker x:Name="FromDatePicker" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="1" Margin="0,0,8,0">
-                        <TextBlock Text="По дату" Style="{StaticResource CaptionText}" Margin="0,0,0,6" />
-                        <DatePicker x:Name="ToDatePicker" />
-                    </StackPanel>
-
-                    <Button Grid.Column="2"
-                            Content="Построить"
-                            Style="{StaticResource PrimaryButton}"
-                            VerticalAlignment="Bottom"
-                            Click="BuildTopButton_Click" />
-                </Grid>
-
-                <Grid Grid.Row="2" Margin="0,14,0,8">
-                    <TextBlock Text="Рейтинг по расходу" Style="{StaticResource CaptionText}" VerticalAlignment="Center" />
-                    <Border Style="{StaticResource PillBorder}" HorizontalAlignment="Right">
-                        <TextBlock x:Name="TopSummaryText"
-                                   Style="{StaticResource CaptionText}"
-                                   Foreground="{DynamicResource AccentBrush}"
-                                   FontWeight="SemiBold" />
-                    </Border>
-                </Grid>
-
-                <Border Grid.Row="3" Style="{StaticResource TableBorder}">
-                    <Grid>
-                        <DataGrid x:Name="TopItemsGrid"
-                                  Style="{StaticResource ModernDataGrid}"
-                                  BorderThickness="0">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="SKU"
-                                                    Binding="{Binding Sku}"
-                                                    Width="82" />
-                                <DataGridTextColumn Header="Товар"
-                                                    Binding="{Binding Name}"
-                                                    Width="*" />
-                                <DataGridTextColumn Header="Расход"
-                                                    Binding="{Binding OutQuantity}"
-                                                    Width="64"
-                                                    ElementStyle="{StaticResource NumberCellText}" />
-                                <DataGridTextColumn Header="Перем."
-                                                    Binding="{Binding TransferQuantity}"
-                                                    Width="58"
-                                                    ElementStyle="{StaticResource NumberCellText}" />
-                                <DataGridTextColumn Header="Док."
-                                                    Binding="{Binding MovementsCount}"
-                                                    Width="50"
-                                                    ElementStyle="{StaticResource NumberCellText}" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-
-                        <TextBlock x:Name="TopStateText"
-                                   Style="{StaticResource EmptyStateText}" />
-                    </Grid>
-                </Border>
-            </Grid>
-        </Border>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>

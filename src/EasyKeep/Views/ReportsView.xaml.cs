@@ -59,6 +59,7 @@ public partial class ReportsView : UserControl
         {
             TopItemsGrid.ItemsSource = null;
             TopSummaryText.Text = "—";
+            ResetLeader("укажите корректный период");
             TopStateText.Text = "Дата начала должна быть раньше даты окончания.";
             TopStateText.Visibility = Visibility.Visible;
             return;
@@ -72,6 +73,17 @@ public partial class ReportsView : UserControl
             TopSummaryText.Text = $"Показано: {rows.Count}";
             TopStateText.Text = "За выбранный период движений не найдено.";
             TopStateText.Visibility = rows.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+
+            if (rows.Count > 0)
+            {
+                TopItemRow leader = rows[0];
+                LeaderNameText.Text = leader.Name;
+                LeaderDetailText.Text = $"{leader.Sku} · {leader.OutQuantity:N0} ед. расхода";
+            }
+            else
+            {
+                ResetLeader("за выбранный период движений нет");
+            }
         }
         catch (Exception)
         {
@@ -93,8 +105,16 @@ public partial class ReportsView : UserControl
     {
         TopItemsGrid.ItemsSource = null;
         TopSummaryText.Text = "Нет данных";
+        ResetLeader("нет данных");
         TopStateText.Text = "Не удалось построить рейтинг. Проверьте подключение к базе данных.";
         TopStateText.Visibility = Visibility.Visible;
+    }
+
+    /// <summary>Сбрасывает карточку лидера оборота в состояние «нет данных».</summary>
+    private void ResetLeader(string hint)
+    {
+        LeaderNameText.Text = "—";
+        LeaderDetailText.Text = hint;
     }
 
     private void RefreshStockButton_Click(object sender, RoutedEventArgs e)
