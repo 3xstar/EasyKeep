@@ -69,6 +69,7 @@
                          SelectionChanged="CategoriesList_SelectionChanged">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
+                            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
                             <Setter Property="Padding" Value="10,8" />
                             <Setter Property="Margin" Value="0,1" />
                             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
