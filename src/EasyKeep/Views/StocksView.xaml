@@ -1,0 +1,147 @@
+<UserControl x:Class="EasyKeep.Views.StocksView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Loaded="StocksView_Loaded">
+
+    <UserControl.Resources>
+        <Style x:Key="NumberCellText" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="TextAlignment" Value="Right" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Панель фильтров -->
+        <Border Style="{StaticResource CardBorder}" Padding="16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="220" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                    <TextBlock Text="Поиск по SKU или названию"
+                               Style="{StaticResource CaptionText}"
+                               Margin="0,0,0,6" />
+                    <TextBox x:Name="SearchBox"
+                             Style="{StaticResource FieldTextBox}"
+                             TextChanged="SearchBox_TextChanged"
+                             ToolTip="Введите артикул или часть названия товара" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Margin="0,0,12,0">
+                    <TextBlock Text="Склад"
+                               Style="{StaticResource CaptionText}"
+                               Margin="0,0,0,6" />
+                    <ComboBox x:Name="WarehouseFilter"
+                              Style="{StaticResource FieldComboBox}"
+                              DisplayMemberPath="Name"
+                              SelectionChanged="WarehouseFilter_SelectionChanged" />
+                </StackPanel>
+
+                <Button Grid.Column="2"
+                        Content="Обновить"
+                        Style="{StaticResource SecondaryButton}"
+                        VerticalAlignment="Bottom"
+                        Margin="0,0,12,0"
+                        Click="RefreshButton_Click" />
+
+                <Border Grid.Column="3"
+                        Style="{StaticResource PillBorder}"
+                        VerticalAlignment="Bottom"
+                        Margin="0,0,0,2">
+                    <TextBlock x:Name="SummaryText"
+                               Style="{StaticResource CaptionText}"
+                               Foreground="{StaticResource AccentBrush}"
+                               FontWeight="SemiBold" />
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Таблица остатков -->
+        <Border Grid.Row="1"
+                Style="{StaticResource CardBorder}"
+                Padding="0"
+                Margin="0,16,0,0">
+            <Grid>
+                <DataGrid x:Name="StocksGrid"
+                          Style="{StaticResource ModernDataGrid}"
+                          BorderThickness="0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="SKU"
+                                            Binding="{Binding Sku}"
+                                            Width="110" />
+                        <DataGridTextColumn Header="Товар"
+                                            Binding="{Binding ItemName}"
+                                            Width="*" />
+                        <DataGridTextColumn Header="Склад"
+                                            Binding="{Binding WarehouseName}"
+                                            Width="170" />
+                        <DataGridTextColumn Header="Остаток"
+                                            Binding="{Binding Quantity}"
+                                            Width="90"
+                                            ElementStyle="{StaticResource NumberCellText}" />
+                        <DataGridTextColumn Header="Минимум"
+                                            Binding="{Binding MinStock}"
+                                            Width="90"
+                                            ElementStyle="{StaticResource NumberCellText}" />
+                        <DataGridTextColumn Header="Расход/день"
+                                            Binding="{Binding AverageDailyConsumption, StringFormat={}{0:0.##}}"
+                                            Width="115"
+                                            ElementStyle="{StaticResource NumberCellText}" />
+                        <DataGridTextColumn Header="Прогноз"
+                                            Binding="{Binding DaysLeftText}"
+                                            Width="95"
+                                            ElementStyle="{StaticResource NumberCellText}" />
+
+                        <DataGridTemplateColumn Header="Светофор" Width="150">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border x:Name="StatusBadge"
+                                            Background="#F1F5F9"
+                                            CornerRadius="999"
+                                            Padding="10,4"
+                                            HorizontalAlignment="Left">
+                                        <TextBlock x:Name="StatusLabel"
+                                                   Text="{Binding StatusText}"
+                                                   FontSize="12"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="#475569" />
+                                    </Border>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="Critical">
+                                            <Setter TargetName="StatusBadge" Property="Background" Value="#FEF2F2" />
+                                            <Setter TargetName="StatusLabel" Property="Foreground" Value="#DC2626" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="Warning">
+                                            <Setter TargetName="StatusBadge" Property="Background" Value="#FFFBEB" />
+                                            <Setter TargetName="StatusLabel" Property="Foreground" Value="#B45309" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="Normal">
+                                            <Setter TargetName="StatusBadge" Property="Background" Value="#F0FDF4" />
+                                            <Setter TargetName="StatusLabel" Property="Foreground" Value="#15803D" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="NonLiquid">
+                                            <Setter TargetName="StatusBadge" Property="Background" Value="#F8FAFC" />
+                                            <Setter TargetName="StatusLabel" Property="Foreground" Value="#64748B" />
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <TextBlock x:Name="StateText"
+                           Style="{StaticResource EmptyStateText}" />
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

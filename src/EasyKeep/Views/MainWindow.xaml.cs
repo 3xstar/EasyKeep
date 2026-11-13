@@ -38,7 +38,21 @@ public partial class MainWindow : Window
         PageTitleText.Text = title;
         PageSubtitleText.Text = subtitle;
 
-        // Экран подключается отдельным шагом, пока показываем аккуратную заглушку.
+        UserControl? view = section switch
+        {
+            "stocks" => new StocksView(),
+            _ => null
+        };
+
+        if (view is not null)
+        {
+            PlaceholderPanel.Visibility = Visibility.Collapsed;
+            ContentArea.Content = view;
+            ContentArea.Visibility = Visibility.Visible;
+            return;
+        }
+
+        // Остальные экраны подключаются отдельными шагами.
         ContentArea.Content = null;
         ContentArea.Visibility = Visibility.Collapsed;
         PlaceholderPanel.Visibility = Visibility.Visible;
