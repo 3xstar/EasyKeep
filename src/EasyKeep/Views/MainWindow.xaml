@@ -313,7 +313,11 @@
                         </StackPanel>
                     </Border>
 
-                    <ContentControl x:Name="ContentArea" Visibility="Collapsed" />
+                    <ContentControl x:Name="ContentArea" Visibility="Collapsed">
+                        <ContentControl.RenderTransform>
+                            <TranslateTransform x:Name="ContentShift" Y="0" />
+                        </ContentControl.RenderTransform>
+                    </ContentControl>
                 </Grid>
             </Grid>
         </Grid>

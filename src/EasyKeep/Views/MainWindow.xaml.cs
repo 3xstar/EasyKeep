@@ -1,6 +1,8 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 using EasyKeep.Services;
 
 namespace EasyKeep.Views;
@@ -71,6 +73,7 @@ public partial class MainWindow : Window
             PlaceholderPanel.Visibility = Visibility.Collapsed;
             ContentArea.Content = view;
             ContentArea.Visibility = Visibility.Visible;
+            AnimateContentEntrance();
             return;
         }
 
@@ -79,6 +82,26 @@ public partial class MainWindow : Window
         ContentArea.Visibility = Visibility.Collapsed;
         PlaceholderPanel.Visibility = Visibility.Visible;
         PlaceholderTitle.Text = title;
+    }
+
+    /// <summary>
+    /// Мгновенный, но мягкий вход экрана: 120 мс, прозрачность 0.6 → 1
+    /// и сдвиг на 4 px вниз с CubicEase EaseOut.
+    /// </summary>
+    private void AnimateContentEntrance()
+    {
+        CubicEase easing = new() { EasingMode = EasingMode.EaseOut };
+        TimeSpan duration = TimeSpan.FromMilliseconds(120);
+
+        ContentArea.BeginAnimation(OpacityProperty, new DoubleAnimation(0.6, 1, duration)
+        {
+            EasingFunction = easing
+        });
+
+        ContentShift.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(4, 0, duration)
+        {
+            EasingFunction = easing
+        });
     }
 
     // ==================== Персонализация ====================

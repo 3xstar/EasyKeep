@@ -130,10 +130,14 @@
         </Grid>
 
         <!-- Рентген товара -->
-        <Border Grid.Column="1"
+        <Border x:Name="XRayPanel"
+                Grid.Column="1"
                 Style="{StaticResource CardBorder}"
                 Margin="16,0,0,0"
                 Padding="18">
+            <Border.RenderTransform>
+                <TranslateTransform x:Name="XRayShift" X="0" />
+            </Border.RenderTransform>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />

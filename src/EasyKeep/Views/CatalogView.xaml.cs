@@ -1,5 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 using EasyKeep.Data;
 using EasyKeep.Data.Entities;
 using EasyKeep.Data.Reports;
@@ -222,6 +224,7 @@ public partial class CatalogView : UserControl
         HistoryList.ItemsSource = null;
         HistoryStateText.Text = "Загрузка истории...";
         HistoryStateText.Visibility = Visibility.Visible;
+        AnimateXRayPanel();
 
         try
         {
@@ -254,6 +257,23 @@ public partial class CatalogView : UserControl
         HistoryList.ItemsSource = null;
         HistoryStateText.Text = "Выберите товар в таблице.";
         HistoryStateText.Visibility = Visibility.Visible;
+    }
+
+    /// <summary>Панель истории мягко выезжает справа за 140 мс.</summary>
+    private void AnimateXRayPanel()
+    {
+        CubicEase easing = new() { EasingMode = EasingMode.EaseOut };
+        TimeSpan duration = TimeSpan.FromMilliseconds(140);
+
+        XRayPanel.BeginAnimation(OpacityProperty, new DoubleAnimation(0.7, 1, duration)
+        {
+            EasingFunction = easing
+        });
+
+        XRayShift.BeginAnimation(TranslateTransform.XProperty, new DoubleAnimation(16, 0, duration)
+        {
+            EasingFunction = easing
+        });
     }
 
     // ==================== Вспомогательные методы ====================
