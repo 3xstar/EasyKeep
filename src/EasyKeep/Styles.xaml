@@ -50,6 +50,8 @@
     <sys:Double x:Key="ControlHeight">36</sys:Double>
     <sys:Double x:Key="TableRowHeight">44</sys:Double>
     <Thickness x:Key="CardPadding">20</Thickness>
+    <!-- Верхний отступ заглушки пустой таблицы = высота шапки DataGrid -->
+    <Thickness x:Key="TableHintMargin">16,44,16,16</Thickness>
 
     <!-- ============================================================
          Типографика
@@ -1085,6 +1087,13 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="Margin" Value="24" />
+    </Style>
+
+    <!-- Заглушка пустой таблицы: строго под шапкой DataGrid,
+             никогда не перекрывает заголовки колонок. -->
+    <Style x:Key="TableEmptyStateText" TargetType="TextBlock" BasedOn="{StaticResource EmptyStateText}">
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Margin" Value="{DynamicResource TableHintMargin}" />
     </Style>
 
 </ResourceDictionary>

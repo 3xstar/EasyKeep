@@ -197,6 +197,7 @@ public partial class MainWindow : Window
         resources["ControlHeight"] = 36.0 * factor;
         resources["TableRowHeight"] = 44.0 * factor;
         resources["CardPadding"] = new Thickness(20.0 * factor);
+        resources["TableHintMargin"] = new Thickness(16.0 * factor, 44.0 * factor, 16.0 * factor, 16.0 * factor);
         ScalePercentText.Text = $"{_scalePercent}%";
 
         if (save)

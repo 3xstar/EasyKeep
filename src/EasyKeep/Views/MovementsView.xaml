@@ -161,7 +161,7 @@
 
                     <TextBlock x:Name="LinesEmptyText"
                                Text="Добавьте товар через командную строку выше."
-                               Style="{StaticResource EmptyStateText}"
+                               Style="{StaticResource TableEmptyStateText}"
                                IsHitTestVisible="False" />
                 </Grid>
 
