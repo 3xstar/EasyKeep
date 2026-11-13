@@ -90,7 +90,7 @@
                     <TextBlock x:Name="LeaderNameText"
                                Text="—"
                                Style="{StaticResource KpiValueText}"
-                               FontSize="20"
+                               FontSize="{DynamicResource FontSizeSubtitle}"
                                TextWrapping="NoWrap" />
                     <TextBlock x:Name="LeaderDetailText"
                                Text="за выбранный период"
@@ -143,7 +143,7 @@
                             </Border>
                             <Button Content="Обновить"
                                     Style="{StaticResource SecondaryButton}"
-                                    FontSize="12"
+                                    FontSize="{DynamicResource FontSizeSmall}"
                                     Padding="12,7"
                                     Click="RefreshStockButton_Click" />
                         </StackPanel>

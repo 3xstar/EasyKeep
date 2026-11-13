@@ -218,7 +218,7 @@
                                             HorizontalAlignment="Left">
                                         <TextBlock x:Name="StatusLabel"
                                                    Text="{Binding StatusText}"
-                                                   FontSize="12"
+                                                   FontSize="{DynamicResource FontSizeSmall}"
                                                    FontWeight="SemiBold"
                                                    Foreground="{DynamicResource BadgeNeutralForegroundBrush}" />
                                     </Border>

@@ -53,7 +53,9 @@
                 </Grid.RowDefinitions>
 
                 <Grid Margin="8,4,8,8">
-                    <TextBlock Text="Список категорий" Style="{StaticResource SectionTitleText}" FontSize="13" />
+                    <TextBlock Text="Список категорий"
+                               Style="{StaticResource SectionTitleText}"
+                               FontSize="{DynamicResource FontSizeBase}" />
                     <TextBlock x:Name="CategoryCountText"
                                Style="{StaticResource CaptionText}"
                                HorizontalAlignment="Right"
@@ -97,7 +99,7 @@
                     </ListBox.ItemContainerStyle>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Name}" FontSize="13" />
+                            <TextBlock Text="{Binding Name}" FontSize="{DynamicResource FontSizeBase}" />
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>

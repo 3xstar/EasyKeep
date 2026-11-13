@@ -65,7 +65,7 @@
                 <TextBlock Text="Минимальный остаток используется «Светофором дефицита» как неснижаемый порог."
                            Style="{StaticResource CaptionText}"
                            Foreground="{DynamicResource TextMutedBrush}"
-                           FontSize="11"
+                           FontSize="{DynamicResource FontSizeSmall}"
                            Margin="0,14,0,0" />
             </StackPanel>
         </Border>

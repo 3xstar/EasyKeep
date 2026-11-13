@@ -7,319 +7,313 @@
         WindowStartupLocation="CenterScreen"
         FontFamily="Segoe UI"
         UseLayoutRounding="True"
-        TextOptions.TextFormattingMode="Display"
+        SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Ideal"
         Background="{DynamicResource AppBackgroundBrush}"
         PreviewKeyDown="Window_PreviewKeyDown">
 
-    <ScrollViewer x:Name="RootScrollViewer"
-                  HorizontalScrollBarVisibility="Auto"
-                  VerticalScrollBarVisibility="Auto"
-                  Focusable="False">
-        <Grid x:Name="ScaleRoot"
-              Width="{Binding ViewportWidth, ElementName=RootScrollViewer}"
-              Height="{Binding ViewportHeight, ElementName=RootScrollViewer}">
-            <Grid.LayoutTransform>
-                <ScaleTransform x:Name="UiScale" ScaleX="1" ScaleY="1" />
-            </Grid.LayoutTransform>
+    <!-- Масштаб интерфейса реализован без ScaleTransform и внешнего
+         ScrollViewer: при смене масштаба пересчитываются ресурсы
+         (FontSize*, ControlHeight, TableRowHeight, CardPadding), и
+         layout с *-колонками сам ужимается под окно без «мыла» и
+         горизонтальных полос прокрутки. -->
+    <Grid x:Name="LayoutRoot">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="248" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="248" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <!-- Боковое меню навигации -->
-            <Border Grid.Column="0"
-                    Background="{DynamicResource NavBackgroundBrush}"
-                    BorderBrush="{DynamicResource CardBorderBrush}"
-                    BorderThickness="0,0,1,0">
-                <Grid Margin="16,22,16,16">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <!-- Логотип -->
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{StaticResource EasyKeepLogo}" Width="40" Height="40" />
-                        <TextBlock Text="EasyKeep"
-                                   FontSize="20"
-                                   FontWeight="Bold"
-                                   Foreground="{DynamicResource TextPrimaryBrush}"
-                                   VerticalAlignment="Center"
-                                   Margin="12,0,0,0" />
-                    </StackPanel>
-
-                    <!-- Разделы -->
-                    <StackPanel Grid.Row="1" Margin="0,32,0,0">
-                        <TextBlock Text="РАЗДЕЛЫ"
-                                   FontSize="10"
-                                   FontWeight="SemiBold"
-                                   Foreground="{DynamicResource TextMutedBrush}"
-                                   Margin="14,0,0,8" />
-
-                        <RadioButton x:Name="StocksNav"
-                                     GroupName="Sections"
-                                     Style="{StaticResource NavButton}"
-                                     Tag="stocks"
-                                     AutomationProperties.Name="Остатки"
-                                     Checked="NavButton_Checked">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Data="M4,20 H20 M6,20 V13 H9 V20 M11,20 V8 H14 V20 M16,20 V10 H19 V20"
-                                      Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
-                                      StrokeThickness="1.7"
-                                      StrokeLineJoin="Round"
-                                      StrokeStartLineCap="Round"
-                                      StrokeEndLineCap="Round"
-                                      Width="19" Height="19"
-                                      Stretch="Uniform" />
-                                <TextBlock Text="Остатки" Margin="12,0,0,0" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </RadioButton>
-
-                        <RadioButton x:Name="MovementsNav"
-                                     GroupName="Sections"
-                                     Style="{StaticResource NavButton}"
-                                     Tag="movements"
-                                     AutomationProperties.Name="Движения"
-                                     Checked="NavButton_Checked">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Data="M4,7 H16 M13,4 L17,7 L13,10 M20,17 H8 M11,14 L7,17 L11,20"
-                                      Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
-                                      StrokeThickness="1.7"
-                                      StrokeLineJoin="Round"
-                                      StrokeStartLineCap="Round"
-                                      StrokeEndLineCap="Round"
-                                      Width="19" Height="19"
-                                      Stretch="Uniform" />
-                                <TextBlock Text="Движения" Margin="12,0,0,0" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </RadioButton>
-
-                        <RadioButton x:Name="CatalogNav"
-                                     GroupName="Sections"
-                                     Style="{StaticResource NavButton}"
-                                     Tag="catalog"
-                                     AutomationProperties.Name="Каталог"
-                                     Checked="NavButton_Checked">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Data="M4,7 L12,3 L20,7 V17 L12,21 L4,17 Z M4,7 L12,11 L20,7 M12,11 V21"
-                                      Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
-                                      StrokeThickness="1.6"
-                                      StrokeLineJoin="Round"
-                                      StrokeStartLineCap="Round"
-                                      StrokeEndLineCap="Round"
-                                      Width="19" Height="19"
-                                      Stretch="Uniform" />
-                                <TextBlock Text="Каталог" Margin="12,0,0,0" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </RadioButton>
-
-                        <RadioButton x:Name="ReportsNav"
-                                     GroupName="Sections"
-                                     Style="{StaticResource NavButton}"
-                                     Tag="reports"
-                                     AutomationProperties.Name="Отчёт"
-                                     Checked="NavButton_Checked">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Data="M12,3 A9,9 0 1 0 21,12 H12 Z M12,3 V12 H21 A9,9 0 0 0 12,3"
-                                      Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
-                                      StrokeThickness="1.6"
-                                      StrokeLineJoin="Round"
-                                      Width="19" Height="19"
-                                      Stretch="Uniform" />
-                                <TextBlock Text="Отчёт" Margin="12,0,0,0" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </RadioButton>
-                    </StackPanel>
-
-                    <!-- Подвал меню: состояние БД и отдельная зона персонализации -->
-                    <StackPanel Grid.Row="3">
-                        <Border Background="{DynamicResource SurfaceRaisedBrush}"
-                                CornerRadius="8"
-                                Padding="12,9"
-                                Margin="0,0,0,10">
-                            <StackPanel>
-                                <TextBlock Text="Локальная база данных"
-                                           FontSize="11"
-                                           FontWeight="SemiBold"
-                                           Foreground="{DynamicResource TextSecondaryBrush}" />
-                                <TextBlock Text="SQL Server • EasyKeep"
-                                           FontSize="11"
-                                           Foreground="{DynamicResource TextMutedBrush}"
-                                           Margin="0,2,0,0" />
-                            </StackPanel>
-                        </Border>
-
-                        <Button x:Name="PersonalizationButton"
-                                Style="{StaticResource SecondaryButton}"
-                                Padding="12,9"
-                                HorizontalContentAlignment="Left"
-                                ToolTip="Тема и масштаб интерфейса"
-                                AutomationProperties.Name="Персонализация"
-                                Click="PersonalizationButton_Click">
-                            <StackPanel Orientation="Horizontal">
-                                <Canvas Width="18" Height="18" VerticalAlignment="Center">
-                                    <Path Data="M2,4 H16 M2,9 H16 M2,14 H16"
-                                          Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
-                                          StrokeThickness="1.6"
-                                          StrokeStartLineCap="Round"
-                                          StrokeEndLineCap="Round" />
-                                    <Ellipse Canvas.Left="3" Canvas.Top="1.5"
-                                             Width="5" Height="5"
-                                             Fill="{DynamicResource CardBackgroundBrush}"
-                                             Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
-                                             StrokeThickness="1.6" />
-                                    <Ellipse Canvas.Left="9" Canvas.Top="6.5"
-                                             Width="5" Height="5"
-                                             Fill="{DynamicResource CardBackgroundBrush}"
-                                             Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
-                                             StrokeThickness="1.6" />
-                                    <Ellipse Canvas.Left="5" Canvas.Top="11.5"
-                                             Width="5" Height="5"
-                                             Fill="{DynamicResource CardBackgroundBrush}"
-                                             Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
-                                             StrokeThickness="1.6" />
-                                </Canvas>
-                                <TextBlock Text="Персонализация"
-                                           Margin="10,0,0,0"
-                                           VerticalAlignment="Center" />
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-
-                    <!-- Всплывающая панель персонализации -->
-                    <Popup x:Name="PersonalizationPopup"
-                           PlacementTarget="{Binding ElementName=PersonalizationButton}"
-                           Placement="Top"
-                           VerticalOffset="-8"
-                           AllowsTransparency="True"
-                           StaysOpen="False"
-                           PopupAnimation="Fade">
-                        <Border Width="278"
-                                Background="{DynamicResource PopupBackgroundBrush}"
-                                BorderBrush="{DynamicResource CardBorderBrush}"
-                                BorderThickness="1"
-                                CornerRadius="14"
-                                Padding="16"
-                                Effect="{DynamicResource PopupShadowEffect}"
-                                PreviewKeyDown="Window_PreviewKeyDown">
-                            <StackPanel>
-                                <TextBlock Text="Персонализация" Style="{StaticResource SectionTitleText}" />
-                                <TextBlock Text="Тема и масштаб интерфейса"
-                                           Style="{StaticResource CaptionText}"
-                                           Margin="0,2,0,14" />
-
-                                <TextBlock Text="ТЕМА"
-                                           FontSize="10"
-                                           FontWeight="SemiBold"
-                                           Foreground="{DynamicResource TextMutedBrush}" />
-                                <Border Background="{DynamicResource SegmentTrackBrush}"
-                                        CornerRadius="9"
-                                        Padding="3"
-                                        Margin="0,6,0,0">
-                                    <UniformGrid Columns="2">
-                                        <RadioButton x:Name="LightThemeOption"
-                                                     GroupName="ThemeOptions"
-                                                     Style="{StaticResource SegmentRadio}"
-                                                     Content="Светлая"
-                                                     Checked="ThemeOption_Checked" />
-                                        <RadioButton x:Name="DarkThemeOption"
-                                                     GroupName="ThemeOptions"
-                                                     Style="{StaticResource SegmentRadio}"
-                                                     Content="Тёмная"
-                                                     Checked="ThemeOption_Checked" />
-                                    </UniformGrid>
-                                </Border>
-
-                                <TextBlock Text="МАСШТАБ"
-                                           FontSize="10"
-                                           FontWeight="SemiBold"
-                                           Foreground="{DynamicResource TextMutedBrush}"
-                                           Margin="0,16,0,0" />
-                                <Border Background="{DynamicResource SegmentTrackBrush}"
-                                        CornerRadius="9"
-                                        Padding="3"
-                                        Margin="0,6,0,0">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="38" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="38" />
-                                        </Grid.ColumnDefinitions>
-                                        <Button Content="−"
-                                                Style="{StaticResource GhostButton}"
-                                                FontSize="16"
-                                                ToolTip="Уменьшить масштаб (Ctrl −)"
-                                                Click="ZoomOutButton_Click" />
-                                        <Button Grid.Column="1"
-                                                Style="{StaticResource GhostButton}"
-                                                ToolTip="Сбросить на 100% (Ctrl 0)"
-                                                Click="ZoomResetButton_Click">
-                                            <TextBlock x:Name="ScalePercentText"
-                                                       Text="100%"
-                                                       FontSize="12"
-                                                       FontWeight="SemiBold"
-                                                       HorizontalAlignment="Center" />
-                                        </Button>
-                                        <Button Grid.Column="2"
-                                                Content="+"
-                                                Style="{StaticResource GhostButton}"
-                                                FontSize="16"
-                                                ToolTip="Увеличить масштаб (Ctrl +)"
-                                                Click="ZoomInButton_Click" />
-                                    </Grid>
-                                </Border>
-                                <TextBlock Text="Ctrl + / Ctrl − / Ctrl 0 — как в редакторах кода"
-                                           Style="{StaticResource KpiHintText}"
-                                           Margin="0,8,0,0" />
-                            </StackPanel>
-                        </Border>
-                    </Popup>
-                </Grid>
-            </Border>
-
-            <!-- Рабочая область -->
-            <Grid Grid.Column="1" Margin="28,24,28,24">
+        <!-- Боковое меню навигации -->
+        <Border Grid.Column="0"
+                Background="{DynamicResource NavBackgroundBrush}"
+                BorderBrush="{DynamicResource CardBorderBrush}"
+                BorderThickness="0,0,1,0">
+            <Grid Margin="16,22,16,16">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <StackPanel>
-                    <TextBlock x:Name="PageTitleText" Style="{StaticResource PageTitleText}" />
-                    <TextBlock x:Name="PageSubtitleText"
-                               Style="{StaticResource CaptionText}"
-                               Margin="0,4,0,0" />
+                <!-- Логотип -->
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="{StaticResource EasyKeepLogo}" Width="40" Height="40" />
+                    <TextBlock Text="EasyKeep"
+                               FontSize="{DynamicResource FontSizeSubtitle}"
+                               FontWeight="Bold"
+                               Foreground="{DynamicResource TextPrimaryBrush}"
+                               VerticalAlignment="Center"
+                               Margin="12,0,0,0" />
                 </StackPanel>
 
-                <Grid Grid.Row="1" Margin="0,18,0,0">
-                    <!-- Заглушка для разделов, которые ещё не подключены -->
-                    <Border x:Name="PlaceholderPanel" Style="{StaticResource CardBorder}">
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="440">
-                            <Image Source="{StaticResource EasyKeepLogo}"
-                                   Width="64" Height="64"
-                                   HorizontalAlignment="Center" />
-                            <TextBlock x:Name="PlaceholderTitle"
-                                       Style="{StaticResource SectionTitleText}"
-                                       FontSize="17"
-                                       HorizontalAlignment="Center"
-                                       Margin="0,16,0,0" />
-                            <TextBlock Text="Раздел будет подключён на следующем шаге разработки."
-                                       Style="{StaticResource CaptionText}"
-                                       TextAlignment="Center"
-                                       Margin="0,6,0,0" />
+                <!-- Разделы -->
+                <StackPanel Grid.Row="1" Margin="0,32,0,0">
+                    <TextBlock Text="РАЗДЕЛЫ"
+                               FontSize="{DynamicResource FontSizeSmall}"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextMutedBrush}"
+                               Margin="14,0,0,8" />
+
+                    <RadioButton x:Name="StocksNav"
+                                 GroupName="Sections"
+                                 Style="{StaticResource NavButton}"
+                                 Tag="stocks"
+                                 AutomationProperties.Name="Остатки"
+                                 Checked="NavButton_Checked">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="M4,20 H20 M6,20 V13 H9 V20 M11,20 V8 H14 V20 M16,20 V10 H19 V20"
+                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
+                                  StrokeThickness="1.7"
+                                  StrokeLineJoin="Round"
+                                  StrokeStartLineCap="Round"
+                                  StrokeEndLineCap="Round"
+                                  Width="19" Height="19"
+                                  Stretch="Uniform" />
+                            <TextBlock Text="Остатки" Margin="12,0,0,0" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </RadioButton>
+
+                    <RadioButton x:Name="MovementsNav"
+                                 GroupName="Sections"
+                                 Style="{StaticResource NavButton}"
+                                 Tag="movements"
+                                 AutomationProperties.Name="Движения"
+                                 Checked="NavButton_Checked">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="M4,7 H16 M13,4 L17,7 L13,10 M20,17 H8 M11,14 L7,17 L11,20"
+                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
+                                  StrokeThickness="1.7"
+                                  StrokeLineJoin="Round"
+                                  StrokeStartLineCap="Round"
+                                  StrokeEndLineCap="Round"
+                                  Width="19" Height="19"
+                                  Stretch="Uniform" />
+                            <TextBlock Text="Движения" Margin="12,0,0,0" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </RadioButton>
+
+                    <RadioButton x:Name="CatalogNav"
+                                 GroupName="Sections"
+                                 Style="{StaticResource NavButton}"
+                                 Tag="catalog"
+                                 AutomationProperties.Name="Каталог"
+                                 Checked="NavButton_Checked">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="M4,7 L12,3 L20,7 V17 L12,21 L4,17 Z M4,7 L12,11 L20,7 M12,11 V21"
+                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
+                                  StrokeThickness="1.6"
+                                  StrokeLineJoin="Round"
+                                  StrokeStartLineCap="Round"
+                                  StrokeEndLineCap="Round"
+                                  Width="19" Height="19"
+                                  Stretch="Uniform" />
+                            <TextBlock Text="Каталог" Margin="12,0,0,0" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </RadioButton>
+
+                    <RadioButton x:Name="ReportsNav"
+                                 GroupName="Sections"
+                                 Style="{StaticResource NavButton}"
+                                 Tag="reports"
+                                 AutomationProperties.Name="Отчёт"
+                                 Checked="NavButton_Checked">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="M12,3 A9,9 0 1 0 21,12 H12 Z M12,3 V12 H21 A9,9 0 0 0 12,3"
+                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
+                                  StrokeThickness="1.6"
+                                  StrokeLineJoin="Round"
+                                  Width="19" Height="19"
+                                  Stretch="Uniform" />
+                            <TextBlock Text="Отчёт" Margin="12,0,0,0" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </RadioButton>
+                </StackPanel>
+
+                <!-- Подвал меню: состояние БД и отдельная зона персонализации -->
+                <StackPanel Grid.Row="3">
+                    <Border Background="{DynamicResource SurfaceRaisedBrush}"
+                            CornerRadius="8"
+                            Padding="12,9"
+                            Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="Локальная база данных"
+                                       FontSize="{DynamicResource FontSizeSmall}"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextSecondaryBrush}" />
+                            <TextBlock Text="SQL Server • EasyKeep"
+                                       FontSize="{DynamicResource FontSizeSmall}"
+                                       Foreground="{DynamicResource TextMutedBrush}"
+                                       Margin="0,2,0,0" />
                         </StackPanel>
                     </Border>
 
-                    <ContentControl x:Name="ContentArea" Visibility="Collapsed">
-                        <ContentControl.RenderTransform>
-                            <TranslateTransform x:Name="ContentShift" Y="0" />
-                        </ContentControl.RenderTransform>
-                    </ContentControl>
-                </Grid>
+                    <Button x:Name="PersonalizationButton"
+                            Style="{StaticResource SecondaryButton}"
+                            Padding="12,9"
+                            HorizontalContentAlignment="Left"
+                            ToolTip="Тема и масштаб интерфейса"
+                            AutomationProperties.Name="Персонализация"
+                            Click="PersonalizationButton_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Canvas Width="18" Height="18" VerticalAlignment="Center">
+                                <Path Data="M2,4 H16 M2,9 H16 M2,14 H16"
+                                      Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                      StrokeThickness="1.6"
+                                      StrokeStartLineCap="Round"
+                                      StrokeEndLineCap="Round" />
+                                <Ellipse Canvas.Left="3" Canvas.Top="1.5"
+                                         Width="5" Height="5"
+                                         Fill="{DynamicResource CardBackgroundBrush}"
+                                         Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                         StrokeThickness="1.6" />
+                                <Ellipse Canvas.Left="9" Canvas.Top="6.5"
+                                         Width="5" Height="5"
+                                         Fill="{DynamicResource CardBackgroundBrush}"
+                                         Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                         StrokeThickness="1.6" />
+                                <Ellipse Canvas.Left="5" Canvas.Top="11.5"
+                                         Width="5" Height="5"
+                                         Fill="{DynamicResource CardBackgroundBrush}"
+                                         Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                         StrokeThickness="1.6" />
+                            </Canvas>
+                            <TextBlock Text="Персонализация"
+                                       Margin="10,0,0,0"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <!-- Всплывающая панель персонализации -->
+                <Popup x:Name="PersonalizationPopup"
+                       PlacementTarget="{Binding ElementName=PersonalizationButton}"
+                       Placement="Top"
+                       VerticalOffset="-8"
+                       AllowsTransparency="True"
+                       StaysOpen="False"
+                       PopupAnimation="Fade">
+                    <Border Width="278"
+                            Background="{DynamicResource PopupBackgroundBrush}"
+                            BorderBrush="{DynamicResource CardBorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="14"
+                            Padding="16"
+                            Effect="{DynamicResource PopupShadowEffect}"
+                            PreviewKeyDown="Window_PreviewKeyDown">
+                        <StackPanel>
+                            <TextBlock Text="Персонализация" Style="{StaticResource SectionTitleText}" />
+                            <TextBlock Text="Тема и масштаб интерфейса"
+                                       Style="{StaticResource CaptionText}"
+                                       Margin="0,2,0,14" />
+
+                            <TextBlock Text="ТЕМА"
+                                       FontSize="{DynamicResource FontSizeSmall}"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextMutedBrush}" />
+                            <Border Background="{DynamicResource SegmentTrackBrush}"
+                                    CornerRadius="9"
+                                    Padding="3"
+                                    Margin="0,6,0,0">
+                                <UniformGrid Columns="2">
+                                    <RadioButton x:Name="LightThemeOption"
+                                                 GroupName="ThemeOptions"
+                                                 Style="{StaticResource SegmentRadio}"
+                                                 Content="Светлая"
+                                                 Checked="ThemeOption_Checked" />
+                                    <RadioButton x:Name="DarkThemeOption"
+                                                 GroupName="ThemeOptions"
+                                                 Style="{StaticResource SegmentRadio}"
+                                                 Content="Тёмная"
+                                                 Checked="ThemeOption_Checked" />
+                                </UniformGrid>
+                            </Border>
+
+                            <TextBlock Text="МАСШТАБ"
+                                       FontSize="{DynamicResource FontSizeSmall}"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextMutedBrush}"
+                                       Margin="0,16,0,0" />
+                            <Border Background="{DynamicResource SegmentTrackBrush}"
+                                    CornerRadius="9"
+                                    Padding="3"
+                                    Margin="0,6,0,0">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="46" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="46" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button Content="−"
+                                            Style="{StaticResource GhostButton}"
+                                            FontSize="{DynamicResource FontSizeTitle}"
+                                            ToolTip="Уменьшить масштаб (Ctrl −)"
+                                            Click="ZoomOutButton_Click" />
+                                    <Button Grid.Column="1"
+                                            Style="{StaticResource GhostButton}"
+                                            ToolTip="Сбросить на 100% (Ctrl 0)"
+                                            Click="ZoomResetButton_Click">
+                                        <TextBlock x:Name="ScalePercentText"
+                                                   Text="100%"
+                                                   FontSize="{DynamicResource FontSizeSmall}"
+                                                   FontWeight="SemiBold"
+                                                   HorizontalAlignment="Center" />
+                                    </Button>
+                                    <Button Grid.Column="2"
+                                            Content="+"
+                                            Style="{StaticResource GhostButton}"
+                                            FontSize="{DynamicResource FontSizeTitle}"
+                                            ToolTip="Увеличить масштаб (Ctrl +)"
+                                            Click="ZoomInButton_Click" />
+                                </Grid>
+                            </Border>
+                            <TextBlock Text="Ctrl + / Ctrl − / Ctrl 0 — как в редакторах кода"
+                                       Style="{StaticResource KpiHintText}"
+                                       Margin="0,8,0,0" />
+                        </StackPanel>
+                    </Border>
+                </Popup>
+            </Grid>
+        </Border>
+
+        <!-- Рабочая область -->
+        <Grid Grid.Column="1" Margin="28,24,28,24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <StackPanel>
+                <TextBlock x:Name="PageTitleText" Style="{StaticResource PageTitleText}" />
+                <TextBlock x:Name="PageSubtitleText"
+                           Style="{StaticResource CaptionText}"
+                           Margin="0,4,0,0" />
+            </StackPanel>
+
+            <Grid Grid.Row="1" Margin="0,18,0,0">
+                <!-- Заглушка для разделов, которые ещё не подключены -->
+                <Border x:Name="PlaceholderPanel" Style="{StaticResource CardBorder}">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="440">
+                        <Image Source="{StaticResource EasyKeepLogo}"
+                               Width="64" Height="64"
+                               HorizontalAlignment="Center" />
+                        <TextBlock x:Name="PlaceholderTitle"
+                                   Style="{StaticResource SectionTitleText}"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,16,0,0" />
+                        <TextBlock Text="Раздел будет подключён на следующем шаге разработки."
+                                   Style="{StaticResource CaptionText}"
+                                   TextAlignment="Center"
+                                   Margin="0,6,0,0" />
+                    </StackPanel>
+                </Border>
+
+                <ContentControl x:Name="ContentArea" Visibility="Collapsed">
+                    <ContentControl.RenderTransform>
+                        <TranslateTransform x:Name="ContentShift" Y="0" />
+                    </ContentControl.RenderTransform>
+                </ContentControl>
             </Grid>
         </Grid>
-    </ScrollViewer>
+    </Grid>
 </Window>

@@ -35,7 +35,7 @@
                     <TextBlock Text="Новый документ" Style="{StaticResource SectionTitleText}" VerticalAlignment="Center" />
                     <Button Content="Авто-балансировка"
                             Style="{StaticResource SecondaryButton}"
-                            FontSize="12"
+                            FontSize="{DynamicResource FontSizeSmall}"
                             Padding="10,6"
                             HorizontalAlignment="Right"
                             Click="AutoBalanceButton_Click" />
@@ -76,7 +76,9 @@
                 <Border Grid.Row="3" Style="{StaticResource AppSeparator}" />
 
                 <StackPanel Grid.Row="4">
-                    <TextBlock Text="Командная строка склада" Style="{StaticResource SectionTitleText}" FontSize="13" />
+                    <TextBlock Text="Командная строка склада"
+                               Style="{StaticResource SectionTitleText}"
+                               FontSize="{DynamicResource FontSizeBase}" />
                     <TextBox x:Name="CommandLineBox"
                              Style="{StaticResource FieldTextBox}"
                              Margin="0,6,0,0"
@@ -90,11 +92,13 @@
                     <TextBlock Text="Enter добавляет позицию +1. Повторный ввод увеличивает количество."
                                Style="{StaticResource CaptionText}"
                                Foreground="{DynamicResource TextMutedBrush}"
-                               FontSize="11" />
+                               FontSize="{DynamicResource FontSizeSmall}" />
                 </StackPanel>
 
                 <Grid Grid.Row="5" Margin="0,12,0,6">
-                    <TextBlock Text="Позиции документа" Style="{StaticResource SectionTitleText}" FontSize="13" />
+                    <TextBlock Text="Позиции документа"
+                               Style="{StaticResource SectionTitleText}"
+                               FontSize="{DynamicResource FontSizeBase}" />
                     <TextBlock x:Name="DocumentSummaryText"
                                Style="{StaticResource CaptionText}"
                                HorizontalAlignment="Right"
@@ -104,9 +108,7 @@
                 <Grid Grid.Row="6">
                     <DataGrid x:Name="LinesGrid"
                               Style="{StaticResource ModernDataGrid}"
-                              IsReadOnly="False"
-                              RowHeight="38"
-                              ColumnHeaderHeight="34">
+                              IsReadOnly="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="SKU"
                                                 Binding="{Binding Sku}"
@@ -274,7 +276,7 @@
                                                     HorizontalAlignment="Left">
                                                 <TextBlock x:Name="TypeLabel"
                                                            Text="{Binding TypeText}"
-                                                           FontSize="11"
+                                                           FontSize="{DynamicResource FontSizeSmall}"
                                                            FontWeight="SemiBold"
                                                            Foreground="{DynamicResource BadgeNeutralForegroundBrush}" />
                                             </Border>

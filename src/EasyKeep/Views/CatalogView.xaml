@@ -155,7 +155,7 @@
                 <StackPanel Grid.Row="1" Margin="0,14,0,0">
                     <TextBlock x:Name="XRayItemName"
                                Text="Товар не выбран"
-                               FontSize="15"
+                               FontSize="{DynamicResource FontSizeTitle}"
                                FontWeight="SemiBold"
                                Foreground="{DynamicResource TextPrimaryBrush}"
                                TextTrimming="CharacterEllipsis" />
@@ -177,7 +177,7 @@
                                         <StackPanel>
                                             <Grid>
                                                 <TextBlock Text="{Binding DateText}"
-                                                           FontSize="11"
+                                                           FontSize="{DynamicResource FontSizeSmall}"
                                                            Foreground="{DynamicResource TextMutedBrush}" />
                                                 <Border x:Name="HistoryTypeBadge"
                                                         Background="{DynamicResource BadgeNeutralBackgroundBrush}"
@@ -186,25 +186,25 @@
                                                         HorizontalAlignment="Right">
                                                     <TextBlock x:Name="HistoryTypeLabel"
                                                                Text="{Binding TypeText}"
-                                                               FontSize="10"
+                                                               FontSize="{DynamicResource FontSizeSmall}"
                                                                FontWeight="SemiBold"
                                                                Foreground="{DynamicResource BadgeNeutralForegroundBrush}" />
                                                 </Border>
                                             </Grid>
 
                                             <TextBlock Text="{Binding RouteText}"
-                                                       FontSize="12"
+                                                       FontSize="{DynamicResource FontSizeBase}"
                                                        Foreground="{DynamicResource TextPrimaryBrush}"
                                                        TextTrimming="CharacterEllipsis"
                                                        Margin="0,4,0,0" />
 
                                             <Grid Margin="0,3,0,0">
                                                 <TextBlock Text="{Binding QuantityText}"
-                                                           FontSize="13"
+                                                           FontSize="{DynamicResource FontSizeBase}"
                                                            FontWeight="SemiBold"
                                                            Foreground="{DynamicResource AccentBrush}" />
                                                 <TextBlock Text="{Binding Comment}"
-                                                           FontSize="11"
+                                                           FontSize="{DynamicResource FontSizeSmall}"
                                                            Foreground="{DynamicResource TextMutedBrush}"
                                                            HorizontalAlignment="Right"
                                                            MaxWidth="190"

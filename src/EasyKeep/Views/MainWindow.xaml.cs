@@ -13,7 +13,7 @@ namespace EasyKeep.Views;
 /// </summary>
 public partial class MainWindow : Window
 {
-    private static readonly int[] ScaleSteps = { 85, 95, 100, 110, 120, 135, 150 };
+    private static readonly int[] ScaleSteps = { 85, 95, 100, 110, 120, 130, 140 };
 
     private int _scalePercent = 100;
     private bool _isInitializing;
@@ -182,9 +182,21 @@ public partial class MainWindow : Window
     {
         _scalePercent = Math.Clamp(percent, ScaleSteps[0], ScaleSteps[^1]);
 
+        // Адаптивное масштабирование как в браузере: пересчитываем базовые
+        // ресурсы — шрифты, высоты контролов и отступы карточек. Layout с
+        // *-колонками сам ужимается под окно, без ScaleTransform (мыла) и
+        // внешнего ScrollViewer (горизонтальных полос).
         double factor = _scalePercent / 100.0;
-        UiScale.ScaleX = factor;
-        UiScale.ScaleY = factor;
+        ResourceDictionary resources = Application.Current.Resources;
+        resources["FontSizeSmall"] = 11.0 * factor;
+        resources["FontSizeBase"] = 13.0 * factor;
+        resources["FontSizeTitle"] = 15.0 * factor;
+        resources["FontSizeSubtitle"] = 20.0 * factor;
+        resources["FontSizePageTitle"] = 24.0 * factor;
+        resources["FontSizeKpi"] = 30.0 * factor;
+        resources["ControlHeight"] = 36.0 * factor;
+        resources["TableRowHeight"] = 44.0 * factor;
+        resources["CardPadding"] = new Thickness(20.0 * factor);
         ScalePercentText.Text = $"{_scalePercent}%";
 
         if (save)
