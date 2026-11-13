@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="960" viewBox="0 0 1480 960" role="img" aria-labelledby="title desc">
+  <title id="title">ER-диаграмма базы данных EasyKeep</title>
+  <desc id="desc">Шесть таблиц схемы dbo: categories, items, warehouses, stocks, movements, movement_items. Показаны первичные и внешние ключи, уникальные и CHECK-ограничения, связи один ко многим.</desc>
+
+  <defs>
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="125%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#0F172A" flood-opacity="0.08"/>
+    </filter>
+    <style>
+      .card { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 1.2; }
+      .header { fill: #2563EB; }
+      .title { font-family: "Segoe UI", Arial, sans-serif; font-size: 26px; font-weight: 700; fill: #0F172A; }
+      .subtitle { font-family: "Segoe UI", Arial, sans-serif; font-size: 14px; fill: #64748B; }
+      .table-name { font-family: "Segoe UI", Arial, sans-serif; font-size: 14px; font-weight: 700; fill: #FFFFFF; }
+      .field { font-family: "Segoe UI", Arial, sans-serif; font-size: 12.5px; fill: #0F172A; }
+      .type { font-family: Consolas, "Courier New", monospace; font-size: 11.5px; fill: #475569; }
+      .badge-text { font-family: "Segoe UI", Arial, sans-serif; font-size: 9.5px; font-weight: 700; }
+      .rel { stroke: #64748B; stroke-width: 1.6; fill: none; }
+      .rel-label { font-family: "Segoe UI", Arial, sans-serif; font-size: 12px; font-weight: 700; fill: #334155; }
+      .rel-note { font-family: "Segoe UI", Arial, sans-serif; font-size: 10.5px; fill: #64748B; }
+      .legend { font-family: "Segoe UI", Arial, sans-serif; font-size: 12.5px; fill: #334155; }
+      .divider { stroke: #E2E8F0; stroke-width: 1; }
+    </style>
+  </defs>
+
+  <rect width="1480" height="960" fill="#F8FAFC"/>
+
+  <text x="60" y="52" class="title">EasyKeep — ER-диаграмма базы данных</text>
+  <text x="60" y="78" class="subtitle">Схема dbo · 6 связанных таблиц · SQL Server · PK / FK / UQ / CK · связи 1 : N</text>
+
+  <!-- ================= categories ================= -->
+  <g filter="url(#cardShadow)">
+    <rect x="70" y="120" width="300" height="100" rx="12" class="card"/>
+    <path d="M70 132 A12 12 0 0 1 82 120 H358 A12 12 0 0 1 370 132 V156 H70 Z" class="header"/>
+  </g>
+  <text x="84" y="143" class="table-name">dbo.categories</text>
+
+  <rect x="82" y="161" width="30" height="16" rx="4" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.8"/>
+  <text x="97" y="173" text-anchor="middle" class="badge-text" fill="#92400E">PK</text>
+  <text x="120" y="173" class="field">id</text>
+  <text x="356" y="173" text-anchor="end" class="type">INT IDENTITY</text>
+  <line x1="70" y1="182" x2="370" y2="182" class="divider"/>
+
+  <rect x="82" y="187" width="30" height="16" rx="4" fill="#DCFCE7" stroke="#22C55E" stroke-width="0.8"/>
+  <text x="97" y="199" text-anchor="middle" class="badge-text" fill="#166534">UQ</text>
+  <text x="120" y="199" class="field">name</text>
+  <text x="356" y="199" text-anchor="end" class="type">NVARCHAR(100)</text>
+
+  <!-- ================= items ================= -->
+  <g filter="url(#cardShadow)">
+    <rect x="70" y="330" width="340" height="230" rx="12" class="card"/>
+    <path d="M70 342 A12 12 0 0 1 82 330 H398 A12 12 0 0 1 410 342 V366 H70 Z" class="header"/>
+  </g>
+  <text x="84" y="353" class="table-name">dbo.items</text>
+
+  <rect x="82" y="371" width="30" height="16" rx="4" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.8"/>
+  <text x="97" y="383" text-anchor="middle" class="badge-text" fill="#92400E">PK</text>
+  <text x="120" y="383" class="field">id</text>
+  <text x="396" y="383" text-anchor="end" class="type">INT IDENTITY</text>
+  <line x1="70" y1="392" x2="410" y2="392" class="divider"/>
+
+  <rect x="82" y="397" width="30" height="16" rx="4" fill="#DCFCE7" stroke="#22C55E" stroke-width="0.8"/>
+  <text x="97" y="409" text-anchor="middle" class="badge-text" fill="#166534">UQ</text>
+  <text x="120" y="409" class="field">sku</text>
+  <text x="396" y="409" text-anchor="end" class="type">NVARCHAR(50)</text>
+  <line x1="70" y1="418" x2="410" y2="418" class="divider"/>
+
+  <text x="86" y="435" class="field">name</text>
+  <text x="396" y="435" text-anchor="end" class="type">NVARCHAR(200)</text>
+  <line x1="70" y1="444" x2="410" y2="444" class="divider"/>
+
+  <rect x="82" y="449" width="30" height="16" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="0.8"/>
+  <text x="97" y="461" text-anchor="middle" class="badge-text" fill="#1D4ED8">FK</text>
+  <text x="120" y="461" class="field">category_id</text>
+  <text x="396" y="461" text-anchor="end" class="type">INT</text>
+  <line x1="70" y1="470" x2="410" y2="470" class="divider"/>
+
+  <text x="86" y="487" class="field">unit</text>
+  <text x="396" y="487" text-anchor="end" class="type">NVARCHAR(20)</text>
+  <line x1="70" y1="496" x2="410" y2="496" class="divider"/>
+
+  <rect x="82" y="501" width="30" height="16" rx="4" fill="#FEE2E2" stroke="#F87171" stroke-width="0.8"/>
+  <text x="97" y="513" text-anchor="middle" class="badge-text" fill="#B91C1C">CK</text>
+  <text x="120" y="513" class="field">price</text>
+  <text x="396" y="513" text-anchor="end" class="type">DECIMAL(18,2)</text>
+  <line x1="70" y1="522" x2="410" y2="522" class="divider"/>
+
+  <rect x="82" y="527" width="30" height="16" rx="4" fill="#FEE2E2" stroke="#F87171" stroke-width="0.8"/>
+  <text x="97" y="539" text-anchor="middle" class="badge-text" fill="#B91C1C">CK</text>
+  <text x="120" y="539" class="field">min_stock</text>
+  <text x="396" y="539" text-anchor="end" class="type">INT</text>
+
+  <!-- ================= warehouses ================= -->
+  <g filter="url(#cardShadow)">
+    <rect x="1060" y="120" width="320" height="126" rx="12" class="card"/>
+    <path d="M1060 132 A12 12 0 0 1 1072 120 H1368 A12 12 0 0 1 1380 132 V156 H1060 Z" class="header"/>
+  </g>
+  <text x="1074" y="143" class="table-name">dbo.warehouses</text>
+
+  <rect x="1072" y="161" width="30" height="16" rx="4" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.8"/>
+  <text x="1087" y="173" text-anchor="middle" class="badge-text" fill="#92400E">PK</text>
+  <text x="1110" y="173" class="field">id</text>
+  <text x="1366" y="173" text-anchor="end" class="type">INT IDENTITY</text>
+  <line x1="1060" y1="182" x2="1380" y2="182" class="divider"/>
+
+  <rect x="1072" y="187" width="30" height="16" rx="4" fill="#DCFCE7" stroke="#22C55E" stroke-width="0.8"/>
+  <text x="1087" y="199" text-anchor="middle" class="badge-text" fill="#166534">UQ</text>
+  <text x="1110" y="199" class="field">name</text>
+  <text x="1366" y="199" text-anchor="end" class="type">NVARCHAR(100)</text>
+  <line x1="1060" y1="208" x2="1380" y2="208" class="divider"/>
+
+  <text x="1076" y="225" class="field">address</text>
+  <text x="1366" y="225" text-anchor="end" class="type">NVARCHAR(300) NULL</text>
+
+  <!-- ================= stocks ================= -->
+  <g filter="url(#cardShadow)">
+    <rect x="590" y="300" width="350" height="178" rx="12" class="card"/>
+    <path d="M590 312 A12 12 0 0 1 602 300 H928 A12 12 0 0 1 940 312 V336 H590 Z" class="header"/>
+  </g>
+  <text x="604" y="323" class="table-name">dbo.stocks</text>
+
+  <rect x="602" y="341" width="30" height="16" rx="4" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.8"/>
+  <text x="617" y="353" text-anchor="middle" class="badge-text" fill="#92400E">PK</text>
+  <text x="640" y="353" class="field">id</text>
+  <text x="926" y="353" text-anchor="end" class="type">INT IDENTITY</text>
+  <line x1="590" y1="362" x2="940" y2="362" class="divider"/>
+
+  <rect x="602" y="367" width="30" height="16" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="0.8"/>
+  <text x="617" y="379" text-anchor="middle" class="badge-text" fill="#1D4ED8">FK</text>
+  <text x="640" y="379" class="field">warehouse_id</text>
+  <text x="926" y="379" text-anchor="end" class="type">INT</text>
+  <line x1="590" y1="388" x2="940" y2="388" class="divider"/>
+
+  <rect x="602" y="393" width="30" height="16" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="0.8"/>
+  <text x="617" y="405" text-anchor="middle" class="badge-text" fill="#1D4ED8">FK</text>
+  <text x="640" y="405" class="field">item_id</text>
+  <text x="926" y="405" text-anchor="end" class="type">INT</text>
+  <line x1="590" y1="414" x2="940" y2="414" class="divider"/>
+
+  <rect x="602" y="419" width="30" height="16" rx="4" fill="#FEE2E2" stroke="#F87171" stroke-width="0.8"/>
+  <text x="617" y="431" text-anchor="middle" class="badge-text" fill="#B91C1C">CK</text>
+  <text x="640" y="431" class="field">quantity</text>
+  <text x="926" y="431" text-anchor="end" class="type">INT · &gt;= 0</text>
+  <line x1="590" y1="440" x2="940" y2="440" class="divider"/>
+
+  <rect x="602" y="445" width="30" height="16" rx="4" fill="#DCFCE7" stroke="#22C55E" stroke-width="0.8"/>
+  <text x="617" y="457" text-anchor="middle" class="badge-text" fill="#166534">UQ</text>
+  <text x="640" y="457" class="field">(warehouse_id, item_id)</text>
+  <text x="926" y="457" text-anchor="end" class="type">UNIQUE</text>
+
+  <!-- ================= movements ================= -->
+  <g filter="url(#cardShadow)">
+    <rect x="1060" y="330" width="350" height="204" rx="12" class="card"/>
+    <path d="M1060 342 A12 12 0 0 1 1072 330 H1398 A12 12 0 0 1 1410 342 V366 H1060 Z" class="header"/>
+  </g>
+  <text x="1074" y="353" class="table-name">dbo.movements</text>
+
+  <rect x="1072" y="371" width="30" height="16" rx="4" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.8"/>
+  <text x="1087" y="383" text-anchor="middle" class="badge-text" fill="#92400E">PK</text>
+  <text x="1110" y="383" class="field">id</text>
+  <text x="1396" y="383" text-anchor="end" class="type">INT IDENTITY</text>
+  <line x1="1060" y1="392" x2="1410" y2="392" class="divider"/>
+
+  <rect x="1072" y="397" width="30" height="16" rx="4" fill="#FEE2E2" stroke="#F87171" stroke-width="0.8"/>
+  <text x="1087" y="409" text-anchor="middle" class="badge-text" fill="#B91C1C">CK</text>
+  <text x="1110" y="409" class="field">type</text>
+  <text x="1396" y="409" text-anchor="end" class="type">NVARCHAR(10)</text>
+  <line x1="1060" y1="418" x2="1410" y2="418" class="divider"/>
+
+  <rect x="1072" y="423" width="30" height="16" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="0.8"/>
+  <text x="1087" y="435" text-anchor="middle" class="badge-text" fill="#1D4ED8">FK</text>
+  <text x="1110" y="435" class="field">from_warehouse_id</text>
+  <text x="1396" y="435" text-anchor="end" class="type">INT NULL</text>
+  <line x1="1060" y1="444" x2="1410" y2="444" class="divider"/>
+
+  <rect x="1072" y="449" width="30" height="16" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="0.8"/>
+  <text x="1087" y="461" text-anchor="middle" class="badge-text" fill="#1D4ED8">FK</text>
+  <text x="1110" y="461" class="field">to_warehouse_id</text>
+  <text x="1396" y="461" text-anchor="end" class="type">INT NULL</text>
+  <line x1="1060" y1="470" x2="1410" y2="470" class="divider"/>
+
+  <text x="1076" y="487" class="field">created_at</text>
+  <text x="1396" y="487" text-anchor="end" class="type">DATETIME2(0)</text>
+  <line x1="1060" y1="496" x2="1410" y2="496" class="divider"/>
+
+  <text x="1076" y="513" class="field">comment</text>
+  <text x="1396" y="513" text-anchor="end" class="type">NVARCHAR(500) NULL</text>
+
+  <!-- ================= movement_items ================= -->
+  <g filter="url(#cardShadow)">
+    <rect x="590" y="640" width="350" height="178" rx="12" class="card"/>
+    <path d="M590 652 A12 12 0 0 1 602 640 H928 A12 12 0 0 1 940 652 V676 H590 Z" class="header"/>
+  </g>
+  <text x="604" y="663" class="table-name">dbo.movement_items</text>
+
+  <rect x="602" y="681" width="30" height="16" rx="4" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.8"/>
+  <text x="617" y="693" text-anchor="middle" class="badge-text" fill="#92400E">PK</text>
+  <text x="640" y="693" class="field">id</text>
+  <text x="926" y="693" text-anchor="end" class="type">INT IDENTITY</text>
+  <line x1="590" y1="702" x2="940" y2="702" class="divider"/>
+
+  <rect x="602" y="707" width="30" height="16" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="0.8"/>
+  <text x="617" y="719" text-anchor="middle" class="badge-text" fill="#1D4ED8">FK</text>
+  <text x="640" y="719" class="field">movement_id</text>
+  <text x="926" y="719" text-anchor="end" class="type">INT · CASCADE</text>
+  <line x1="590" y1="728" x2="940" y2="728" class="divider"/>
+
+  <rect x="602" y="733" width="30" height="16" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="0.8"/>
+  <text x="617" y="745" text-anchor="middle" class="badge-text" fill="#1D4ED8">FK</text>
+  <text x="640" y="745" class="field">item_id</text>
+  <text x="926" y="745" text-anchor="end" class="type">INT</text>
+  <line x1="590" y1="754" x2="940" y2="754" class="divider"/>
+
+  <rect x="602" y="759" width="30" height="16" rx="4" fill="#FEE2E2" stroke="#F87171" stroke-width="0.8"/>
+  <text x="617" y="771" text-anchor="middle" class="badge-text" fill="#B91C1C">CK</text>
+  <text x="640" y="771" class="field">quantity</text>
+  <text x="926" y="771" text-anchor="end" class="type">INT · &gt; 0</text>
+  <line x1="590" y1="780" x2="940" y2="780" class="divider"/>
+
+  <rect x="602" y="785" width="30" height="16" rx="4" fill="#DCFCE7" stroke="#22C55E" stroke-width="0.8"/>
+  <text x="617" y="797" text-anchor="middle" class="badge-text" fill="#166534">UQ</text>
+  <text x="640" y="797" class="field">(movement_id, item_id)</text>
+  <text x="926" y="797" text-anchor="end" class="type">UNIQUE</text>
+
+  <!-- ================= relationships ================= -->
+  <!-- categories 1 -> N items -->
+  <path d="M220 220 L220 330" class="rel"/>
+  <circle cx="220" cy="226" r="3.5" fill="#64748B"/>
+  <path d="M213 322 L220 330 L227 322" class="rel"/>
+  <text x="232" y="252" class="rel-label">1</text>
+  <text x="232" y="322" class="rel-label">N</text>
+
+  <!-- items 1 -> N stocks -->
+  <path d="M410 420 H500 V360 H590" class="rel"/>
+  <circle cx="416" cy="420" r="3.5" fill="#64748B"/>
+  <path d="M582 353 L590 360 L582 367" class="rel"/>
+  <text x="444" y="410" class="rel-label">1</text>
+  <text x="568" y="353" class="rel-label">N</text>
+
+  <!-- warehouses 1 -> N stocks -->
+  <path d="M1060 200 H1000 V360 H940" class="rel"/>
+  <circle cx="1054" cy="200" r="3.5" fill="#64748B"/>
+  <path d="M948 353 L940 360 L948 367" class="rel"/>
+  <text x="1014" y="190" class="rel-label">1</text>
+  <text x="950" y="353" class="rel-label">N</text>
+
+  <!-- warehouses 1 -> N movements (from) -->
+  <path d="M1150 246 L1150 330" class="rel"/>
+  <circle cx="1150" cy="252" r="3.5" fill="#64748B"/>
+  <path d="M1143 322 L1150 330 L1157 322" class="rel"/>
+  <text x="1160" y="268" class="rel-label">1</text>
+  <text x="1160" y="322" class="rel-label">N</text>
+  <text x="1174" y="300" class="rel-note">from_warehouse_id</text>
+
+  <!-- warehouses 1 -> N movements (to) -->
+  <path d="M1380 160 H1448 V440 H1410" class="rel"/>
+  <circle cx="1386" cy="160" r="3.5" fill="#64748B"/>
+  <path d="M1418 433 L1410 440 L1418 447" class="rel"/>
+  <text x="1394" y="152" class="rel-label">1</text>
+  <text x="1416" y="458" class="rel-label">N</text>
+  <text x="1420" y="380" class="rel-note" transform="rotate(-90 1420 380)">to_warehouse_id</text>
+
+  <!-- movements 1 -> N movement_items -->
+  <path d="M1060 470 H1000 V700 H940" class="rel"/>
+  <circle cx="1054" cy="470" r="3.5" fill="#64748B"/>
+  <path d="M948 693 L940 700 L948 707" class="rel"/>
+  <text x="1014" y="462" class="rel-label">1</text>
+  <text x="950" y="693" class="rel-label">N</text>
+
+  <!-- items 1 -> N movement_items -->
+  <path d="M240 560 L240 600 H720 V640" class="rel"/>
+  <circle cx="240" cy="566" r="3.5" fill="#64748B"/>
+  <path d="M713 632 L720 640 L727 632" class="rel"/>
+  <text x="250" y="582" class="rel-label">1</text>
+  <text x="732" y="633" class="rel-label">N</text>
+
+  <!-- ================= legend ================= -->
+  <line x1="60" y1="868" x2="1420" y2="868" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="60" y="900" class="legend" font-weight="700">Обозначения:</text>
+
+  <rect x="176" y="887" width="30" height="17" rx="4" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.8"/>
+  <text x="191" y="900" text-anchor="middle" class="badge-text" fill="#92400E">PK</text>
+  <text x="214" y="900" class="legend">первичный ключ</text>
+
+  <rect x="330" y="887" width="30" height="17" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="0.8"/>
+  <text x="345" y="900" text-anchor="middle" class="badge-text" fill="#1D4ED8">FK</text>
+  <text x="368" y="900" class="legend">внешний ключ</text>
+
+  <rect x="486" y="887" width="30" height="17" rx="4" fill="#DCFCE7" stroke="#22C55E" stroke-width="0.8"/>
+  <text x="501" y="900" text-anchor="middle" class="badge-text" fill="#166534">UQ</text>
+  <text x="524" y="900" class="legend">уникальность</text>
+
+  <rect x="650" y="887" width="30" height="17" rx="4" fill="#FEE2E2" stroke="#F87171" stroke-width="0.8"/>
+  <text x="665" y="900" text-anchor="middle" class="badge-text" fill="#B91C1C">CK</text>
+  <text x="688" y="900" class="legend">CHECK-ограничение</text>
+
+  <path d="M866 895 L916 895" class="rel"/>
+  <text x="872" y="888" class="rel-label">1</text>
+  <text x="906" y="912" class="rel-label">N</text>
+  <text x="928" y="900" class="legend">один ко многим</text>
+
+  <text x="60" y="932" class="rel-note">Источник: database/schema.sql · таблицы и ключи совпадают с описанием в docs/database-schema.md</text>
+</svg>
