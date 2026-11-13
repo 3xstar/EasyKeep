@@ -1,0 +1,37 @@
+using System.Windows;
+
+namespace EasyKeep.Views;
+
+/// <summary>Строка предпросмотра черновика авто-балансировки.</summary>
+public record AutoBalancePreviewRow(
+    string WarehouseName,
+    string Sku,
+    string ItemName,
+    int Quantity);
+
+/// <summary>
+/// Диалог проверки и подтверждения черновиков авто-балансировки.
+/// </summary>
+public partial class AutoBalanceDialog : Window
+{
+    public AutoBalanceDialog(IReadOnlyList<AutoBalancePreviewRow> rows)
+    {
+        InitializeComponent();
+
+        DraftsGrid.ItemsSource = rows;
+
+        int warehousesCount = rows.Select(row => row.WarehouseName).Distinct().Count();
+        int totalQuantity = rows.Sum(row => row.Quantity);
+        SummaryText.Text = $"Точек: {warehousesCount} · строк: {rows.Count} · единиц: {totalQuantity}";
+    }
+
+    private void ConfirmButton_Click(object sender, RoutedEventArgs e)
+    {
+        DialogResult = true;
+    }
+
+    private void CancelButton_Click(object sender, RoutedEventArgs e)
+    {
+        DialogResult = false;
+    }
+}

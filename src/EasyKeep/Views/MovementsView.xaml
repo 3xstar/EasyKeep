@@ -1,0 +1,322 @@
+<UserControl x:Class="EasyKeep.Views.MovementsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Loaded="MovementsView_Loaded">
+
+    <UserControl.Resources>
+        <Style x:Key="NumberCellText" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="TextAlignment" Value="Right" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="400" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- ==================== Форма нового документа ==================== -->
+        <Border Style="{StaticResource CardBorder}" Padding="18">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid>
+                    <TextBlock Text="Новый документ" Style="{StaticResource SectionTitleText}" VerticalAlignment="Center" />
+                    <Button Content="Авто-балансировка"
+                            Style="{StaticResource SecondaryButton}"
+                            FontSize="12"
+                            Padding="10,6"
+                            HorizontalAlignment="Right"
+                            Click="AutoBalanceButton_Click" />
+                </Grid>
+
+                <StackPanel Grid.Row="1" Margin="0,14,0,0">
+                    <TextBlock Text="Тип операции" Style="{StaticResource CaptionText}" Margin="0,0,0,6" />
+                    <ComboBox x:Name="TypeCombo"
+                              Style="{StaticResource FieldComboBox}"
+                              SelectionChanged="TypeCombo_SelectionChanged">
+                        <ComboBoxItem Content="Приход (IN)" Tag="IN" />
+                        <ComboBoxItem Content="Расход (OUT)" Tag="OUT" />
+                        <ComboBoxItem Content="Перемещение (TRANSFER)" Tag="TRANSFER" />
+                    </ComboBox>
+                </StackPanel>
+
+                <Grid Grid.Row="2" Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel x:Name="SourceWarehousePanel">
+                        <TextBlock Text="Склад-источник" Style="{StaticResource CaptionText}" Margin="0,0,0,6" />
+                        <ComboBox x:Name="SourceWarehouse"
+                                  Style="{StaticResource FieldComboBox}"
+                                  DisplayMemberPath="Name" />
+                    </StackPanel>
+
+                    <StackPanel x:Name="TargetWarehousePanel" Grid.Column="1">
+                        <TextBlock Text="Склад-получатель" Style="{StaticResource CaptionText}" Margin="0,0,0,6" />
+                        <ComboBox x:Name="TargetWarehouse"
+                                  Style="{StaticResource FieldComboBox}"
+                                  DisplayMemberPath="Name" />
+                    </StackPanel>
+                </Grid>
+
+                <Border Grid.Row="3" Style="{StaticResource AppSeparator}" />
+
+                <StackPanel Grid.Row="4">
+                    <TextBlock Text="Командная строка склада" Style="{StaticResource SectionTitleText}" FontSize="13" />
+                    <TextBox x:Name="CommandLineBox"
+                             Style="{StaticResource FieldTextBox}"
+                             Margin="0,6,0,0"
+                             MaxLength="100"
+                             KeyDown="CommandLineBox_KeyDown"
+                             ToolTip="Введите SKU или часть названия и нажмите Enter" />
+                    <TextBlock x:Name="CommandFeedbackText"
+                               Style="{StaticResource CaptionText}"
+                               MinHeight="16"
+                               Margin="0,4,0,0" />
+                    <TextBlock Text="Enter добавляет позицию +1. Повторный ввод увеличивает количество."
+                               Style="{StaticResource CaptionText}"
+                               Foreground="{StaticResource TextMutedBrush}"
+                               FontSize="11" />
+                </StackPanel>
+
+                <Grid Grid.Row="5" Margin="0,12,0,6">
+                    <TextBlock Text="Позиции документа" Style="{StaticResource SectionTitleText}" FontSize="13" />
+                    <TextBlock x:Name="DocumentSummaryText"
+                               Style="{StaticResource CaptionText}"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center" />
+                </Grid>
+
+                <Grid Grid.Row="6">
+                    <DataGrid x:Name="LinesGrid"
+                              Style="{StaticResource ModernDataGrid}"
+                              IsReadOnly="False"
+                              RowHeight="38"
+                              ColumnHeaderHeight="34">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="SKU"
+                                                Binding="{Binding Sku}"
+                                                IsReadOnly="True"
+                                                Width="85" />
+                            <DataGridTextColumn Header="Товар"
+                                                Binding="{Binding Name}"
+                                                IsReadOnly="True"
+                                                Width="*" />
+                            <DataGridTextColumn Header="Кол-во"
+                                                Binding="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"
+                                                Width="62"
+                                                ElementStyle="{StaticResource NumberCellText}" />
+                            <DataGridTextColumn Header="Ед."
+                                                Binding="{Binding Unit}"
+                                                IsReadOnly="True"
+                                                Width="48" />
+                            <DataGridTemplateColumn Width="34">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="✕"
+                                                   Foreground="{StaticResource TextMutedBrush}"
+                                                   Cursor="Hand"
+                                                   ToolTip="Удалить позицию"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   MouseLeftButtonUp="RemoveLine_Click" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <TextBlock x:Name="LinesEmptyText"
+                               Text="Добавьте товар через командную строку выше."
+                               Style="{StaticResource EmptyStateText}"
+                               IsHitTestVisible="False" />
+                </Grid>
+
+                <StackPanel Grid.Row="7" Margin="0,10,0,0">
+                    <TextBlock Text="Комментарий (необязательно)" Style="{StaticResource CaptionText}" Margin="0,0,0,6" />
+                    <TextBox x:Name="CommentBox"
+                             Style="{StaticResource FieldTextBox}"
+                             MaxLength="500" />
+                </StackPanel>
+
+                <Grid Grid.Row="8" Margin="0,14,0,0">
+                    <Button Content="Очистить"
+                            Style="{StaticResource SecondaryButton}"
+                            HorizontalAlignment="Left"
+                            Click="ClearButton_Click" />
+                    <Button Content="Провести документ"
+                            Style="{StaticResource PrimaryButton}"
+                            HorizontalAlignment="Right"
+                            Click="PostButton_Click" />
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- ==================== Журнал операций ==================== -->
+        <Grid Grid.Column="1" Margin="16,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Border Style="{StaticResource CardBorder}" Padding="16">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                        <TextBlock Text="С даты" Style="{StaticResource CaptionText}" Margin="0,0,0,6" />
+                        <DatePicker x:Name="FromDatePicker" SelectedDateChanged="JournalFilter_Changed" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                        <TextBlock Text="По дату" Style="{StaticResource CaptionText}" Margin="0,0,0,6" />
+                        <DatePicker x:Name="ToDatePicker" SelectedDateChanged="JournalFilter_Changed" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Тип операции" Style="{StaticResource CaptionText}" Margin="0,0,0,6" />
+                        <ComboBox x:Name="TypeFilter"
+                                  Style="{StaticResource FieldComboBox}"
+                                  SelectionChanged="JournalFilter_Changed">
+                            <ComboBoxItem Content="Все операции" Tag="" />
+                            <ComboBoxItem Content="Приход" Tag="IN" />
+                            <ComboBoxItem Content="Расход" Tag="OUT" />
+                            <ComboBoxItem Content="Перемещение" Tag="TRANSFER" />
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,10,10,0">
+                        <TextBlock Text="Склад" Style="{StaticResource CaptionText}" Margin="0,0,0,6" />
+                        <ComboBox x:Name="JournalWarehouse"
+                                  Style="{StaticResource FieldComboBox}"
+                                  DisplayMemberPath="Name"
+                                  SelectionChanged="JournalFilter_Changed" />
+                    </StackPanel>
+
+                    <Grid Grid.Row="1" Grid.Column="2" Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Margin="0,0,8,0">
+                            <TextBlock Text="Поиск по товару" Style="{StaticResource CaptionText}" Margin="0,0,0,6" />
+                            <TextBox x:Name="JournalSearchBox"
+                                     Style="{StaticResource FieldTextBox}"
+                                     MaxLength="100"
+                                     KeyDown="JournalSearchBox_KeyDown" />
+                        </StackPanel>
+                        <Button Grid.Column="1"
+                                Content="Показать"
+                                Style="{StaticResource PrimaryButton}"
+                                VerticalAlignment="Bottom"
+                                Click="RefreshJournalButton_Click" />
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="1"
+                    Style="{StaticResource CardBorder}"
+                    Padding="0"
+                    Margin="0,16,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Margin="18,14,18,10">
+                        <TextBlock Text="Журнал операций" Style="{StaticResource SectionTitleText}" />
+                        <Border Style="{StaticResource PillBorder}" HorizontalAlignment="Right">
+                            <TextBlock x:Name="JournalSummaryText"
+                                       Style="{StaticResource CaptionText}"
+                                       Foreground="{StaticResource AccentBrush}"
+                                       FontWeight="SemiBold" />
+                        </Border>
+                    </Grid>
+
+                    <Grid Grid.Row="1">
+                        <DataGrid x:Name="JournalGrid"
+                                  Style="{StaticResource ModernDataGrid}"
+                                  BorderThickness="0">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Дата"
+                                                    Binding="{Binding CreatedAt, StringFormat={}{0:dd.MM.yyyy HH:mm}}"
+                                                    Width="112" />
+                                <DataGridTemplateColumn Header="Тип" Width="98">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border x:Name="TypeBadge"
+                                                    Background="#F1F5F9"
+                                                    CornerRadius="999"
+                                                    Padding="8,3"
+                                                    HorizontalAlignment="Left">
+                                                <TextBlock x:Name="TypeLabel"
+                                                           Text="{Binding TypeText}"
+                                                           FontSize="11"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="#475569" />
+                                            </Border>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding Type}" Value="IN">
+                                                    <Setter TargetName="TypeBadge" Property="Background" Value="#F0FDF4" />
+                                                    <Setter TargetName="TypeLabel" Property="Foreground" Value="#15803D" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Type}" Value="OUT">
+                                                    <Setter TargetName="TypeBadge" Property="Background" Value="#FEF2F2" />
+                                                    <Setter TargetName="TypeLabel" Property="Foreground" Value="#DC2626" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Type}" Value="TRANSFER">
+                                                    <Setter TargetName="TypeBadge" Property="Background" Value="#EFF6FF" />
+                                                    <Setter TargetName="TypeLabel" Property="Foreground" Value="#2563EB" />
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="Маршрут"
+                                                    Binding="{Binding RouteText}"
+                                                    Width="*" />
+                                <DataGridTextColumn Header="Позиций"
+                                                    Binding="{Binding ItemsCount}"
+                                                    Width="68"
+                                                    ElementStyle="{StaticResource NumberCellText}" />
+                                <DataGridTextColumn Header="Единиц"
+                                                    Binding="{Binding TotalQuantity}"
+                                                    Width="68"
+                                                    ElementStyle="{StaticResource NumberCellText}" />
+                                <DataGridTextColumn Header="Комментарий"
+                                                    Binding="{Binding Comment}"
+                                                    Width="110" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <TextBlock x:Name="JournalStateText"
+                                   Style="{StaticResource EmptyStateText}" />
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

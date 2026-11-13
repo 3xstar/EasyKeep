@@ -41,6 +41,7 @@ public partial class MainWindow : Window
         UserControl? view = section switch
         {
             "stocks" => new StocksView(),
+            "movements" => new MovementsView(),
             _ => null
         };
 

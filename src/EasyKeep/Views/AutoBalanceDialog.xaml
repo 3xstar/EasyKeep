@@ -1,0 +1,66 @@
+<Window x:Class="EasyKeep.Views.AutoBalanceDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Авто-балансировка складов"
+        Height="560" Width="760"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        FontFamily="Segoe UI"
+        Background="{StaticResource AppBackgroundBrush}">
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel>
+            <TextBlock Text="Черновики авто-балансировки"
+                       Style="{StaticResource PageTitleText}" />
+            <TextBlock Text="Система подобрала перемещения с основного склада на торговые точки. Проверьте цифры перед проведением."
+                       Style="{StaticResource CaptionText}"
+                       Margin="0,4,0,0" />
+        </StackPanel>
+
+        <Border Grid.Row="1"
+                Style="{StaticResource CardBorder}"
+                Padding="0"
+                Margin="0,18,0,0">
+            <DataGrid x:Name="DraftsGrid"
+                      Style="{StaticResource ModernDataGrid}"
+                      BorderThickness="0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Торговая точка"
+                                        Binding="{Binding WarehouseName}"
+                                        Width="190" />
+                    <DataGridTextColumn Header="SKU"
+                                        Binding="{Binding Sku}"
+                                        Width="120" />
+                    <DataGridTextColumn Header="Товар"
+                                        Binding="{Binding ItemName}"
+                                        Width="*" />
+                    <DataGridTextColumn Header="Количество"
+                                        Binding="{Binding Quantity}"
+                                        Width="110" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <Grid Grid.Row="2" Margin="0,18,0,0">
+            <TextBlock x:Name="SummaryText"
+                       Style="{StaticResource CaptionText}"
+                       VerticalAlignment="Center" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Отмена"
+                        Style="{StaticResource SecondaryButton}"
+                        Margin="0,0,10,0"
+                        Click="CancelButton_Click" />
+                <Button Content="Провести все"
+                        Style="{StaticResource PrimaryButton}"
+                        Click="ConfirmButton_Click" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

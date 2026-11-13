@@ -1,5 +1,6 @@
 using EasyKeep.Data;
 using EasyKeep.Data.Entities;
+using EasyKeep.Data.Reports;
 using Microsoft.EntityFrameworkCore;
 
 namespace EasyKeep.Services;
@@ -90,5 +91,49 @@ public class MovementService
             .Where(stock => stock.WarehouseId == warehouseId && stock.ItemId == itemId)
             .Select(stock => stock.Quantity)
             .FirstOrDefaultAsync();
+    }
+
+    /// <summary>
+    /// Ищет товар для «Командной строки склада»: сначала точный SKU,
+    /// затем частичное совпадение по названию.
+    /// </summary>
+    public async Task<Item?> FindItemAsync(string query)
+    {
+        string value = query.Trim();
+        if (value.Length == 0)
+            return null;
+
+        Item? bySku = await _context.Items
+            .AsNoTracking()
+            .FirstOrDefaultAsync(item => item.Sku == value);
+        if (bySku is not null)
+            return bySku;
+
+        return await _context.Items
+            .AsNoTracking()
+            .Where(item => item.Name.Contains(value))
+            .OrderBy(item => item.Name)
+            .FirstOrDefaultAsync();
+    }
+
+    /// <summary>Товары по списку id — для подписей в предпросмотре авто-балансировки.</summary>
+    public async Task<List<Item>> GetItemsAsync(IEnumerable<int> itemIds)
+    {
+        int[] ids = itemIds.Distinct().ToArray();
+        return await _context.Items
+            .AsNoTracking()
+            .Where(item => ids.Contains(item.Id))
+            .ToListAsync();
+    }
+
+    /// <summary>Журнал движений (делегируется в ADO.NET репозиторий).</summary>
+    public List<MovementJournalRow> GetJournal(
+        DateTime from,
+        DateTime to,
+        string? type = null,
+        int? warehouseId = null,
+        string? search = null)
+    {
+        return _repository.GetJournal(from, to, type, warehouseId, search);
     }
 }

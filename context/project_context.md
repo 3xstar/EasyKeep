@@ -68,14 +68,19 @@
 
 ### Статус последней сессии
 - **Активный агент:** OpenCode (DeepSeek V4.1 Flash Free)
-- **Последний коммит Git:** `a6cbfa6` — `feat: добавлен экран остатков со светофором дефицита`; перед ним `497c08c` — `docs: зафиксирован хэш коммита UI-каркаса`
+- **Последний коммит Git:** `feat: реализован экран движений с командной строкой и авто-балансировкой` (хэш фиксируется следующим docs-коммитом); перед ним `34b00b8` — `docs: зафиксирован хэш коммита экрана остатков`
 - **Что сделано:**
-  - **Этап 2, шаг 2.1:** `Styles.xaml` (светлая дизайн-система, векторный логотип), `MainWindow` с меню «Остатки / Движения / Каталог / Отчёт», фоллбэк `AppConfig` на `(localdb)\MSSQLLocalDB`.
-  - **Этап 2, шаг 2.2:** создан `Services/WarehouseService.cs` (`GetWarehousesAsync`) — справочник складов без SQL в UI.
-  - Создан `Views/StocksView.xaml(.cs)`: таблица `DeficitService.GetDeficitRowsAsync` (SKU, товар, склад, остаток, минимум, расход/день, прогноз, светофор), фильтр по складу с пунктом «Все склады», поиск по SKU/названию, кнопка «Обновить», счётчик «Позиций / критично» и пустые состояния для «нет данных»/«ничего не найдено».
-  - Цветные бейджи статусов: 🔴 критично (красный), 🟡 внимание (янтарный), 🟢 норма (зелёный), ⚪ неликвид (серый). `MainWindow.ShowSection` для раздела `stocks` подключает `new StocksView()`.
-  - Проверено через UI Automation на LocalDB: загружено 43 строки, 5 критичных, статусы и прогноз отображаются (например, `COF-001` — 🟡 7,9 дн.; `MILK-001` — 🔴 9,9 дн. при минимуме 40).
-  - `dotnet build src/EasyKeep.sln` — 0 ошибок, 0 предупреждений; окно запускается.
+  - **Этап 2, шаги 2.1–2.2:** дизайн-система `Styles.xaml`, главное окно с меню, фоллбэк LocalDB в `AppConfig`, экран «Остатки» (`StocksView`) со светофором и фильтрами.
+  - **Этап 2, шаг 2.3:** расширен `Services/MovementService.cs`: `FindItemAsync`, `GetItemsAsync`, `GetJournal` (делегирование в `AdoNetMovementRepository`).
+  - `Data/Reports/MovementJournalRow.cs`: добавлены вычисляемые `TypeText` (Приход/Расход/Перемещение) и `RouteText` (склад-источник → склад-получатель).
+  - Создан `Views/MovementsView.xaml(.cs)`: форма IN/OUT/TRANSFER с переключением складов, «Командная строка склада» (Enter → поиск по SKU/названию → `+1`, повторный ввод увеличивает количество), редактируемая таблица позиций, удаление строк, комментарий, подтверждение проведения, журнал с фильтрами по периоду/типу/складу/товару и кнопкой «Показать».
+  - `Views/MovementLineModel.cs`: строка документа с `INotifyPropertyChanged` для пересчёта итогов.
+  - Создан `Views/AutoBalanceDialog.xaml(.cs)` — предпросмотр черновиков `BuildDraftsAsync` (точка, SKU, товар, количество) с подтверждением «Провести все».
+  - Умная подсказка `InsufficientStockException`: показывает доступный остаток, предлагает подставить максимум или удалить позицию при нуле.
+  - `MainWindow.ShowSection` подключает `MovementsView` для раздела `movements`.
+  - Проверено через UI Automation: журнал за 30 дней — 27 документов; «Командная строка» добавила `COF-001` (+1); авто-балансировка показала 2 точки / 3 строки / 21 ед. (Торговый зал: `COF-002` 10, `MILK-001` 4; Кофейня: `BAKE-002` 7); тестовый расход `COF-002` подтверждён и проведён (документ №29, журнал 28), после проверки документ удалён, остаток восстановлен, `IDENTITY` возвращён к 28/129; нехватка `SUP-004` показала диалог «Доступно: 0, запрошено: 1».
+  - БД после тестов: 28 движений, 129 строк, 43 остатка, 19 товаров.
+  - `dotnet build src/EasyKeep.sln` — 0 ошибок, 0 предупреждений; приложение запускается.
 
 ### Контракты и сигнатуры (накопительная база — не стирать рабочее)
 
@@ -224,17 +229,32 @@ src/EasyKeep/
   - `RefreshButton_Click` перезагружает строки; ошибки БД показываются понятным текстом без деталей подключения.
 - `MainWindow.ShowSection`: для `stocks` возвращает `new StocksView()`, иначе показывает `PlaceholderPanel`.
 
+#### 11. Экран «Движения» (шаг 2.3)
+- `Services/MovementService.cs` (дополнено):
+  - `Task<Item?> FindItemAsync(string query)` — точное совпадение по `Sku`, затем частичное по `Name`.
+  - `Task<List<Item>> GetItemsAsync(IEnumerable<int> itemIds)` — товары для подписей предпросмотра.
+  - `List<MovementJournalRow> GetJournal(DateTime from, DateTime to, string? type = null, int? warehouseId = null, string? search = null)`.
+- `Data/Reports/MovementJournalRow.cs`: `TypeText` (`IN` → «Приход», `OUT` → «Расход», `TRANSFER` → «Перемещение») и `RouteText` (склад-источник → склад-получатель).
+- `Views/MovementLineModel.cs`: `ItemId`, `Sku`, `Name`, `Unit`, `Quantity` с `INotifyPropertyChanged`.
+- `Views/MovementsView.xaml(.cs)`:
+  - формы IN/OUT/TRANSFER, склады показываются по типу операции; для TRANSFER склады автоматически разводятся;
+  - `CommandLineBox_KeyDown` + `AddFromCommandLineAsync`: Enter → `FindItemAsync` → `+1`, повторный ввод увеличивает `Quantity`;
+  - редактируемая колонка «Кол-во» в `LinesGrid`, удаление строки по ✕, итоги «Позиций / единиц»;
+  - `PostButton_Click`: валидация, `MessageBox` подтверждения, `MovementService.PostMovementAsync`, обработка `InsufficientStockException` с подстановкой доступного максимума;
+  - `AutoBalanceButton_Click`: `BuildDraftsAsync` → `AutoBalancePreviewRow` → `AutoBalanceDialog` → последовательное проведение черновиков;
+  - журнал: период (`DatePicker`), тип, склад, поиск по товару, кнопка «Показать», пустые состояния и сообщение об ошибке подключения.
+- `Views/AutoBalanceDialog.xaml(.cs)` и запись `AutoBalancePreviewRow(WarehouseName, Sku, ItemName, Quantity)`; `DialogResult=true` только по кнопке «Провести все».
+- `MainWindow.ShowSection`: `movements` → `new MovementsView()`.
+
 ### Известные баги / незавершенные места
-- Нет. Экраны «Движения», «Каталог», «Отчёт» ещё не подключены (показывается заглушка).
+- Нет. Экраны «Каталог» и «Отчёт» ещё не подключены (показывается заглушка).
 
 ### ТОЧНЫЙ СЛЕДУЮЩИЙ ШАГ (ЗАДАЧА №1 ДЛЯ СЛЕДУЮЩЕГО АГЕНТА)
-1. **Этап 2, шаг 2.3 — экран «Движения»:** создать `Views/MovementsView.xaml(.cs)`:
-   - журнал `AdoNetMovementRepository.GetJournal(from, to, type, warehouseId, search)` с фильтрами по периоду, типу и складу;
-   - форма проведения `IN`/`OUT`/`TRANSFER` через `MovementService.PostMovementAsync`, выбор складов по типу операции;
-   - «Командная строка склада»: поле SKU/названия в фокусе, `Enter` ищет товар и добавляет `+1` в документ (повторный ввод увеличивает количество);
-   - кнопка «Авто-балансировка» (`AutoBalanceService.BuildDraftsAsync`) с предпросмотром черновиков и подтверждением проведения;
-   - `MessageBox` подтверждения необратимых операций, обработка `InsufficientStockException` с предложением подставить доступный максимум;
-   - подключить экран в `MainWindow.ShowSection`; SQL в code-behind не писать. Затем `dotnet build`, обновить контекст, коммит `feat: реализован экран движений с командной строкой и авто-балансировкой`.
-2. **Шаг 2.4 — «Каталог»:** CRUD товаров и категорий с поиском, подтверждением удаления и боковой панелью «Рентген товара» (`GetItemHistory`).
-3. **Шаг 2.5 — «Отчёт»:** `GetStockReport` + `GetTopItems`.
-4. **Документация:** заполнить `README.md`, `docs/requirements.md`, `docs/database-schema.md` + ER-диаграмма, `docs/testing.md`; добавить скриншоты и прогнать тест-кейсы.
+1. **Этап 2, шаг 2.4 — экран «Каталог»:** создать `Views/CatalogView.xaml(.cs)` и сервис каталога:
+   - список товаров (`AsNoTracking`, проекция с категорией, ценой, `min_stock`) с поиском по SKU/названию и фильтром по категории;
+   - CRUD товаров и категорий: добавление/редактирование в форме или диалоге, удаление с обязательным подтверждением; обрабатывать FK-ограничения (нельзя удалить категорию с товарами) понятным сообщением;
+   - боковая панель «Рентген товара»: при клике по строке загружать `AdoNetMovementRepository.GetItemHistory(itemId)` (вызвать через сервис, не из SQL в code-behind) и показывать таймлайн движений;
+   - пустые состояния для поиска и пустой истории;
+   - подключить экран в `MainWindow.ShowSection` (`catalog`). Проверить `dotnet build`, обновить контекст, коммит `feat: добавлен экран каталога с панелью рентген товара`.
+2. **Шаг 2.5 — «Отчёт»:** `GetStockReport` (сводка по складам) + `GetTopItems` (период, топ активных товаров) через сервис.
+3. **Документация:** заполнить `README.md`, `docs/requirements.md`, `docs/database-schema.md` + ER-диаграмма, `docs/testing.md`; добавить скриншоты и прогнать тест-кейсы.
