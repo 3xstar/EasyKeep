@@ -68,19 +68,17 @@
 
 ### Статус последней сессии
 - **Активный агент:** OpenCode (DeepSeek V4.1 Flash Free)
-- **Последний коммит Git:** `9ac8b4c` — `feat: реализован экран движений с командной строкой и авто-балансировкой`; перед ним `34b00b8` — `docs: зафиксирован хэш коммита экрана остатков`
+- **Последний коммит Git:** `feat: добавлен экран каталога с панелью рентген товара` (хэш фиксируется следующим docs-коммитом); перед ним `0d3ad32` — `docs: зафиксирован хэш коммита экрана движений`
 - **Что сделано:**
-  - **Этап 2, шаги 2.1–2.2:** дизайн-система `Styles.xaml`, главное окно с меню, фоллбэк LocalDB в `AppConfig`, экран «Остатки» (`StocksView`) со светофором и фильтрами.
-  - **Этап 2, шаг 2.3:** расширен `Services/MovementService.cs`: `FindItemAsync`, `GetItemsAsync`, `GetJournal` (делегирование в `AdoNetMovementRepository`).
-  - `Data/Reports/MovementJournalRow.cs`: добавлены вычисляемые `TypeText` (Приход/Расход/Перемещение) и `RouteText` (склад-источник → склад-получатель).
-  - Создан `Views/MovementsView.xaml(.cs)`: форма IN/OUT/TRANSFER с переключением складов, «Командная строка склада» (Enter → поиск по SKU/названию → `+1`, повторный ввод увеличивает количество), редактируемая таблица позиций, удаление строк, комментарий, подтверждение проведения, журнал с фильтрами по периоду/типу/складу/товару и кнопкой «Показать».
-  - `Views/MovementLineModel.cs`: строка документа с `INotifyPropertyChanged` для пересчёта итогов.
-  - Создан `Views/AutoBalanceDialog.xaml(.cs)` — предпросмотр черновиков `BuildDraftsAsync` (точка, SKU, товар, количество) с подтверждением «Провести все».
-  - Умная подсказка `InsufficientStockException`: показывает доступный остаток, предлагает подставить максимум или удалить позицию при нуле.
-  - `MainWindow.ShowSection` подключает `MovementsView` для раздела `movements`.
-  - Проверено через UI Automation: журнал за 30 дней — 27 документов; «Командная строка» добавила `COF-001` (+1); авто-балансировка показала 2 точки / 3 строки / 21 ед. (Торговый зал: `COF-002` 10, `MILK-001` 4; Кофейня: `BAKE-002` 7); тестовый расход `COF-002` подтверждён и проведён (документ №29, журнал 28), после проверки документ удалён, остаток восстановлен, `IDENTITY` возвращён к 28/129; нехватка `SUP-004` показала диалог «Доступно: 0, запрошено: 1».
-  - БД после тестов: 28 движений, 129 строк, 43 остатка, 19 товаров.
-  - `dotnet build src/EasyKeep.sln` — 0 ошибок, 0 предупреждений; приложение запускается.
+  - **Этап 2, шаги 2.1–2.3:** дизайн-система и главное окно, экран «Остатки» со светофором, экран «Движения» (журнал, командная строка, авто-балансировка, умная валидация).
+  - **Этап 2, шаг 2.4:** создан `Services/CatalogService.cs` — товары/категории (`GetItemsAsync` с `Include(Category)`, `GetCategoriesAsync`), CRUD с проверкой уникальности SKU/названия категории и понятными ошибками FK; `GetItemHistory` делегирует в `AdoNetMovementRepository`.
+  - `Data/Reports/ItemMovementRow.cs`: добавлены `DateText`, `TypeText`, `RouteText`, `QuantityText` для таймлайна «Рентгена».
+  - Созданы `Views/CatalogView.xaml(.cs)`: таблица товаров (SKU, название, категория, ед., цена, минимум), локальный поиск и фильтр по категории, кнопки «Добавить товар», «Изменить», «Удалить» (с подтверждением), «Категории»; пустые состояния.
+  - Созданы `Views/ItemEditorDialog.xaml(.cs)` (валидация SKU/названия/категории/цены/мин. остатка) и `Views/CategoryManagerDialog.xaml(.cs)` (добавление, переименование, удаление с подтверждением, понятные ошибки).
+  - Боковая панель «Рентген товара» (`HistoryList`): по клику на строку загружает `GetItemHistory`, показывает дату, тип (цветной бейдж), маршрут, количество и комментарий; состояния «товар не выбран»/«нет движений».
+  - `MainWindow.ShowSection` подключает `CatalogView` для раздела `catalog`.
+  - Проверено через UI Automation: каталог 19 товаров, выбор `COF-002` показал историю из 10+ событий; создан товар `TST-777`, переименован, удалён (20 → 19); категория «Тестовая категория» создана и удалена (8 → 7). БД после тестов: 7 категорий, 19 товаров.
+  - `dotnet build src/EasyKeep.sln` — 0 ошибок, 0 предупреждений.
 
 ### Контракты и сигнатуры (накопительная база — не стирать рабочее)
 
@@ -246,15 +244,32 @@ src/EasyKeep/
 - `Views/AutoBalanceDialog.xaml(.cs)` и запись `AutoBalancePreviewRow(WarehouseName, Sku, ItemName, Quantity)`; `DialogResult=true` только по кнопке «Провести все».
 - `MainWindow.ShowSection`: `movements` → `new MovementsView()`.
 
+#### 12. Экран «Каталог» (шаг 2.4)
+- `Services/CatalogService.cs`:
+  - `Task<List<Item>> GetItemsAsync()` — `AsNoTracking().Include(Item.Category)`, сортировка по названию.
+  - `Task<List<Category>> GetCategoriesAsync()`.
+  - `Task<Item> CreateItemAsync(string sku, string name, int categoryId, string unit, decimal price, int minStock)`.
+  - `Task<Item> UpdateItemAsync(int id, string sku, string name, int categoryId, string unit, decimal price, int minStock)`.
+  - `Task DeleteItemAsync(int id)` — запрещает удаление товара, используемого в остатках/движениях.
+  - `Task<Category> CreateCategoryAsync(string name)`, `UpdateCategoryAsync(int id, string name)`, `DeleteCategoryAsync(int id)` — запрет удаления категории с товарами.
+  - `List<ItemMovementRow> GetItemHistory(int itemId, int limit = 50)` — обёртка над ADO.NET.
+  - Валидация: пустые/длинные поля, отрицательные цена и `min_stock`, уникальность SKU/названия категории; `DbUpdateException` → понятное `InvalidOperationException`.
+- `Data/Reports/ItemMovementRow.cs`: `DateText`, `TypeText`, `RouteText`, `QuantityText`.
+- `Views/CatalogView.xaml(.cs)`:
+  - таблица товаров, локальные поиск и фильтр по категории, счётчик «Товаров: N»;
+  - кнопки «Добавить товар», «Изменить», «Удалить» (подтверждение), «Категории»;
+  - `ItemsGrid_SelectionChanged` загружает историю выбранного товара в `HistoryList` (дата, тип, маршрут, количество, комментарий), есть состояния «не выбран»/«нет движений».
+- `Views/ItemEditorDialog.xaml(.cs)`: свойства `Sku`, `ItemName`, `CategoryId`, `Unit`, `Price`, `MinStock`; валидация ввода.
+- `Views/CategoryManagerDialog.xaml(.cs)`: список категорий, добавление, переименование, удаление с подтверждением.
+- `MainWindow.ShowSection`: `catalog` → `new CatalogView()`.
+
 ### Известные баги / незавершенные места
-- Нет. Экраны «Каталог» и «Отчёт» ещё не подключены (показывается заглушка).
+- Нет. Экран «Отчёт» ещё не подключён (показывается заглушка).
 
 ### ТОЧНЫЙ СЛЕДУЮЩИЙ ШАГ (ЗАДАЧА №1 ДЛЯ СЛЕДУЮЩЕГО АГЕНТА)
-1. **Этап 2, шаг 2.4 — экран «Каталог»:** создать `Views/CatalogView.xaml(.cs)` и сервис каталога:
-   - список товаров (`AsNoTracking`, проекция с категорией, ценой, `min_stock`) с поиском по SKU/названию и фильтром по категории;
-   - CRUD товаров и категорий: добавление/редактирование в форме или диалоге, удаление с обязательным подтверждением; обрабатывать FK-ограничения (нельзя удалить категорию с товарами) понятным сообщением;
-   - боковая панель «Рентген товара»: при клике по строке загружать `AdoNetMovementRepository.GetItemHistory(itemId)` (вызвать через сервис, не из SQL в code-behind) и показывать таймлайн движений;
-   - пустые состояния для поиска и пустой истории;
-   - подключить экран в `MainWindow.ShowSection` (`catalog`). Проверить `dotnet build`, обновить контекст, коммит `feat: добавлен экран каталога с панелью рентген товара`.
-2. **Шаг 2.5 — «Отчёт»:** `GetStockReport` (сводка по складам) + `GetTopItems` (период, топ активных товаров) через сервис.
-3. **Документация:** заполнить `README.md`, `docs/requirements.md`, `docs/database-schema.md` + ER-диаграмма, `docs/testing.md`; добавить скриншоты и прогнать тест-кейсы.
+1. **Этап 2, шаг 2.5 — экран «Отчёт»:** создать `Views/ReportsView.xaml(.cs)`:
+   - сводка остатков по складам `AdoNetMovementRepository.GetStockReport()` через сервис: склад, число позиций, общее количество, стоимость; итоговая строка или карточки-метрики;
+   - рейтинг самых активных товаров `GetTopItems(from, to, limit)` через сервис: период (по умолчанию 30 дней), SKU, название, расход `OUT`, перемещения, число документов;
+   - пустые состояния, форматирование валюты и чисел, обновление по кнопке;
+   - подключить экран в `MainWindow.ShowSection` (`reports`). SQL в code-behind не писать. Проверить `dotnet build`, обновить контекст, коммит `feat: добавлен экран аналитических отчётов`.
+2. **Документация:** заполнить `README.md`, `docs/requirements.md`, `docs/database-schema.md` + ER-диаграмма, `docs/testing.md`; добавить скриншоты и прогнать тест-кейсы (включая отрицательные).

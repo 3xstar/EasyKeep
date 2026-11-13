@@ -42,6 +42,7 @@ public partial class MainWindow : Window
         {
             "stocks" => new StocksView(),
             "movements" => new MovementsView(),
+            "catalog" => new CatalogView(),
             _ => null
         };
 

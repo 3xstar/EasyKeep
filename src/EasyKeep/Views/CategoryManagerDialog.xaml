@@ -1,0 +1,121 @@
+<Window x:Class="EasyKeep.Views.CategoryManagerDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Категории товаров"
+        Height="600" Width="520"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        FontFamily="Segoe UI"
+        Background="{StaticResource AppBackgroundBrush}"
+        Loaded="CategoryManagerDialog_Loaded">
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel>
+            <TextBlock Text="Категории товаров" Style="{StaticResource PageTitleText}" />
+            <TextBlock Text="Добавляйте, переименовывайте и удаляйте категории каталога."
+                       Style="{StaticResource CaptionText}"
+                       Margin="0,4,0,0" />
+        </StackPanel>
+
+        <Border Grid.Row="1" Style="{StaticResource CardBorder}" Padding="16" Margin="0,18,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="NameBox"
+                         Style="{StaticResource FieldTextBox}"
+                         MaxLength="100"
+                         ToolTip="Название категории" />
+                <Button Grid.Column="1"
+                        Content="Добавить"
+                        Style="{StaticResource PrimaryButton}"
+                        Margin="10,0,0,0"
+                        Click="AddButton_Click" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="2" Style="{StaticResource CardBorder}" Padding="10" Margin="0,14,0,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid Margin="8,4,8,8">
+                    <TextBlock Text="Список категорий" Style="{StaticResource SectionTitleText}" FontSize="13" />
+                    <TextBlock x:Name="CategoryCountText"
+                               Style="{StaticResource CaptionText}"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center" />
+                </Grid>
+
+                <ListBox x:Name="CategoriesList"
+                         Grid.Row="1"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         SelectionChanged="CategoriesList_SelectionChanged">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Padding" Value="10,8" />
+                            <Setter Property="Margin" Value="0,1" />
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Setter Property="Cursor" Value="Hand" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border x:Name="Root"
+                                                Background="Transparent"
+                                                CornerRadius="6"
+                                                Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Root" Property="Background" Value="{StaticResource RowHoverBrush}" />
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="Root" Property="Background" Value="{StaticResource AccentSoftBrush}" />
+                                                <Setter Property="Foreground" Value="{StaticResource AccentBrush}" />
+                                                <Setter Property="FontWeight" Value="SemiBold" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" FontSize="13" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="3" Margin="0,18,0,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <Button Content="Переименовать"
+                        Style="{StaticResource SecondaryButton}"
+                        Margin="0,0,8,0"
+                        Click="RenameButton_Click" />
+                <Button Content="Удалить"
+                        Style="{StaticResource DangerButton}"
+                        Click="DeleteButton_Click" />
+            </StackPanel>
+            <Button Content="Готово"
+                    Style="{StaticResource PrimaryButton}"
+                    HorizontalAlignment="Right"
+                    Click="CloseButton_Click" />
+        </Grid>
+    </Grid>
+</Window>
