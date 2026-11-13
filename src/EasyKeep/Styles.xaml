@@ -78,6 +78,13 @@
         <Setter Property="TextWrapping" Value="Wrap" />
     </Style>
 
+    <!-- Подпись над полем ввода: никогда не рвётся по буквам,
+             при нехватке ширины обрезается многоточием. -->
+    <Style x:Key="FieldLabelText" TargetType="TextBlock" BasedOn="{StaticResource CaptionText}">
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+    </Style>
+
     <Style x:Key="MetricValueText" TargetType="TextBlock">
         <Setter Property="FontSize" Value="{DynamicResource FontSizeKpi}" />
         <Setter Property="FontWeight" Value="Bold" />

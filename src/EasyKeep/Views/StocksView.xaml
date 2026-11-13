@@ -129,30 +129,38 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-                <StackPanel Grid.Column="0" Margin="0,0,12,0">
-                    <TextBlock Text="Поиск по SKU или названию"
-                               Style="{StaticResource CaptionText}"
-                               Margin="0,0,0,6" />
-                    <TextBox x:Name="SearchBox"
-                             Style="{StaticResource FieldTextBox}"
-                             Height="{DynamicResource ControlHeight}"
-                             TextChanged="SearchBox_TextChanged"
-                             ToolTip="Введите артикул или часть названия товара" />
-                </StackPanel>
+                <TextBlock Grid.Row="0" Grid.Column="0"
+                           Text="Поиск по SKU или названию"
+                           Style="{StaticResource FieldLabelText}"
+                           VerticalAlignment="Bottom"
+                           Margin="0,0,12,6" />
+                <TextBlock Grid.Row="0" Grid.Column="1"
+                           Text="Склад"
+                           Style="{StaticResource FieldLabelText}"
+                           VerticalAlignment="Bottom"
+                           Margin="0,0,12,6" />
 
-                <StackPanel Grid.Column="1" Margin="0,0,12,0">
-                    <TextBlock Text="Склад"
-                               Style="{StaticResource CaptionText}"
-                               Margin="0,0,0,6" />
-                    <ComboBox x:Name="WarehouseFilter"
-                              Style="{StaticResource FieldComboBox}"
-                              Height="{DynamicResource ControlHeight}"
-                              DisplayMemberPath="Name"
-                              SelectionChanged="WarehouseFilter_SelectionChanged" />
-                </StackPanel>
+                <TextBox Grid.Row="1" Grid.Column="0"
+                         x:Name="SearchBox"
+                         Style="{StaticResource FieldTextBox}"
+                         Height="{DynamicResource ControlHeight}"
+                         Margin="0,0,12,0"
+                         TextChanged="SearchBox_TextChanged"
+                         ToolTip="Введите артикул или часть названия товара" />
+                <ComboBox Grid.Row="1" Grid.Column="1"
+                          x:Name="WarehouseFilter"
+                          Style="{StaticResource FieldComboBox}"
+                          Height="{DynamicResource ControlHeight}"
+                          Margin="0,0,12,0"
+                          DisplayMemberPath="Name"
+                          SelectionChanged="WarehouseFilter_SelectionChanged" />
 
-                <Button Grid.Column="2"
+                <Button Grid.Row="1" Grid.Column="2"
                         Content="Обновить"
                         Style="{StaticResource SecondaryButton}"
                         Height="{DynamicResource ControlHeight}"
@@ -160,7 +168,7 @@
                         Margin="0,0,12,0"
                         Click="RefreshButton_Click" />
 
-                <Border Grid.Column="3"
+                <Border Grid.Row="1" Grid.Column="3"
                         Style="{StaticResource PillBorder}"
                         VerticalAlignment="Bottom"
                         Margin="0,0,0,2">
