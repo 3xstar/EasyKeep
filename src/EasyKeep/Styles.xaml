@@ -607,6 +607,7 @@
                                           IsHitTestVisible="False"
                                           Content="{TemplateBinding SelectionBoxItem}"
                                           ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                          ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
                                           ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
                                           Margin="{TemplateBinding Padding}"
                                           HorizontalAlignment="Left"
@@ -850,7 +851,6 @@
                                                    IsHitTestVisible="False" />
                                         <DataGridCellsPresenter ItemsPanel="{TemplateBinding ItemsPanel}"
                                                                 SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                                        <DataGridDetailsPresenter />
                                     </Grid>
                                 </Border>
                                 <ControlTemplate.Triggers>
