@@ -791,7 +791,6 @@
     </Style>
 
     <Style TargetType="DatePicker">
-        <Setter Property="Language" Value="ru-RU" />
         <Setter Property="FontSize" Value="{DynamicResource FontSizeBase}" />
         <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
         <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />

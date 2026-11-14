@@ -6,8 +6,10 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!-- Порядок важен: тема даёт палитру, Styles.xaml — компоненты. -->
+                <!-- Порядок важен: тема даёт палитру, Strings — язык,
+                     Styles.xaml — компоненты. -->
                 <ResourceDictionary Source="Themes/LightTheme.xaml" />
+                <ResourceDictionary Source="Localization/Strings.ru.xaml" />
                 <ResourceDictionary Source="Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

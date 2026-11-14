@@ -7,6 +7,7 @@ namespace EasyKeep.Services;
 public sealed class UserPreferences
 {
     public string Theme { get; init; } = "Light";
+    public string Language { get; init; } = "ru";
     public int ScalePercent { get; init; } = 100;
 }
 

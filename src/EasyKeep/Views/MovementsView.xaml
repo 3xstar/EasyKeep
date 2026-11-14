@@ -39,12 +39,12 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="Новый документ"
+                    <TextBlock Text="{DynamicResource Loc_Mov_DocTitle}"
                                Style="{StaticResource SectionTitleText}"
                                VerticalAlignment="Center"
                                TextWrapping="Wrap" />
                     <Button Grid.Column="1"
-                            Content="Авто-балансировка"
+                            Content="{DynamicResource Loc_Mov_AutoBalance}"
                             Style="{StaticResource SecondaryButton}"
                             FontSize="{DynamicResource FontSizeSmall}"
                             Padding="10,6"
@@ -54,13 +54,13 @@
                 </Grid>
 
                 <StackPanel Grid.Row="1" Margin="0,14,0,0">
-                    <TextBlock Text="Тип операции" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
+                    <TextBlock Text="{DynamicResource Loc_Mov_TypeLabel}" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
                     <ComboBox x:Name="TypeCombo"
                               Style="{StaticResource FieldComboBox}"
                               SelectionChanged="TypeCombo_SelectionChanged">
-                        <ComboBoxItem Content="Приход (IN)" Tag="IN" />
-                        <ComboBoxItem Content="Расход (OUT)" Tag="OUT" />
-                        <ComboBoxItem Content="Перемещение (TRANSFER)" Tag="TRANSFER" />
+                        <ComboBoxItem Content="{DynamicResource Loc_Type_InCombo}" Tag="IN" />
+                        <ComboBoxItem Content="{DynamicResource Loc_Type_OutCombo}" Tag="OUT" />
+                        <ComboBoxItem Content="{DynamicResource Loc_Type_TransferCombo}" Tag="TRANSFER" />
                     </ComboBox>
                 </StackPanel>
 
@@ -71,14 +71,14 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel x:Name="SourceWarehousePanel">
-                        <TextBlock Text="Склад-источник" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
+                        <TextBlock Text="{DynamicResource Loc_Mov_SourceLabel}" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
                         <ComboBox x:Name="SourceWarehouse"
                                   Style="{StaticResource FieldComboBox}"
                                   DisplayMemberPath="Name" />
                     </StackPanel>
 
                     <StackPanel x:Name="TargetWarehousePanel" Grid.Column="1">
-                        <TextBlock Text="Склад-получатель" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
+                        <TextBlock Text="{DynamicResource Loc_Mov_TargetLabel}" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
                         <ComboBox x:Name="TargetWarehouse"
                                   Style="{StaticResource FieldComboBox}"
                                   DisplayMemberPath="Name" />
@@ -88,7 +88,7 @@
                 <Border Grid.Row="3" Style="{StaticResource AppSeparator}" />
 
                 <StackPanel Grid.Row="4">
-                    <TextBlock Text="Командная строка склада"
+                    <TextBlock Text="{DynamicResource Loc_Mov_CommandTitle}"
                                Style="{StaticResource SectionTitleText}"
                                FontSize="{DynamicResource FontSizeBase}" />
                     <TextBox x:Name="CommandLineBox"
@@ -96,12 +96,12 @@
                              Margin="0,6,0,0"
                              MaxLength="100"
                              KeyDown="CommandLineBox_KeyDown"
-                             ToolTip="Введите SKU или часть названия и нажмите Enter" />
+                             ToolTip="{DynamicResource Loc_Mov_CommandTooltip}" />
                     <TextBlock x:Name="CommandFeedbackText"
                                Style="{StaticResource CaptionText}"
                                MinHeight="16"
                                Margin="0,4,0,0" />
-                    <TextBlock Text="Enter добавляет позицию +1. Повторный ввод увеличивает количество."
+                    <TextBlock Text="{DynamicResource Loc_Mov_CommandHint}"
                                Style="{StaticResource CaptionText}"
                                Foreground="{DynamicResource TextMutedBrush}"
                                FontSize="{DynamicResource FontSizeSmall}" />
@@ -112,7 +112,7 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="Позиции документа"
+                    <TextBlock Text="{DynamicResource Loc_Mov_LinesTitle}"
                                Style="{StaticResource SectionTitleText}"
                                FontSize="{DynamicResource FontSizeBase}" />
                     <TextBlock x:Name="DocumentSummaryText"
@@ -128,23 +128,23 @@
                               IsReadOnly="False"
                               MinHeight="180">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="SKU"
+                            <DataGridTextColumn Header="{DynamicResource Loc_Common_HeaderSku}"
                                                 Binding="{Binding Sku}"
                                                 IsReadOnly="True"
                                                 Width="*"
                                                 MinWidth="70" />
-                            <DataGridTextColumn Header="Товар"
+                            <DataGridTextColumn Header="{DynamicResource Loc_Common_HeaderItem}"
                                                 Binding="{Binding Name}"
                                                 IsReadOnly="True"
                                                 Width="2*"
                                                 MinWidth="110" />
-                            <DataGridTextColumn Header="Кол-во"
+                            <DataGridTextColumn Header="{DynamicResource Loc_Mov_HeaderQuantity}"
                                                 Binding="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"
                                                 Width="*"
                                                 MinWidth="54"
                                                 HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                                 ElementStyle="{StaticResource NumberCellText}" />
-                            <DataGridTextColumn Header="Ед."
+                            <DataGridTextColumn Header="{DynamicResource Loc_Common_UnitShort}"
                                                 Binding="{Binding Unit}"
                                                 IsReadOnly="True"
                                                 Width="Auto" />
@@ -154,7 +154,7 @@
                                         <TextBlock Text="✕"
                                                    Foreground="{DynamicResource TextMutedBrush}"
                                                    Cursor="Hand"
-                                                   ToolTip="Удалить позицию"
+                                                   ToolTip="{DynamicResource Loc_Mov_RemoveTooltip}"
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"
                                                    MouseLeftButtonUp="RemoveLine_Click" />
@@ -165,24 +165,24 @@
                     </DataGrid>
 
                     <TextBlock x:Name="LinesEmptyText"
-                               Text="Добавьте товар через командную строку выше."
+                               Text="{DynamicResource Loc_Mov_LinesEmpty}"
                                Style="{StaticResource TableEmptyStateText}"
                                IsHitTestVisible="False" />
                 </Grid>
 
                 <StackPanel Grid.Row="7" Margin="0,10,0,0">
-                    <TextBlock Text="Комментарий (необязательно)" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
+                    <TextBlock Text="{DynamicResource Loc_Mov_CommentLabel}" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
                     <TextBox x:Name="CommentBox"
                              Style="{StaticResource FieldTextBox}"
                              MaxLength="500" />
                 </StackPanel>
 
                 <Grid Grid.Row="8" Margin="0,14,0,0">
-                    <Button Content="Очистить"
+                    <Button Content="{DynamicResource Loc_Common_Clear}"
                             Style="{StaticResource SecondaryButton}"
                             HorizontalAlignment="Left"
                             Click="ClearButton_Click" />
-                    <Button Content="Провести документ"
+                    <Button Content="{DynamicResource Loc_Mov_Post}"
                             Style="{StaticResource PrimaryButton}"
                             HorizontalAlignment="Right"
                             Click="PostButton_Click" />
@@ -213,17 +213,17 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Row="0" Grid.Column="0"
-                               Text="С даты"
+                               Text="{DynamicResource Loc_Mov_FromDate}"
                                Style="{StaticResource FieldLabelText}"
                                VerticalAlignment="Bottom"
                                Margin="0,0,10,6" />
                     <TextBlock Grid.Row="0" Grid.Column="1"
-                               Text="По дату"
+                               Text="{DynamicResource Loc_Mov_ToDate}"
                                Style="{StaticResource FieldLabelText}"
                                VerticalAlignment="Bottom"
                                Margin="0,0,10,6" />
                     <TextBlock Grid.Row="0" Grid.Column="2"
-                               Text="Тип операции"
+                               Text="{DynamicResource Loc_Mov_TypeLabel}"
                                Style="{StaticResource FieldLabelText}"
                                VerticalAlignment="Bottom"
                                Margin="0,0,10,6" />
@@ -241,19 +241,19 @@
                               Style="{StaticResource FieldComboBox}"
                               Margin="0,0,10,0"
                               SelectionChanged="JournalFilter_Changed">
-                        <ComboBoxItem Content="Все операции" Tag="" />
-                        <ComboBoxItem Content="Приход" Tag="IN" />
-                        <ComboBoxItem Content="Расход" Tag="OUT" />
-                        <ComboBoxItem Content="Перемещение" Tag="TRANSFER" />
+                        <ComboBoxItem Content="{DynamicResource Loc_Type_All}" Tag="" />
+                        <ComboBoxItem Content="{DynamicResource Loc_Type_In}" Tag="IN" />
+                        <ComboBoxItem Content="{DynamicResource Loc_Type_Out}" Tag="OUT" />
+                        <ComboBoxItem Content="{DynamicResource Loc_Type_Transfer}" Tag="TRANSFER" />
                     </ComboBox>
 
                     <TextBlock Grid.Row="2" Grid.Column="0"
-                               Text="Склад"
+                               Text="{DynamicResource Loc_Common_HeaderWarehouse}"
                                Style="{StaticResource FieldLabelText}"
                                VerticalAlignment="Bottom"
                                Margin="0,10,10,6" />
                     <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
-                               Text="Поиск по товару"
+                               Text="{DynamicResource Loc_Mov_SearchLabel}"
                                Style="{StaticResource FieldLabelText}"
                                VerticalAlignment="Bottom"
                                Margin="0,10,10,6" />
@@ -275,7 +275,7 @@
                              MaxLength="100"
                              KeyDown="JournalSearchBox_KeyDown" />
                     <Button Grid.Row="3" Grid.Column="3"
-                            Content="Показать"
+                            Content="{DynamicResource Loc_Common_Show}"
                             Style="{StaticResource PrimaryButton}"
                             Height="{DynamicResource ControlHeight}"
                             VerticalAlignment="Bottom"
@@ -299,7 +299,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Журнал операций"
+                        <TextBlock Text="{DynamicResource Loc_Mov_JournalTitle}"
                                    Style="{StaticResource SectionTitleText}"
                                    TextWrapping="Wrap" />
                         <Border Grid.Column="1"
@@ -318,11 +318,11 @@
                                   BorderThickness="0"
                                   MinHeight="200">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Дата"
+                                <DataGridTextColumn Header="{DynamicResource Loc_Mov_HeaderDate}"
                                                     Binding="{Binding CreatedAt, StringFormat={}{0:dd.MM.yyyy HH:mm}}"
                                                     Width="*"
                                                     MinWidth="108" />
-                                <DataGridTemplateColumn Header="Тип" Width="Auto" SortMemberPath="Type">
+                                <DataGridTemplateColumn Header="{DynamicResource Loc_Mov_HeaderType}" Width="Auto" SortMemberPath="Type">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <Border x:Name="TypeBadge"
@@ -331,7 +331,6 @@
                                                     Padding="8,3"
                                                     HorizontalAlignment="Left">
                                                 <TextBlock x:Name="TypeLabel"
-                                                           Text="{Binding TypeText}"
                                                            FontSize="{DynamicResource FontSizeSmall}"
                                                            FontWeight="SemiBold"
                                                            Foreground="{DynamicResource BadgeNeutralForegroundBrush}" />
@@ -341,38 +340,41 @@
                                                     <Setter TargetName="TypeBadge" Property="Background" Value="{DynamicResource BadgeSuccessBackgroundBrush}" />
                                                     <Setter TargetName="TypeBadge" Property="Effect" Value="{DynamicResource GlowSuccessEffect}" />
                                                     <Setter TargetName="TypeLabel" Property="Foreground" Value="{DynamicResource BadgeSuccessForegroundBrush}" />
+                                                    <Setter TargetName="TypeLabel" Property="Text" Value="{DynamicResource Loc_Type_In}" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Type}" Value="OUT">
                                                     <Setter TargetName="TypeBadge" Property="Background" Value="{DynamicResource BadgeCriticalBackgroundBrush}" />
                                                     <Setter TargetName="TypeBadge" Property="Effect" Value="{DynamicResource GlowCriticalEffect}" />
                                                     <Setter TargetName="TypeLabel" Property="Foreground" Value="{DynamicResource BadgeCriticalForegroundBrush}" />
+                                                    <Setter TargetName="TypeLabel" Property="Text" Value="{DynamicResource Loc_Type_Out}" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Type}" Value="TRANSFER">
                                                     <Setter TargetName="TypeBadge" Property="Background" Value="{DynamicResource BadgeInfoBackgroundBrush}" />
                                                     <Setter TargetName="TypeBadge" Property="Effect" Value="{DynamicResource GlowSuccessEffect}" />
                                                     <Setter TargetName="TypeLabel" Property="Foreground" Value="{DynamicResource BadgeInfoForegroundBrush}" />
+                                                    <Setter TargetName="TypeLabel" Property="Text" Value="{DynamicResource Loc_Type_Transfer}" />
                                                 </DataTrigger>
                                             </DataTemplate.Triggers>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="Маршрут"
+                                <DataGridTextColumn Header="{DynamicResource Loc_Mov_HeaderRoute}"
                                                     Binding="{Binding RouteText}"
                                                     Width="2*"
                                                     MinWidth="140" />
-                                <DataGridTextColumn Header="Позиций"
+                                <DataGridTextColumn Header="{DynamicResource Loc_Common_HeaderItems}"
                                                     Binding="{Binding ItemsCount}"
                                                     Width="*"
                                                     MinWidth="62"
                                                     HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                                     ElementStyle="{StaticResource NumberCellText}" />
-                                <DataGridTextColumn Header="Единиц"
+                                <DataGridTextColumn Header="{DynamicResource Loc_Common_HeaderUnits}"
                                                     Binding="{Binding TotalQuantity}"
                                                     Width="*"
                                                     MinWidth="62"
                                                     HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                                     ElementStyle="{StaticResource NumberCellText}" />
-                                <DataGridTextColumn Header="Комментарий"
+                                <DataGridTextColumn Header="{DynamicResource Loc_Common_HeaderComment}"
                                                     Binding="{Binding Comment}"
                                                     Width="1.2*"
                                                     MinWidth="100" />

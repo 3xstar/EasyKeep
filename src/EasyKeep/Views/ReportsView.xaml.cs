@@ -15,6 +15,20 @@ public partial class ReportsView : UserControl
     public ReportsView()
     {
         InitializeComponent();
+
+        // XAML-строки переключаются словарём сами; кодовые — по событию.
+        LocalizationManager.LanguageChanged += OnLanguageChanged;
+        Unloaded += (_, _) => LocalizationManager.LanguageChanged -= OnLanguageChanged;
+    }
+
+    /// <summary>Пересобирает оба отчёта, чтобы кодовые подписи сменили язык.</summary>
+    private void OnLanguageChanged(object? sender, EventArgs e)
+    {
+        if (!_isReady || !IsLoaded)
+            return;
+
+        LoadStockReport();
+        LoadTopItems();
     }
 
     private void ReportsView_Loaded(object sender, RoutedEventArgs e)
@@ -41,7 +55,7 @@ public partial class ReportsView : UserControl
             TotalQuantityText.Text = rows.Sum(row => row.TotalQuantity).ToString("N0");
             TotalValueText.Text = rows.Sum(row => row.TotalValue).ToString("N0") + " ₽";
 
-            StockStateText.Text = "Остатков пока нет.";
+            StockStateText.Text = LocalizationManager.Get("Rep_StockEmpty");
             StockStateText.Visibility = rows.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
         }
         catch (Exception)
@@ -59,8 +73,8 @@ public partial class ReportsView : UserControl
         {
             TopItemsGrid.ItemsSource = null;
             TopSummaryText.Text = "—";
-            ResetLeader("укажите корректный период");
-            TopStateText.Text = "Дата начала должна быть раньше даты окончания.";
+            ResetLeader(LocalizationManager.Get("Rep_LeaderInvalidPeriod"));
+            TopStateText.Text = LocalizationManager.Get("Common_InvalidPeriod");
             TopStateText.Visibility = Visibility.Visible;
             return;
         }
@@ -70,19 +84,22 @@ public partial class ReportsView : UserControl
             List<TopItemRow> rows = new ReportService().GetTopItems(from, to);
 
             TopItemsGrid.ItemsSource = rows;
-            TopSummaryText.Text = $"Показано: {rows.Count}";
-            TopStateText.Text = "За выбранный период движений не найдено.";
+            TopSummaryText.Text = string.Format(LocalizationManager.Get("Rep_TopSummary"), rows.Count);
+            TopStateText.Text = LocalizationManager.Get("Rep_TopEmpty");
             TopStateText.Visibility = rows.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
 
             if (rows.Count > 0)
             {
                 TopItemRow leader = rows[0];
                 LeaderNameText.Text = leader.Name;
-                LeaderDetailText.Text = $"{leader.Sku} · {leader.OutQuantity:N0} ед. расхода";
+                LeaderDetailText.Text = string.Format(
+                    LocalizationManager.Get("Rep_LeaderDetail"),
+                    leader.Sku,
+                    leader.OutQuantity.ToString("N0"));
             }
             else
             {
-                ResetLeader("за выбранный период движений нет");
+                ResetLeader(LocalizationManager.Get("Rep_LeaderNoMovements"));
             }
         }
         catch (Exception)
@@ -97,16 +114,16 @@ public partial class ReportsView : UserControl
         WarehouseCountText.Text = "—";
         TotalQuantityText.Text = "—";
         TotalValueText.Text = "—";
-        StockStateText.Text = "Не удалось загрузить отчёт. Проверьте подключение к базе данных.";
+        StockStateText.Text = LocalizationManager.Get("Rep_StockError");
         StockStateText.Visibility = Visibility.Visible;
     }
 
     private void ShowTopItemsError()
     {
         TopItemsGrid.ItemsSource = null;
-        TopSummaryText.Text = "Нет данных";
-        ResetLeader("нет данных");
-        TopStateText.Text = "Не удалось построить рейтинг. Проверьте подключение к базе данных.";
+        TopSummaryText.Text = LocalizationManager.Get("Common_NoData");
+        ResetLeader(LocalizationManager.Get("Rep_LeaderNoData"));
+        TopStateText.Text = LocalizationManager.Get("Rep_TopError");
         TopStateText.Visibility = Visibility.Visible;
     }
 

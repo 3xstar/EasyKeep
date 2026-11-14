@@ -34,6 +34,30 @@ public partial class MovementsView : UserControl
         TypeFilter.SelectedIndex = 0;
         UpdateWarehouseVisibility();
         UpdateDocumentSummary();
+
+        // XAML-строки переключаются словарём сами; кодовые — по событию.
+        LocalizationManager.LanguageChanged += OnLanguageChanged;
+        Unloaded += (_, _) => LocalizationManager.LanguageChanged -= OnLanguageChanged;
+    }
+
+    /// <summary>Пересчитывает сводки и заглушки, собранные в коде.</summary>
+    private void OnLanguageChanged(object? sender, EventArgs e)
+    {
+        // Пункт «Все склады» в фильтре журнала — локальная заглушка.
+        if (JournalWarehouse.ItemsSource is List<Warehouse> warehouses &&
+            warehouses.Count > 0 && warehouses[0].Id == 0)
+        {
+            int selectedIndex = JournalWarehouse.SelectedIndex;
+            warehouses[0].Name = LocalizationManager.Get("Common_WarehouseAll");
+            JournalWarehouse.ItemsSource = null;
+            JournalWarehouse.ItemsSource = warehouses;
+            JournalWarehouse.SelectedIndex = selectedIndex;
+        }
+
+        UpdateDocumentSummary();
+
+        if (_isReady && IsLoaded)
+            LoadJournal();
     }
 
     private async void MovementsView_Loaded(object sender, RoutedEventArgs e)
@@ -69,7 +93,7 @@ public partial class MovementsView : UserControl
         TargetWarehouse.ItemsSource = _warehouses;
 
         List<Warehouse> filterWarehouses = new(_warehouses);
-        filterWarehouses.Insert(0, new Warehouse { Id = 0, Name = "Все склады" });
+        filterWarehouses.Insert(0, new Warehouse { Id = 0, Name = LocalizationManager.Get("Common_WarehouseAll") });
 
         JournalWarehouse.ItemsSource = filterWarehouses;
 
@@ -167,7 +191,7 @@ public partial class MovementsView : UserControl
 
             if (item is null)
             {
-                ShowCommandFeedback($"Товар «{query}» не найден.", isError: true);
+                ShowCommandFeedback(string.Format(LocalizationManager.Get("Mov_CommandNotFound"), query), isError: true);
                 return;
             }
 
@@ -191,13 +215,13 @@ public partial class MovementsView : UserControl
             }
 
             LinesGrid.ScrollIntoView(line);
-            ShowCommandFeedback($"Добавлено: {item.Name} (+1).", isError: false);
+            ShowCommandFeedback(string.Format(LocalizationManager.Get("Mov_CommandAdded"), item.Name), isError: false);
             CommandLineBox.Clear();
             CommandLineBox.Focus();
         }
         catch (Exception)
         {
-            ShowCommandFeedback("Не удалось найти товар. Проверьте подключение к базе данных.", isError: true);
+            ShowCommandFeedback(LocalizationManager.Get("Mov_CommandError"), isError: true);
         }
     }
 
@@ -233,7 +257,7 @@ public partial class MovementsView : UserControl
     private void UpdateDocumentSummary()
     {
         int totalQuantity = _lines.Sum(line => line.Quantity);
-        DocumentSummaryText.Text = $"Позиций: {_lines.Count} · единиц: {totalQuantity}";
+        DocumentSummaryText.Text = string.Format(LocalizationManager.Get("Mov_SummaryFormat"), _lines.Count, totalQuantity);
         LinesEmptyText.Visibility = _lines.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
     }
 
@@ -264,7 +288,7 @@ public partial class MovementsView : UserControl
         string confirmation = BuildConfirmationText(type);
         MessageBoxResult answer = MessageBox.Show(
             confirmation,
-            "Подтверждение операции",
+            LocalizationManager.Get("Mov_ConfirmTitle"),
             MessageBoxButton.YesNo,
             MessageBoxImage.Question);
 
@@ -277,8 +301,8 @@ public partial class MovementsView : UserControl
             int movementId = await new MovementService(context).PostMovementAsync(movement);
 
             MessageBox.Show(
-                $"Документ №{movementId} успешно проведён. Остатки обновлены.",
-                "Готово",
+                string.Format(LocalizationManager.Get("Mov_PostedOk"), movementId),
+                LocalizationManager.Get("Common_Done"),
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
 
@@ -292,8 +316,8 @@ public partial class MovementsView : UserControl
         catch (Exception ex)
         {
             MessageBox.Show(
-                $"Не удалось провести документ. {ex.Message}",
-                "Ошибка проведения",
+                string.Format(LocalizationManager.Get("Mov_PostError"), ex.Message),
+                LocalizationManager.Get("Mov_PostErrorTitle"),
                 MessageBoxButton.OK,
                 MessageBoxImage.Warning);
         }
@@ -305,13 +329,13 @@ public partial class MovementsView : UserControl
 
         if (_lines.Count == 0)
         {
-            ShowWarning("Добавьте хотя бы одну позицию в документ.");
+            ShowWarning(LocalizationManager.Get("Mov_WarnNoLines"));
             return false;
         }
 
         if (_lines.Any(line => line.Quantity <= 0))
         {
-            ShowWarning("Количество в каждой строке должно быть больше нуля.");
+            ShowWarning(LocalizationManager.Get("Mov_WarnBadQuantity"));
             return false;
         }
 
@@ -322,19 +346,19 @@ public partial class MovementsView : UserControl
 
         if (needsSource && source is null)
         {
-            ShowWarning("Выберите склад-источник.");
+            ShowWarning(LocalizationManager.Get("Mov_WarnNoSource"));
             return false;
         }
 
         if (needsTarget && target is null)
         {
-            ShowWarning("Выберите склад-получатель.");
+            ShowWarning(LocalizationManager.Get("Mov_WarnNoTarget"));
             return false;
         }
 
         if (type == MovementTypes.Transfer && source!.Id == target!.Id)
         {
-            ShowWarning("Склады отправления и получения должны различаться.");
+            ShowWarning(LocalizationManager.Get("Mov_WarnSameWarehouses"));
             return false;
         }
 
@@ -360,14 +384,14 @@ public partial class MovementsView : UserControl
 
         string action = type switch
         {
-            MovementTypes.In => $"Провести приход на склад «{targetName}»?",
-            MovementTypes.Out => $"Провести расход со склада «{sourceName}»?",
-            _ => $"Переместить товары со склада «{sourceName}» на «{targetName}»?"
+            MovementTypes.In => string.Format(LocalizationManager.Get("Mov_ConfirmIn"), targetName),
+            MovementTypes.Out => string.Format(LocalizationManager.Get("Mov_ConfirmOut"), sourceName),
+            _ => string.Format(LocalizationManager.Get("Mov_ConfirmTransfer"), sourceName, targetName)
         };
 
         int totalQuantity = _lines.Sum(line => line.Quantity);
-        return $"{action}\n\nПозиций: {_lines.Count}, единиц: {totalQuantity}.\n" +
-               "Документ изменит остатки и будет записан в журнал.";
+        return $"{action}\n\n{string.Format(LocalizationManager.Get("Mov_ConfirmCounts"), _lines.Count, totalQuantity)}\n" +
+               LocalizationManager.Get("Mov_ConfirmTrailer");
     }
 
     /// <summary>
@@ -377,15 +401,16 @@ public partial class MovementsView : UserControl
     private void HandleShortage(InsufficientStockException shortage)
     {
         string question = shortage.Available > 0
-            ? $"Подставить доступный максимум — {shortage.Available}?"
-            : "Доступного остатка нет. Удалить позицию из документа?";
+            ? string.Format(LocalizationManager.Get("Mov_AskSubstitute"), shortage.Available)
+            : LocalizationManager.Get("Mov_AskRemoveLine");
 
-        string message = $"Недостаточно товара «{shortage.ItemName}».\n" +
-                         $"Доступно: {shortage.Available}, запрошено: {shortage.Requested}.\n\n{question}";
+        string message = string.Format(LocalizationManager.Get("Mov_ShortageHeader"), shortage.ItemName) + "\n" +
+                         string.Format(LocalizationManager.Get("Mov_ShortageAvailable"), shortage.Available, shortage.Requested) +
+                         $"\n\n{question}";
 
         MessageBoxResult answer = MessageBox.Show(
             message,
-            "Нехватка остатка",
+            LocalizationManager.Get("Mov_ShortageTitle"),
             MessageBoxButton.YesNo,
             MessageBoxImage.Warning);
 
@@ -400,8 +425,8 @@ public partial class MovementsView : UserControl
         {
             line.Quantity = shortage.Available;
             MessageBox.Show(
-                $"Количество обновлено до доступного максимума ({shortage.Available}). Проверьте документ.",
-                "Подсказка EasyKeep",
+                string.Format(LocalizationManager.Get("Mov_Substituted"), shortage.Available),
+                LocalizationManager.Get("Mov_HintTitle"),
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
             return;
@@ -409,8 +434,8 @@ public partial class MovementsView : UserControl
 
         RemoveLine(line);
         MessageBox.Show(
-            "Позиция удалена из документа: на складе нет доступного остатка.",
-            "Подсказка EasyKeep",
+            LocalizationManager.Get("Mov_LineRemoved"),
+            LocalizationManager.Get("Mov_HintTitle"),
             MessageBoxButton.OK,
             MessageBoxImage.Information);
     }
@@ -429,8 +454,8 @@ public partial class MovementsView : UserControl
         catch (Exception)
         {
             MessageBox.Show(
-                "Не удалось выполнить авто-балансировку. Проверьте подключение к базе данных.",
-                "Авто-балансировка",
+                LocalizationManager.Get("Mov_AutoBalanceError"),
+                LocalizationManager.Get("Mov_AutoBalance"),
                 MessageBoxButton.OK,
                 MessageBoxImage.Warning);
             return;
@@ -439,8 +464,8 @@ public partial class MovementsView : UserControl
         if (drafts.Count == 0)
         {
             MessageBox.Show(
-                "Авто-балансировка не требуется: критичного дефицита на торговых точках нет.",
-                "Авто-балансировка",
+                LocalizationManager.Get("Mov_AutoBalanceNone"),
+                LocalizationManager.Get("Mov_AutoBalance"),
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
             return;
@@ -481,7 +506,7 @@ public partial class MovementsView : UserControl
                 return new AutoBalancePreviewRow(
                     draft.ToWarehouseName,
                     item?.Sku ?? "—",
-                    item?.Name ?? $"Товар #{line.ItemId}",
+                    item?.Name ?? string.Format(LocalizationManager.Get("Mov_ItemFallback"), line.ItemId),
                     line.Quantity);
             }))
             .ToList();
@@ -506,13 +531,13 @@ public partial class MovementsView : UserControl
             }
         }
 
-        string message = $"Проведено документов: {postedCount} из {drafts.Count}.";
+        string message = string.Format(LocalizationManager.Get("Mov_AutoBalanceDone"), postedCount, drafts.Count);
         if (failures.Count > 0)
-            message += "\n\nНе удалось провести:\n" + string.Join("\n", failures);
+            message += "\n\n" + LocalizationManager.Get("Mov_AutoBalanceFailedList") + "\n" + string.Join("\n", failures);
 
         MessageBox.Show(
             message,
-            "Авто-балансировка завершена",
+            LocalizationManager.Get("Mov_AutoBalanceDoneTitle"),
             MessageBoxButton.OK,
             failures.Count == 0 ? MessageBoxImage.Information : MessageBoxImage.Warning);
 
@@ -529,8 +554,8 @@ public partial class MovementsView : UserControl
         if (to <= from)
         {
             JournalGrid.ItemsSource = null;
-            JournalSummaryText.Text = "Период задан неверно";
-            JournalStateText.Text = "Дата начала должна быть раньше даты окончания.";
+            JournalSummaryText.Text = LocalizationManager.Get("Mov_JournalWrongPeriod");
+            JournalStateText.Text = LocalizationManager.Get("Common_InvalidPeriod");
             JournalStateText.Visibility = Visibility.Visible;
             return;
         }
@@ -550,8 +575,8 @@ public partial class MovementsView : UserControl
                 .GetJournal(from, to, type, warehouseId, JournalSearchBox.Text);
 
             JournalGrid.ItemsSource = rows;
-            JournalSummaryText.Text = $"Документов: {rows.Count}";
-            JournalStateText.Text = "За выбранный период ничего не найдено. Измените фильтры.";
+            JournalSummaryText.Text = string.Format(LocalizationManager.Get("Mov_JournalSummary"), rows.Count);
+            JournalStateText.Text = LocalizationManager.Get("Mov_JournalEmpty");
             JournalStateText.Visibility = rows.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
         }
         catch (Exception)
@@ -592,13 +617,13 @@ public partial class MovementsView : UserControl
     private void ShowConnectionError()
     {
         JournalGrid.ItemsSource = null;
-        JournalSummaryText.Text = "Нет данных";
-        JournalStateText.Text = "Не удалось загрузить журнал. Проверьте подключение к базе данных.";
+        JournalSummaryText.Text = LocalizationManager.Get("Common_NoData");
+        JournalStateText.Text = LocalizationManager.Get("Mov_JournalError");
         JournalStateText.Visibility = Visibility.Visible;
     }
 
     private static void ShowWarning(string message)
     {
-        MessageBox.Show(message, "Проверьте документ", MessageBoxButton.OK, MessageBoxImage.Warning);
+        MessageBox.Show(message, LocalizationManager.Get("Mov_WarnTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
     }
 }

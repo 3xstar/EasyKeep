@@ -20,6 +20,27 @@ public partial class StocksView : UserControl
     public StocksView()
     {
         InitializeComponent();
+
+        // XAML-строки переключаются словарём сами; кодовые сводки — по событию.
+        LocalizationManager.LanguageChanged += OnLanguageChanged;
+        Unloaded += (_, _) => LocalizationManager.LanguageChanged -= OnLanguageChanged;
+    }
+
+    /// <summary>Пересчитывает подписи, собранные в коде, после смены языка.</summary>
+    private void OnLanguageChanged(object? sender, EventArgs e)
+    {
+        // Пункт «Все склады» — локальный объект-заглушка, не связанный с БД.
+        if (WarehouseFilter.ItemsSource is List<Warehouse> warehouses &&
+            warehouses.Count > 0 && warehouses[0].Id == 0)
+        {
+            int selectedIndex = WarehouseFilter.SelectedIndex;
+            warehouses[0].Name = LocalizationManager.Get("Common_WarehouseAll");
+            WarehouseFilter.ItemsSource = null;
+            WarehouseFilter.ItemsSource = warehouses;
+            WarehouseFilter.SelectedIndex = selectedIndex;
+        }
+
+        ApplyFilter();
     }
 
     private async void StocksView_Loaded(object sender, RoutedEventArgs e)
@@ -49,7 +70,7 @@ public partial class StocksView : UserControl
             warehouses = await new WarehouseService(context).GetWarehousesAsync();
         }
 
-        warehouses.Insert(0, new Warehouse { Id = 0, Name = "Все склады" });
+        warehouses.Insert(0, new Warehouse { Id = 0, Name = LocalizationManager.Get("Common_WarehouseAll") });
         WarehouseFilter.ItemsSource = warehouses;
         WarehouseFilter.SelectedIndex = 0;
     }
@@ -88,12 +109,12 @@ public partial class StocksView : UserControl
 
         int criticalCount = visible.Count(row => row.Status == DeficitStatus.Critical);
         SummaryText.Text = _statusFilter == "all"
-            ? $"Позиций: {visible.Count} · критично: {criticalCount}"
-            : $"Показано: {visible.Count} из {_rows.Count}";
+            ? string.Format(LocalizationManager.Get("Stocks_SummaryAll"), visible.Count, criticalCount)
+            : string.Format(LocalizationManager.Get("Stocks_SummaryFiltered"), visible.Count, _rows.Count);
 
         StateText.Text = _rows.Count == 0
-            ? "На выбранном складе пока нет остатков."
-            : "По вашему запросу ничего не найдено. Измените поиск, склад или виджет.";
+            ? LocalizationManager.Get("Stocks_EmptyWarehouse")
+            : LocalizationManager.Get("Stocks_EmptyFilter");
         StateText.Visibility = visible.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
     }
 
@@ -139,12 +160,12 @@ public partial class StocksView : UserControl
     private void ShowLoadError()
     {
         StocksGrid.ItemsSource = null;
-        SummaryText.Text = "Нет данных";
+        SummaryText.Text = LocalizationManager.Get("Common_NoData");
         KpiAllText.Text = "—";
         KpiCriticalText.Text = "—";
         KpiWarningText.Text = "—";
         KpiNonLiquidText.Text = "—";
-        StateText.Text = "Не удалось загрузить остатки. Проверьте подключение к базе данных.";
+        StateText.Text = LocalizationManager.Get("Stocks_LoadError");
         StateText.Visibility = Visibility.Visible;
     }
 

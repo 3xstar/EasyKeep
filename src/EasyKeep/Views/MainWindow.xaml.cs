@@ -21,6 +21,7 @@ public partial class MainWindow : Window
     private int _scalePercent = 100;
     private bool _isInitializing;
     private bool _isNavCompact;
+    private string _currentSection = "stocks";
 
     public MainWindow()
     {
@@ -34,6 +35,12 @@ public partial class MainWindow : Window
         DarkThemeOption.IsChecked = theme == AppTheme.Dark;
         LightThemeOption.IsChecked = theme == AppTheme.Light;
         ApplyScale(preferences.ScalePercent, save: false);
+
+        // Язык уже применён в App.OnStartup — выставляем переключатель.
+        AppLanguage language = LocalizationManager.Current;
+        RuLanguageOption.IsChecked = language == AppLanguage.Ru;
+        EnLanguageOption.IsChecked = language == AppLanguage.En;
+        LocalizationManager.ApplyCulture(this);
 
         _isInitializing = false;
 
@@ -52,16 +59,8 @@ public partial class MainWindow : Window
 
     private void ShowSection(string section)
     {
-        (string title, string subtitle) = section switch
-        {
-            "movements" => ("Движения", "Журнал операций и проведение прихода, расхода и перемещений."),
-            "catalog" => ("Каталог", "Товары, категории и полная история движений по каждой позиции."),
-            "reports" => ("Отчёт", "Сводка запасов по складам и рейтинг самых активных товаров."),
-            _ => ("Остатки", "Текущие остатки складов и «Светофор дефицита».")
-        };
-
-        PageTitleText.Text = title;
-        PageSubtitleText.Text = subtitle;
+        _currentSection = section;
+        ApplySectionTitle(section);
 
         UserControl? view = section switch
         {
@@ -85,8 +84,24 @@ public partial class MainWindow : Window
         ContentArea.Content = null;
         ContentArea.Visibility = Visibility.Collapsed;
         PlaceholderPanel.Visibility = Visibility.Visible;
-        PlaceholderTitle.Text = title;
+        PlaceholderTitle.Text = PageTitleText.Text;
     }
+
+    /// <summary>Заголовок и подзаголовок раздела — по текущему языку.</summary>
+    private void ApplySectionTitle(string section)
+    {
+        (string titleKey, string subtitleKey) = SectionKeys(section);
+        PageTitleText.Text = LocalizationManager.Get(titleKey);
+        PageSubtitleText.Text = LocalizationManager.Get(subtitleKey);
+    }
+
+    private static (string TitleKey, string SubtitleKey) SectionKeys(string section) => section switch
+    {
+        "movements" => ("Section_Movements_Title", "Section_Movements_Subtitle"),
+        "catalog" => ("Section_Catalog_Title", "Section_Catalog_Subtitle"),
+        "reports" => ("Section_Reports_Title", "Section_Reports_Subtitle"),
+        _ => ("Section_Stocks_Title", "Section_Stocks_Subtitle")
+    };
 
     /// <summary>
     /// Мгновенный, но мягкий вход экрана: 120 мс, прозрачность 0.6 → 1
@@ -177,6 +192,25 @@ public partial class MainWindow : Window
 
         AppTheme theme = DarkThemeOption.IsChecked == true ? AppTheme.Dark : AppTheme.Light;
         ThemeService.Apply(theme);
+
+        if (!_isInitializing)
+            SavePreferences();
+    }
+
+    private void LanguageOption_Checked(object sender, RoutedEventArgs e)
+    {
+        if (RuLanguageOption is null || EnLanguageOption is null)
+            return;
+
+        AppLanguage language = EnLanguageOption.IsChecked == true ? AppLanguage.En : AppLanguage.Ru;
+        if (language == LocalizationManager.Current)
+            return;
+
+        // Словарь строк подменяется мгновенно: весь XAML переключается
+        // сам через DynamicResource, календари — через Culture.
+        LocalizationManager.Apply(language);
+        LocalizationManager.ApplyCulture(this);
+        ApplySectionTitle(_currentSection);
 
         if (!_isInitializing)
             SavePreferences();
@@ -281,6 +315,7 @@ public partial class MainWindow : Window
         PreferencesService.Save(new UserPreferences
         {
             Theme = ThemeService.Current.ToString(),
+            Language = LocalizationManager.Current == AppLanguage.En ? "en" : "ru",
             ScalePercent = _scalePercent
         });
     }

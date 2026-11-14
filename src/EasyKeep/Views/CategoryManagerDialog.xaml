@@ -22,8 +22,8 @@
         </Grid.RowDefinitions>
 
         <StackPanel>
-            <TextBlock Text="Категории товаров" Style="{StaticResource PageTitleText}" />
-            <TextBlock Text="Добавляйте, переименовывайте и удаляйте категории каталога."
+            <TextBlock Text="{DynamicResource Loc_CatDialog_Title}" Style="{StaticResource PageTitleText}" />
+            <TextBlock Text="{DynamicResource Loc_CatDialog_Subtitle}"
                        Style="{StaticResource CaptionText}"
                        Margin="0,4,0,0" />
         </StackPanel>
@@ -37,9 +37,9 @@
                 <TextBox x:Name="NameBox"
                          Style="{StaticResource FieldTextBox}"
                          MaxLength="100"
-                         ToolTip="Название категории" />
+                         ToolTip="{DynamicResource Loc_CatDialog_NameTooltip}" />
                 <Button Grid.Column="1"
-                        Content="Добавить"
+                        Content="{DynamicResource Loc_Common_Add}"
                         Style="{StaticResource PrimaryButton}"
                         Margin="10,0,0,0"
                         Click="AddButton_Click" />
@@ -54,7 +54,7 @@
                 </Grid.RowDefinitions>
 
                 <Grid Margin="8,4,8,8">
-                    <TextBlock Text="Список категорий"
+                    <TextBlock Text="{DynamicResource Loc_CatDialog_ListTitle}"
                                Style="{StaticResource SectionTitleText}"
                                FontSize="{DynamicResource FontSizeBase}" />
                     <TextBlock x:Name="CategoryCountText"
@@ -110,15 +110,15 @@
 
         <Grid Grid.Row="3" Margin="0,18,0,0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <Button Content="Переименовать"
+                <Button Content="{DynamicResource Loc_CatDialog_Rename}"
                         Style="{StaticResource SecondaryButton}"
                         Margin="0,0,8,0"
                         Click="RenameButton_Click" />
-                <Button Content="Удалить"
+                <Button Content="{DynamicResource Loc_Common_Delete}"
                         Style="{StaticResource DangerButton}"
                         Click="DeleteButton_Click" />
             </StackPanel>
-            <Button Content="Готово"
+            <Button Content="{DynamicResource Loc_Common_Done}"
                     Style="{StaticResource PrimaryButton}"
                     HorizontalAlignment="Right"
                     Click="CloseButton_Click" />

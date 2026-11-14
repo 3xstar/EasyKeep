@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using EasyKeep.Data;
@@ -21,6 +22,39 @@ public partial class CatalogView : UserControl
     public CatalogView()
     {
         InitializeComponent();
+
+        // XAML-строки переключаются словарём сами; кодовые — по событию.
+        LocalizationManager.LanguageChanged += OnLanguageChanged;
+        Unloaded += (_, _) => LocalizationManager.LanguageChanged -= OnLanguageChanged;
+    }
+
+    /// <summary>Пересчитывает кодовые строки каталога после смены языка.</summary>
+    private void OnLanguageChanged(object? sender, EventArgs e)
+    {
+        // Пункт «Все категории» — локальная заглушка.
+        if (CategoryFilter.ItemsSource is List<Category> categories &&
+            categories.Count > 0 && categories[0].Id == 0)
+        {
+            int selectedIndex = CategoryFilter.SelectedIndex;
+            categories[0].Name = LocalizationManager.Get("Common_CategoryAll");
+            CategoryFilter.ItemsSource = null;
+            CategoryFilter.ItemsSource = categories;
+            CategoryFilter.SelectedIndex = selectedIndex;
+        }
+
+        ApplyFilter();
+
+        // «Рентген»: перезагружаем историю выбранного товара или сбрасываем подписи.
+        if (ItemsGrid.SelectedItem is Item)
+        {
+            ItemsGrid_SelectionChanged(
+                ItemsGrid,
+                new SelectionChangedEventArgs(Selector.SelectionChangedEvent, Array.Empty<object>(), Array.Empty<object>()));
+        }
+        else
+        {
+            ResetXRay();
+        }
     }
 
     private async void CatalogView_Loaded(object sender, RoutedEventArgs e)
@@ -43,7 +77,7 @@ public partial class CatalogView : UserControl
             _items = await service.GetItemsAsync();
 
             List<Category> filterCategories = new(_categories);
-            filterCategories.Insert(0, new Category { Id = 0, Name = "Все категории" });
+            filterCategories.Insert(0, new Category { Id = 0, Name = LocalizationManager.Get("Common_CategoryAll") });
 
             CategoryFilter.ItemsSource = filterCategories;
             CategoryFilter.SelectedIndex = 0;
@@ -73,19 +107,19 @@ public partial class CatalogView : UserControl
             .ToList();
 
         ItemsGrid.ItemsSource = visible;
-        SummaryText.Text = $"Товаров: {visible.Count}";
+        SummaryText.Text = string.Format(LocalizationManager.Get("Cat_ItemsSummary"), visible.Count);
 
         StateText.Text = _items.Count == 0
-            ? "Каталог пуст. Добавьте первый товар."
-            : "По вашему запросу ничего не найдено. Измените поиск или категорию.";
+            ? LocalizationManager.Get("Cat_EmptyCatalog")
+            : LocalizationManager.Get("Cat_EmptyFilter");
         StateText.Visibility = visible.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private void ShowLoadError()
     {
         ItemsGrid.ItemsSource = null;
-        SummaryText.Text = "Нет данных";
-        StateText.Text = "Не удалось загрузить каталог. Проверьте подключение к базе данных.";
+        SummaryText.Text = LocalizationManager.Get("Common_NoData");
+        StateText.Text = LocalizationManager.Get("Cat_LoadError");
         StateText.Visibility = Visibility.Visible;
     }
 
@@ -95,7 +129,7 @@ public partial class CatalogView : UserControl
     {
         if (_categories.Count == 0)
         {
-            ShowWarning("Сначала создайте хотя бы одну категорию через кнопку «Категории».");
+            ShowWarning(LocalizationManager.Get("Cat_NeedCategory"));
             return;
         }
 
@@ -124,7 +158,7 @@ public partial class CatalogView : UserControl
         }
         catch (Exception)
         {
-            ShowWarning("Не удалось добавить товар. Проверьте подключение к базе данных.");
+            ShowWarning(LocalizationManager.Get("Cat_CreateError"));
         }
     }
 
@@ -132,7 +166,7 @@ public partial class CatalogView : UserControl
     {
         if (ItemsGrid.SelectedItem is not Item item)
         {
-            ShowWarning("Выберите товар в таблице.");
+            ShowWarning(LocalizationManager.Get("Cat_SelectItem"));
             return;
         }
 
@@ -162,7 +196,7 @@ public partial class CatalogView : UserControl
         }
         catch (Exception)
         {
-            ShowWarning("Не удалось изменить товар. Проверьте подключение к базе данных.");
+            ShowWarning(LocalizationManager.Get("Cat_UpdateError"));
         }
     }
 
@@ -170,13 +204,14 @@ public partial class CatalogView : UserControl
     {
         if (ItemsGrid.SelectedItem is not Item item)
         {
-            ShowWarning("Выберите товар в таблице.");
+            ShowWarning(LocalizationManager.Get("Cat_SelectItem"));
             return;
         }
 
         MessageBoxResult answer = MessageBox.Show(
-            $"Удалить товар «{item.Name}» ({item.Sku})?\nЭто действие необратимо.",
-            "Подтверждение удаления",
+            string.Format(LocalizationManager.Get("Cat_DeleteItemConfirm"), item.Name, item.Sku) + "\n" +
+            LocalizationManager.Get("Common_DeleteIrreversible"),
+            LocalizationManager.Get("Common_ConfirmDeleteTitle"),
             MessageBoxButton.YesNo,
             MessageBoxImage.Warning);
 
@@ -195,7 +230,7 @@ public partial class CatalogView : UserControl
         }
         catch (Exception)
         {
-            ShowWarning("Не удалось удалить товар. Проверьте подключение к базе данных.");
+            ShowWarning(LocalizationManager.Get("Cat_DeleteError"));
         }
     }
 
@@ -220,9 +255,9 @@ public partial class CatalogView : UserControl
         }
 
         XRayItemName.Text = item.Name;
-        XRayMeta.Text = $"{item.Sku} · {item.Category?.Name ?? "Без категории"} · {item.Unit}";
+        XRayMeta.Text = $"{item.Sku} · {item.Category?.Name ?? LocalizationManager.Get("Cat_NoCategory")} · {item.Unit}";
         HistoryList.ItemsSource = null;
-        HistoryStateText.Text = "Загрузка истории...";
+        HistoryStateText.Text = LocalizationManager.Get("Cat_XRayLoading");
         HistoryStateText.Visibility = Visibility.Visible;
         AnimateXRayPanel();
 
@@ -239,23 +274,23 @@ public partial class CatalogView : UserControl
                 return;
 
             HistoryList.ItemsSource = history;
-            HistoryStateText.Text = "У этого товара пока нет движений.";
+            HistoryStateText.Text = LocalizationManager.Get("Cat_XRayEmptyHistory");
             HistoryStateText.Visibility = history.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
         }
         catch (Exception)
         {
             HistoryList.ItemsSource = null;
-            HistoryStateText.Text = "Не удалось загрузить историю. Проверьте подключение к базе данных.";
+            HistoryStateText.Text = LocalizationManager.Get("Cat_XRayHistoryError");
             HistoryStateText.Visibility = Visibility.Visible;
         }
     }
 
     private void ResetXRay()
     {
-        XRayItemName.Text = "Товар не выбран";
-        XRayMeta.Text = "Кликните по строке таблицы, чтобы увидеть историю.";
+        XRayItemName.Text = LocalizationManager.Get("Cat_XRayNoItem");
+        XRayMeta.Text = LocalizationManager.Get("Cat_XRayNoItemHint");
         HistoryList.ItemsSource = null;
-        HistoryStateText.Text = "Выберите товар в таблице.";
+        HistoryStateText.Text = LocalizationManager.Get("Cat_SelectItem");
         HistoryStateText.Visibility = Visibility.Visible;
     }
 
@@ -299,6 +334,6 @@ public partial class CatalogView : UserControl
 
     private static void ShowWarning(string message)
     {
-        MessageBox.Show(message, "Каталог", MessageBoxButton.OK, MessageBoxImage.Warning);
+        MessageBox.Show(message, LocalizationManager.Get("Cat_WarnTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
     }
 }

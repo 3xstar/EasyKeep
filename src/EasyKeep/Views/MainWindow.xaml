@@ -61,7 +61,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <TextBlock x:Name="SectionsHeaderText"
-                                   Text="РАЗДЕЛЫ"
+                                   Text="{DynamicResource Loc_Nav_SectionsHeader}"
                                    FontSize="{DynamicResource FontSizeSmall}"
                                    FontWeight="SemiBold"
                                    Foreground="{DynamicResource TextMutedBrush}"
@@ -73,8 +73,8 @@
                                 Padding="6,4"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center"
-                                ToolTip="Свернуть/развернуть меню"
-                                AutomationProperties.Name="Свернуть или развернуть меню"
+                                ToolTip="{DynamicResource Loc_Nav_ToggleTooltip}"
+                                AutomationProperties.Name="{DynamicResource Loc_Nav_ToggleTooltip}"
                                 Click="NavToggleButton_Click">
                             <Path x:Name="NavToggleGlyph"
                                   Data="M6.5,1 L1.5,6 L6.5,11"
@@ -97,7 +97,7 @@
                                  GroupName="Sections"
                                  Style="{StaticResource NavButton}"
                                  Tag="stocks"
-                                 ToolTip="Остатки"
+                                 ToolTip="{DynamicResource Loc_Nav_Stocks}"
                                  AutomationProperties.Name="Остатки"
                                  Checked="NavButton_Checked">
                         <StackPanel Orientation="Horizontal">
@@ -109,7 +109,7 @@
                                   StrokeEndLineCap="Round"
                                   Width="19" Height="19"
                                   Stretch="Uniform" />
-                            <TextBlock x:Name="StocksNavText" Text="Остатки" Margin="12,0,0,0" VerticalAlignment="Center" />
+                            <TextBlock x:Name="StocksNavText" Text="{DynamicResource Loc_Nav_Stocks}" Margin="12,0,0,0" VerticalAlignment="Center" />
                         </StackPanel>
                     </RadioButton>
 
@@ -117,7 +117,7 @@
                                  GroupName="Sections"
                                  Style="{StaticResource NavButton}"
                                  Tag="movements"
-                                 ToolTip="Движения"
+                                 ToolTip="{DynamicResource Loc_Nav_Movements}"
                                  AutomationProperties.Name="Движения"
                                  Checked="NavButton_Checked">
                         <StackPanel Orientation="Horizontal">
@@ -129,7 +129,7 @@
                                   StrokeEndLineCap="Round"
                                   Width="19" Height="19"
                                   Stretch="Uniform" />
-                            <TextBlock x:Name="MovementsNavText" Text="Движения" Margin="12,0,0,0" VerticalAlignment="Center" />
+                            <TextBlock x:Name="MovementsNavText" Text="{DynamicResource Loc_Nav_Movements}" Margin="12,0,0,0" VerticalAlignment="Center" />
                         </StackPanel>
                     </RadioButton>
 
@@ -137,7 +137,7 @@
                                  GroupName="Sections"
                                  Style="{StaticResource NavButton}"
                                  Tag="catalog"
-                                 ToolTip="Каталог"
+                                 ToolTip="{DynamicResource Loc_Nav_Catalog}"
                                  AutomationProperties.Name="Каталог"
                                  Checked="NavButton_Checked">
                         <StackPanel Orientation="Horizontal">
@@ -149,7 +149,7 @@
                                   StrokeEndLineCap="Round"
                                   Width="19" Height="19"
                                   Stretch="Uniform" />
-                            <TextBlock x:Name="CatalogNavText" Text="Каталог" Margin="12,0,0,0" VerticalAlignment="Center" />
+                            <TextBlock x:Name="CatalogNavText" Text="{DynamicResource Loc_Nav_Catalog}" Margin="12,0,0,0" VerticalAlignment="Center" />
                         </StackPanel>
                     </RadioButton>
 
@@ -157,7 +157,7 @@
                                  GroupName="Sections"
                                  Style="{StaticResource NavButton}"
                                  Tag="reports"
-                                 ToolTip="Отчёт"
+                                 ToolTip="{DynamicResource Loc_Nav_Reports}"
                                  AutomationProperties.Name="Отчёт"
                                  Checked="NavButton_Checked">
                         <StackPanel Orientation="Horizontal">
@@ -167,7 +167,7 @@
                                   StrokeLineJoin="Round"
                                   Width="19" Height="19"
                                   Stretch="Uniform" />
-                            <TextBlock x:Name="ReportsNavText" Text="Отчёт" Margin="12,0,0,0" VerticalAlignment="Center" />
+                            <TextBlock x:Name="ReportsNavText" Text="{DynamicResource Loc_Nav_Reports}" Margin="12,0,0,0" VerticalAlignment="Center" />
                         </StackPanel>
                     </RadioButton>
                 </StackPanel>
@@ -180,11 +180,11 @@
                             Padding="12,9"
                             Margin="0,0,0,10">
                         <StackPanel>
-                            <TextBlock Text="Локальная база данных"
+                            <TextBlock Text="{DynamicResource Loc_Shell_DbTitle}"
                                        FontSize="{DynamicResource FontSizeSmall}"
                                        FontWeight="SemiBold"
                                        Foreground="{DynamicResource TextSecondaryBrush}" />
-                            <TextBlock Text="SQL Server • EasyKeep"
+                            <TextBlock Text="{DynamicResource Loc_Shell_DbSubtitle}"
                                        FontSize="{DynamicResource FontSizeSmall}"
                                        Foreground="{DynamicResource TextMutedBrush}"
                                        Margin="0,2,0,0" />
@@ -195,8 +195,8 @@
                             Style="{StaticResource SecondaryButton}"
                             Padding="12,9"
                             HorizontalContentAlignment="Left"
-                            ToolTip="Тема и масштаб интерфейса"
-                            AutomationProperties.Name="Персонализация"
+                            ToolTip="{DynamicResource Loc_Shell_PersonalizationTooltip}"
+                            AutomationProperties.Name="{DynamicResource Loc_Shell_Personalization}"
                             Click="PersonalizationButton_Click">
                         <StackPanel Orientation="Horizontal">
                             <!-- Кисточка: знак палитры и масштаба -->
@@ -207,7 +207,7 @@
                                       Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
                             </Canvas>
                             <TextBlock x:Name="PersonalizationLabel"
-                                       Text="Персонализация"
+                                       Text="{DynamicResource Loc_Shell_Personalization}"
                                        Margin="10,0,0,0"
                                        VerticalAlignment="Center" />
                         </StackPanel>
@@ -231,12 +231,12 @@
                             Effect="{DynamicResource PopupShadowEffect}"
                             PreviewKeyDown="Window_PreviewKeyDown">
                         <StackPanel>
-                            <TextBlock Text="Персонализация" Style="{StaticResource SectionTitleText}" />
-                            <TextBlock Text="Тема и масштаб интерфейса"
+                            <TextBlock Text="{DynamicResource Loc_Shell_Personalization}" Style="{StaticResource SectionTitleText}" />
+                            <TextBlock Text="{DynamicResource Loc_Shell_PersonalizationTooltip}"
                                        Style="{StaticResource CaptionText}"
                                        Margin="0,2,0,14" />
 
-                            <TextBlock Text="ТЕМА"
+                            <TextBlock Text="{DynamicResource Loc_Popup_Theme}"
                                        FontSize="{DynamicResource FontSizeSmall}"
                                        FontWeight="SemiBold"
                                        Foreground="{DynamicResource TextMutedBrush}" />
@@ -248,17 +248,40 @@
                                     <RadioButton x:Name="LightThemeOption"
                                                  GroupName="ThemeOptions"
                                                  Style="{StaticResource SegmentRadio}"
-                                                 Content="Светлая"
+                                                 Content="{DynamicResource Loc_Popup_Light}"
                                                  Checked="ThemeOption_Checked" />
                                     <RadioButton x:Name="DarkThemeOption"
                                                  GroupName="ThemeOptions"
                                                  Style="{StaticResource SegmentRadio}"
-                                                 Content="Тёмная"
+                                                 Content="{DynamicResource Loc_Popup_Dark}"
                                                  Checked="ThemeOption_Checked" />
                                 </UniformGrid>
                             </Border>
 
-                            <TextBlock Text="МАСШТАБ"
+                            <TextBlock Text="{DynamicResource Loc_Popup_Language}"
+                                       FontSize="{DynamicResource FontSizeSmall}"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextMutedBrush}"
+                                       Margin="0,16,0,0" />
+                            <Border Background="{DynamicResource SegmentTrackBrush}"
+                                    CornerRadius="9"
+                                    Padding="3"
+                                    Margin="0,6,0,0">
+                                <UniformGrid Columns="2">
+                                    <RadioButton x:Name="RuLanguageOption"
+                                                 GroupName="LanguageOptions"
+                                                 Style="{StaticResource SegmentRadio}"
+                                                 Content="RU"
+                                                 Checked="LanguageOption_Checked" />
+                                    <RadioButton x:Name="EnLanguageOption"
+                                                 GroupName="LanguageOptions"
+                                                 Style="{StaticResource SegmentRadio}"
+                                                 Content="EN"
+                                                 Checked="LanguageOption_Checked" />
+                                </UniformGrid>
+                            </Border>
+
+                            <TextBlock Text="{DynamicResource Loc_Popup_Scale}"
                                        FontSize="{DynamicResource FontSizeSmall}"
                                        FontWeight="SemiBold"
                                        Foreground="{DynamicResource TextMutedBrush}"
@@ -276,11 +299,11 @@
                                     <Button Content="−"
                                             Style="{StaticResource GhostButton}"
                                             FontSize="{DynamicResource FontSizeTitle}"
-                                            ToolTip="Уменьшить масштаб (Ctrl −)"
+                                            ToolTip="{DynamicResource Loc_Popup_ZoomOutTooltip}"
                                             Click="ZoomOutButton_Click" />
                                     <Button Grid.Column="1"
                                             Style="{StaticResource GhostButton}"
-                                            ToolTip="Сбросить на 100% (Ctrl 0)"
+                                            ToolTip="{DynamicResource Loc_Popup_ZoomResetTooltip}"
                                             Click="ZoomResetButton_Click">
                                         <TextBlock x:Name="ScalePercentText"
                                                    Text="100%"
@@ -292,11 +315,11 @@
                                             Content="+"
                                             Style="{StaticResource GhostButton}"
                                             FontSize="{DynamicResource FontSizeTitle}"
-                                            ToolTip="Увеличить масштаб (Ctrl +)"
+                                            ToolTip="{DynamicResource Loc_Popup_ZoomInTooltip}"
                                             Click="ZoomInButton_Click" />
                                 </Grid>
                             </Border>
-                            <TextBlock Text="Ctrl + / Ctrl − / Ctrl 0 — как в редакторах кода"
+                            <TextBlock Text="{DynamicResource Loc_Popup_ScaleHint}"
                                        Style="{StaticResource KpiHintText}"
                                        Margin="0,8,0,0" />
                         </StackPanel>
@@ -337,7 +360,7 @@
                                            Style="{StaticResource SectionTitleText}"
                                            HorizontalAlignment="Center"
                                            Margin="0,16,0,0" />
-                                <TextBlock Text="Раздел будет подключён на следующем шаге разработки."
+                                <TextBlock Text="{DynamicResource Loc_Shell_Placeholder}"
                                            Style="{StaticResource CaptionText}"
                                            TextAlignment="Center"
                                            Margin="0,6,0,0" />

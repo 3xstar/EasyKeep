@@ -1,4 +1,5 @@
 using System.Windows;
+using EasyKeep.Services;
 
 namespace EasyKeep.Views;
 
@@ -18,11 +19,18 @@ public partial class AutoBalanceDialog : Window
     {
         InitializeComponent();
 
+        LocalizationManager.ApplyCulture(this);
+        Title = LocalizationManager.Get("AbDialog_Title");
+
         DraftsGrid.ItemsSource = rows;
 
         int warehousesCount = rows.Select(row => row.WarehouseName).Distinct().Count();
         int totalQuantity = rows.Sum(row => row.Quantity);
-        SummaryText.Text = $"Точек: {warehousesCount} · строк: {rows.Count} · единиц: {totalQuantity}";
+        SummaryText.Text = string.Format(
+            LocalizationManager.Get("AbDialog_Summary"),
+            warehousesCount,
+            rows.Count,
+            totalQuantity);
     }
 
     private void ConfirmButton_Click(object sender, RoutedEventArgs e)

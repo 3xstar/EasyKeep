@@ -45,14 +45,14 @@
                         <Ellipse Width="7" Height="7"
                                  Fill="{DynamicResource AccentBrush}"
                                  VerticalAlignment="Center" />
-                        <TextBlock Text="Общий остаток"
+                        <TextBlock Text="{DynamicResource Loc_Rep_KpiTotalQuantity}"
                                    Style="{StaticResource KpiLabelText}"
                                    Margin="8,0,0,0" />
                     </StackPanel>
                     <TextBlock x:Name="TotalQuantityText"
                                Text="—"
                                Style="{StaticResource KpiValueText}" />
-                    <TextBlock Text="единиц на всех складах"
+                    <TextBlock Text="{DynamicResource Loc_Rep_KpiTotalQuantityHint}"
                                Style="{StaticResource KpiHintText}" />
                 </StackPanel>
             </Border>
@@ -65,7 +65,7 @@
                         <Ellipse Width="7" Height="7"
                                  Fill="{DynamicResource SuccessBrush}"
                                  VerticalAlignment="Center" />
-                        <TextBlock Text="Общая стоимость запасов"
+                        <TextBlock Text="{DynamicResource Loc_Rep_KpiTotalValue}"
                                    Style="{StaticResource KpiLabelText}"
                                    Margin="8,0,0,0" />
                     </StackPanel>
@@ -73,7 +73,7 @@
                                Text="—"
                                Style="{StaticResource KpiValueText}"
                                Foreground="{DynamicResource AccentBrush}" />
-                    <TextBlock Text="по текущим остаткам"
+                    <TextBlock Text="{DynamicResource Loc_Rep_KpiTotalValueHint}"
                                Style="{StaticResource KpiHintText}" />
                 </StackPanel>
             </Border>
@@ -85,7 +85,7 @@
                         <Ellipse Width="7" Height="7"
                                  Fill="{DynamicResource InfoBrush}"
                                  VerticalAlignment="Center" />
-                        <TextBlock Text="Лидер оборота"
+                        <TextBlock Text="{DynamicResource Loc_Rep_KpiLeader}"
                                    Style="{StaticResource KpiLabelText}"
                                    Margin="8,0,0,0" />
                     </StackPanel>
@@ -95,7 +95,7 @@
                                FontSize="{DynamicResource FontSizeSubtitle}"
                                TextWrapping="NoWrap" />
                     <TextBlock x:Name="LeaderDetailText"
-                               Text="за выбранный период"
+                               Text="{DynamicResource Loc_Rep_LeaderPeriodHint}"
                                Style="{StaticResource KpiHintText}" />
                 </StackPanel>
             </Border>
@@ -123,10 +123,10 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel>
-                            <TextBlock Text="Остатки по складам"
+                            <TextBlock Text="{DynamicResource Loc_Rep_StockTitle}"
                                        Style="{StaticResource SectionTitleText}"
                                        TextWrapping="Wrap" />
-                            <TextBlock Text="Распределение запасов, количество позиций и стоимость хранения."
+                            <TextBlock Text="{DynamicResource Loc_Rep_StockSubtitle}"
                                        Style="{StaticResource CaptionText}"
                                        Margin="0,2,0,0" />
                         </StackPanel>
@@ -139,7 +139,7 @@
                                     Margin="0,0,8,0"
                                     VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Складов:"
+                                    <TextBlock Text="{DynamicResource Loc_Common_WarehousesCount}"
                                                Style="{StaticResource CaptionText}"
                                                Foreground="{DynamicResource AccentBrush}"
                                                FontWeight="SemiBold" />
@@ -151,7 +151,7 @@
                                                Margin="5,0,0,0" />
                                 </StackPanel>
                             </Border>
-                            <Button Content="Обновить"
+                            <Button Content="{DynamicResource Loc_Common_Refresh}"
                                     Style="{StaticResource SecondaryButton}"
                                     FontSize="{DynamicResource FontSizeSmall}"
                                     Padding="12,7"
@@ -166,24 +166,24 @@
                                       BorderThickness="0"
                                       MinHeight="180">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Склад"
+                                    <DataGridTextColumn Header="{DynamicResource Loc_Common_HeaderWarehouse}"
                                                         Binding="{Binding WarehouseName}"
                                                         Width="2*"
                                                         MinWidth="130"
                                                         ElementStyle="{StaticResource CellText}" />
-                                    <DataGridTextColumn Header="Позиций"
+                                    <DataGridTextColumn Header="{DynamicResource Loc_Common_HeaderItems}"
                                                         Binding="{Binding ItemsCount}"
                                                         Width="*"
                                                         MinWidth="62"
                                                         HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                                         ElementStyle="{StaticResource NumberCellText}" />
-                                    <DataGridTextColumn Header="Кол-во"
+                                    <DataGridTextColumn Header="{DynamicResource Loc_Mov_HeaderQuantity}"
                                                         Binding="{Binding TotalQuantity}"
                                                         Width="*"
                                                         MinWidth="70"
                                                         HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                                         ElementStyle="{StaticResource NumberCellText}" />
-                                    <DataGridTextColumn Header="Стоимость, ₽"
+                                    <DataGridTextColumn Header="{DynamicResource Loc_Rep_HeaderValue}"
                                                         Binding="{Binding TotalValue, StringFormat={}{0:N2}}"
                                                         Width="*"
                                                         MinWidth="92"
@@ -213,8 +213,8 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel>
-                        <TextBlock Text="Топ активных товаров" Style="{StaticResource SectionTitleText}" />
-                        <TextBlock Text="Расход и перемещения за выбранный период."
+                        <TextBlock Text="{DynamicResource Loc_Rep_TopTitle}" Style="{StaticResource SectionTitleText}" />
+                        <TextBlock Text="{DynamicResource Loc_Rep_TopSubtitle}"
                                    Style="{StaticResource CaptionText}"
                                    Margin="0,2,0,0" />
                     </StackPanel>
@@ -227,17 +227,17 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Margin="0,0,10,0">
-                            <TextBlock Text="С даты" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
+                            <TextBlock Text="{DynamicResource Loc_Mov_FromDate}" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
                             <DatePicker x:Name="FromDatePicker" />
                         </StackPanel>
 
                         <StackPanel Grid.Column="1" Margin="0,0,10,0">
-                            <TextBlock Text="По дату" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
+                            <TextBlock Text="{DynamicResource Loc_Mov_ToDate}" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
                             <DatePicker x:Name="ToDatePicker" />
                         </StackPanel>
 
                         <Button Grid.Column="2"
-                                Content="Построить"
+                                Content="{DynamicResource Loc_Common_Build}"
                                 Style="{StaticResource PrimaryButton}"
                                 VerticalAlignment="Bottom"
                                 Click="BuildTopButton_Click" />
@@ -248,7 +248,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Рейтинг по расходу" Style="{StaticResource CaptionText}" VerticalAlignment="Center" />
+                        <TextBlock Text="{DynamicResource Loc_Rep_RatingLabel}" Style="{StaticResource CaptionText}" VerticalAlignment="Center" />
                         <Border Grid.Column="1"
                                 Style="{StaticResource PillBorder}"
                                 Margin="12,0,0,0">
@@ -266,29 +266,29 @@
                                       BorderThickness="0"
                                       MinHeight="180">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="SKU"
+                                    <DataGridTextColumn Header="{DynamicResource Loc_Common_HeaderSku}"
                                                         Binding="{Binding Sku}"
                                                         Width="*"
                                                         MinWidth="56"
                                                         ElementStyle="{StaticResource CellText}" />
-                                    <DataGridTextColumn Header="Товар"
+                                    <DataGridTextColumn Header="{DynamicResource Loc_Common_HeaderItem}"
                                                         Binding="{Binding Name}"
                                                         Width="2*"
                                                         MinWidth="130"
                                                         ElementStyle="{StaticResource CellText}" />
-                                    <DataGridTextColumn Header="Расход"
+                                    <DataGridTextColumn Header="{DynamicResource Loc_Rep_HeaderOut}"
                                                         Binding="{Binding OutQuantity}"
                                                         Width="*"
                                                         MinWidth="62"
                                                         HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                                         ElementStyle="{StaticResource NumberCellText}" />
-                                    <DataGridTextColumn Header="Перем."
+                                    <DataGridTextColumn Header="{DynamicResource Loc_Rep_HeaderTransfers}"
                                                         Binding="{Binding TransferQuantity}"
                                                         Width="*"
                                                         MinWidth="58"
                                                         HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                                         ElementStyle="{StaticResource NumberCellText}" />
-                                    <DataGridTextColumn Header="Движ."
+                                    <DataGridTextColumn Header="{DynamicResource Loc_Rep_HeaderMovements}"
                                                         Binding="{Binding MovementsCount}"
                                                         Width="*"
                                                         MinWidth="56"

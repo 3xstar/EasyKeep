@@ -1,0 +1,264 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!-- ============================================================
+         Строки интерфейса: русский. Все ключи с префиксом Loc_:
+         XAML читает их через {DynamicResource Loc_...}, код — через
+         LocalizationManager.Get("...") без префикса. Подмена словаря
+         мгновенно переводит весь интерфейс.
+         ============================================================ -->
+
+    <!-- Общие строки -->
+    <sys:String x:Key="Loc_Common_Refresh">Обновить</sys:String>
+    <sys:String x:Key="Loc_Common_Show">Показать</sys:String>
+    <sys:String x:Key="Loc_Common_Build">Построить</sys:String>
+    <sys:String x:Key="Loc_Common_Cancel">Отмена</sys:String>
+    <sys:String x:Key="Loc_Common_Save">Сохранить</sys:String>
+    <sys:String x:Key="Loc_Common_Done">Готово</sys:String>
+    <sys:String x:Key="Loc_Common_Add">Добавить</sys:String>
+    <sys:String x:Key="Loc_Common_Delete">Удалить</sys:String>
+    <sys:String x:Key="Loc_Common_Edit">Изменить</sys:String>
+    <sys:String x:Key="Loc_Common_Clear">Очистить</sys:String>
+    <sys:String x:Key="Loc_Common_NoData">Нет данных</sys:String>
+    <sys:String x:Key="Loc_Common_DaysShort">дн.</sys:String>
+    <sys:String x:Key="Loc_Common_WarehousesCount">Складов:</sys:String>
+    <sys:String x:Key="Loc_Common_InvalidPeriod">Дата начала должна быть раньше даты окончания.</sys:String>
+    <sys:String x:Key="Loc_Common_ConfirmDeleteTitle">Подтверждение удаления</sys:String>
+    <sys:String x:Key="Loc_Common_DeleteIrreversible">Это действие необратимо.</sys:String>
+    <sys:String x:Key="Loc_Common_WarehouseAll">Все склады</sys:String>
+    <sys:String x:Key="Loc_Common_CategoryAll">Все категории</sys:String>
+    <sys:String x:Key="Loc_Common_SearchLabel">Поиск по SKU или названию</sys:String>
+    <sys:String x:Key="Loc_Common_SearchTooltip">Введите артикул или часть названия товара</sys:String>
+    <sys:String x:Key="Loc_Common_HeaderSku">SKU</sys:String>
+    <sys:String x:Key="Loc_Common_HeaderItem">Товар</sys:String>
+    <sys:String x:Key="Loc_Common_HeaderWarehouse">Склад</sys:String>
+    <sys:String x:Key="Loc_Common_HeaderItems">Позиций</sys:String>
+    <sys:String x:Key="Loc_Common_HeaderUnits">Единиц</sys:String>
+    <sys:String x:Key="Loc_Common_HeaderComment">Комментарий</sys:String>
+    <sys:String x:Key="Loc_Common_UnitShort">Ед.</sys:String>
+
+    <!-- Оболочка: меню, вывеска, персонализация -->
+    <sys:String x:Key="Loc_Nav_Stocks">Остатки</sys:String>
+    <sys:String x:Key="Loc_Nav_Movements">Движения</sys:String>
+    <sys:String x:Key="Loc_Nav_Catalog">Каталог</sys:String>
+    <sys:String x:Key="Loc_Nav_Reports">Отчёт</sys:String>
+    <sys:String x:Key="Loc_Nav_SectionsHeader">РАЗДЕЛЫ</sys:String>
+    <sys:String x:Key="Loc_Nav_ToggleTooltip">Свернуть/развернуть меню</sys:String>
+    <sys:String x:Key="Loc_Shell_DbTitle">Локальная база данных</sys:String>
+    <sys:String x:Key="Loc_Shell_DbSubtitle">SQL Server • EasyKeep</sys:String>
+    <sys:String x:Key="Loc_Shell_Personalization">Персонализация</sys:String>
+    <sys:String x:Key="Loc_Shell_PersonalizationTooltip">Тема и масштаб интерфейса</sys:String>
+    <sys:String x:Key="Loc_Shell_Placeholder">Раздел будет подключён на следующем шаге разработки.</sys:String>
+    <sys:String x:Key="Loc_Popup_Theme">ТЕМА</sys:String>
+    <sys:String x:Key="Loc_Popup_Light">Светлая</sys:String>
+    <sys:String x:Key="Loc_Popup_Dark">Тёмная</sys:String>
+    <sys:String x:Key="Loc_Popup_Language">ЯЗЫК</sys:String>
+    <sys:String x:Key="Loc_Popup_Scale">МАСШТАБ</sys:String>
+    <sys:String x:Key="Loc_Popup_ScaleHint">Ctrl + / Ctrl − / Ctrl 0 — как в редакторах кода</sys:String>
+    <sys:String x:Key="Loc_Popup_ZoomInTooltip">Увеличить масштаб (Ctrl +)</sys:String>
+    <sys:String x:Key="Loc_Popup_ZoomOutTooltip">Уменьшить масштаб (Ctrl −)</sys:String>
+    <sys:String x:Key="Loc_Popup_ZoomResetTooltip">Сбросить на 100% (Ctrl 0)</sys:String>
+    <sys:String x:Key="Loc_PickerCulture">ru-RU</sys:String>
+
+    <!-- Заголовки разделов -->
+    <sys:String x:Key="Loc_Section_Stocks_Title">Остатки</sys:String>
+    <sys:String x:Key="Loc_Section_Stocks_Subtitle">Текущие остатки складов и «Светофор дефицита».</sys:String>
+    <sys:String x:Key="Loc_Section_Movements_Title">Движения</sys:String>
+    <sys:String x:Key="Loc_Section_Movements_Subtitle">Журнал операций и проведение прихода, расхода и перемещений.</sys:String>
+    <sys:String x:Key="Loc_Section_Catalog_Title">Каталог</sys:String>
+    <sys:String x:Key="Loc_Section_Catalog_Subtitle">Товары, категории и полная история движений по каждой позиции.</sys:String>
+    <sys:String x:Key="Loc_Section_Reports_Title">Отчёт</sys:String>
+    <sys:String x:Key="Loc_Section_Reports_Subtitle">Сводка запасов по складам и рейтинг самых активных товаров.</sys:String>
+
+    <!-- Статусы светофора -->
+    <sys:String x:Key="Loc_Status_Normal">🟢 Норма</sys:String>
+    <sys:String x:Key="Loc_Status_Warning">🟡 Внимание</sys:String>
+    <sys:String x:Key="Loc_Status_Critical">🔴 Критично</sys:String>
+    <sys:String x:Key="Loc_Status_NonLiquid">⚪ Неликвид</sys:String>
+
+    <!-- Типы операций -->
+    <sys:String x:Key="Loc_Type_In">Приход</sys:String>
+    <sys:String x:Key="Loc_Type_Out">Расход</sys:String>
+    <sys:String x:Key="Loc_Type_Transfer">Перемещение</sys:String>
+    <sys:String x:Key="Loc_Type_InCombo">Приход (IN)</sys:String>
+    <sys:String x:Key="Loc_Type_OutCombo">Расход (OUT)</sys:String>
+    <sys:String x:Key="Loc_Type_TransferCombo">Перемещение (TRANSFER)</sys:String>
+    <sys:String x:Key="Loc_Type_All">Все операции</sys:String>
+
+    <!-- Экран «Остатки» -->
+    <sys:String x:Key="Loc_Stocks_KpiAll">Всего позиций</sys:String>
+    <sys:String x:Key="Loc_Stocks_KpiCritical">Критичный дефицит</sys:String>
+    <sys:String x:Key="Loc_Stocks_KpiWarning">Внимание</sys:String>
+    <sys:String x:Key="Loc_Stocks_KpiNonLiquid">Неликвид</sys:String>
+    <sys:String x:Key="Loc_Stocks_HeaderQuantity">Остаток</sys:String>
+    <sys:String x:Key="Loc_Stocks_HeaderMin">Минимум</sys:String>
+    <sys:String x:Key="Loc_Stocks_HeaderRate">Расход/день</sys:String>
+    <sys:String x:Key="Loc_Stocks_HeaderForecast">Прогноз</sys:String>
+    <sys:String x:Key="Loc_Stocks_SummaryAll">Позиций: {0} · критично: {1}</sys:String>
+    <sys:String x:Key="Loc_Stocks_SummaryFiltered">Показано: {0} из {1}</sys:String>
+    <sys:String x:Key="Loc_Stocks_EmptyWarehouse">На выбранном складе пока нет остатков.</sys:String>
+    <sys:String x:Key="Loc_Stocks_EmptyFilter">По вашему запросу ничего не найдено. Измените поиск, склад или виджет.</sys:String>
+    <sys:String x:Key="Loc_Stocks_LoadError">Не удалось загрузить остатки. Проверьте подключение к базе данных.</sys:String>
+    <sys:String x:Key="Loc_Stocks_TrafficTooltip">Переключить вид светофора</sys:String>
+
+    <!-- Экран «Движения» -->
+    <sys:String x:Key="Loc_Mov_DocTitle">Новый документ</sys:String>
+    <sys:String x:Key="Loc_Mov_AutoBalance">Авто-балансировка</sys:String>
+    <sys:String x:Key="Loc_Mov_TypeLabel">Тип операции</sys:String>
+    <sys:String x:Key="Loc_Mov_SourceLabel">Склад-источник</sys:String>
+    <sys:String x:Key="Loc_Mov_TargetLabel">Склад-получатель</sys:String>
+    <sys:String x:Key="Loc_Mov_CommandTitle">Командная строка склада</sys:String>
+    <sys:String x:Key="Loc_Mov_CommandTooltip">Введите SKU или часть названия и нажмите Enter</sys:String>
+    <sys:String x:Key="Loc_Mov_CommandHint">Enter добавляет позицию +1. Повторный ввод увеличивает количество.</sys:String>
+    <sys:String x:Key="Loc_Mov_LinesTitle">Позиции документа</sys:String>
+    <sys:String x:Key="Loc_Mov_RemoveTooltip">Удалить позицию</sys:String>
+    <sys:String x:Key="Loc_Mov_CommentLabel">Комментарий (необязательно)</sys:String>
+    <sys:String x:Key="Loc_Mov_Post">Провести документ</sys:String>
+    <sys:String x:Key="Loc_Mov_LinesEmpty">Добавьте товар через командную строку выше.</sys:String>
+    <sys:String x:Key="Loc_Mov_JournalTitle">Журнал операций</sys:String>
+    <sys:String x:Key="Loc_Mov_FromDate">С даты</sys:String>
+    <sys:String x:Key="Loc_Mov_ToDate">По дату</sys:String>
+    <sys:String x:Key="Loc_Mov_SearchLabel">Поиск по товару</sys:String>
+    <sys:String x:Key="Loc_Mov_HeaderDate">Дата</sys:String>
+    <sys:String x:Key="Loc_Mov_HeaderType">Тип</sys:String>
+    <sys:String x:Key="Loc_Mov_HeaderRoute">Маршрут</sys:String>
+    <sys:String x:Key="Loc_Mov_HeaderQuantity">Кол-во</sys:String>
+    <sys:String x:Key="Loc_Mov_CommandNotFound">Товар «{0}» не найден.</sys:String>
+    <sys:String x:Key="Loc_Mov_CommandAdded">Добавлено: {0} (+1).</sys:String>
+    <sys:String x:Key="Loc_Mov_CommandError">Не удалось найти товар. Проверьте подключение к базе данных.</sys:String>
+    <sys:String x:Key="Loc_Mov_SummaryFormat">Позиций: {0} · единиц: {1}</sys:String>
+    <sys:String x:Key="Loc_Mov_ConfirmTitle">Подтверждение операции</sys:String>
+    <sys:String x:Key="Loc_Mov_ConfirmCounts">Позиций: {0}, единиц: {1}.</sys:String>
+    <sys:String x:Key="Loc_Mov_ConfirmIn">Провести приход на склад «{0}»?</sys:String>
+    <sys:String x:Key="Loc_Mov_ConfirmOut">Провести расход со склада «{0}»?</sys:String>
+    <sys:String x:Key="Loc_Mov_ConfirmTransfer">Переместить товары со склада «{0}» на «{1}»?</sys:String>
+    <sys:String x:Key="Loc_Mov_ConfirmTrailer">Документ изменит остатки и будет записан в журнал.</sys:String>
+    <sys:String x:Key="Loc_Mov_PostedOk">Документ №{0} успешно проведён. Остатки обновлены.</sys:String>
+    <sys:String x:Key="Loc_Mov_PostError">Не удалось провести документ. {0}</sys:String>
+    <sys:String x:Key="Loc_Mov_PostErrorTitle">Ошибка проведения</sys:String>
+    <sys:String x:Key="Loc_Mov_WarnTitle">Проверьте документ</sys:String>
+    <sys:String x:Key="Loc_Mov_WarnNoLines">Добавьте хотя бы одну позицию в документ.</sys:String>
+    <sys:String x:Key="Loc_Mov_WarnBadQuantity">Количество в каждой строке должно быть больше нуля.</sys:String>
+    <sys:String x:Key="Loc_Mov_WarnNoSource">Выберите склад-источник.</sys:String>
+    <sys:String x:Key="Loc_Mov_WarnNoTarget">Выберите склад-получатель.</sys:String>
+    <sys:String x:Key="Loc_Mov_WarnSameWarehouses">Склады отправления и получения должны различаться.</sys:String>
+    <sys:String x:Key="Loc_Mov_ShortageTitle">Нехватка остатка</sys:String>
+    <sys:String x:Key="Loc_Mov_ShortageHeader">Недостаточно товара «{0}».</sys:String>
+    <sys:String x:Key="Loc_Mov_ShortageAvailable">Доступно: {0}, запрошено: {1}.</sys:String>
+    <sys:String x:Key="Loc_Mov_AskSubstitute">Подставить доступный максимум — {0}?</sys:String>
+    <sys:String x:Key="Loc_Mov_AskRemoveLine">Доступного остатка нет. Удалить позицию из документа?</sys:String>
+    <sys:String x:Key="Loc_Mov_Substituted">Количество обновлено до доступного максимума ({0}). Проверьте документ.</sys:String>
+    <sys:String x:Key="Loc_Mov_LineRemoved">Позиция удалена из документа: на складе нет доступного остатка.</sys:String>
+    <sys:String x:Key="Loc_Mov_HintTitle">Подсказка EasyKeep</sys:String>
+    <sys:String x:Key="Loc_Mov_JournalWrongPeriod">Период задан неверно</sys:String>
+    <sys:String x:Key="Loc_Mov_JournalSummary">Документов: {0}</sys:String>
+    <sys:String x:Key="Loc_Mov_JournalEmpty">За выбранный период ничего не найдено. Измените фильтры.</sys:String>
+    <sys:String x:Key="Loc_Mov_JournalError">Не удалось загрузить журнал. Проверьте подключение к базе данных.</sys:String>
+    <sys:String x:Key="Loc_Mov_AutoBalanceError">Не удалось выполнить авто-балансировку. Проверьте подключение к базе данных.</sys:String>
+    <sys:String x:Key="Loc_Mov_AutoBalanceNone">Авто-балансировка не требуется: критичного дефицита на торговых точках нет.</sys:String>
+    <sys:String x:Key="Loc_Mov_AutoBalanceDoneTitle">Авто-балансировка завершена</sys:String>
+    <sys:String x:Key="Loc_Mov_AutoBalanceDone">Проведено документов: {0} из {1}.</sys:String>
+    <sys:String x:Key="Loc_Mov_AutoBalanceFailedList">Не удалось провести:</sys:String>
+    <sys:String x:Key="Loc_Mov_ItemFallback">Товар #{0}</sys:String>
+
+    <!-- Экран «Каталог» -->
+    <sys:String x:Key="Loc_Cat_ItemsTitle">Товары каталога</sys:String>
+    <sys:String x:Key="Loc_Cat_CategoryLabel">Категория</sys:String>
+    <sys:String x:Key="Loc_Cat_AddItem">Добавить товар</sys:String>
+    <sys:String x:Key="Loc_Cat_CategoriesButton">Категории</sys:String>
+    <sys:String x:Key="Loc_Cat_HeaderCategory">Категория</sys:String>
+    <sys:String x:Key="Loc_Cat_HeaderPrice">Цена, ₽</sys:String>
+    <sys:String x:Key="Loc_Cat_HeaderMin">Мин.</sys:String>
+    <sys:String x:Key="Loc_Cat_ItemsSummary">Товаров: {0}</sys:String>
+    <sys:String x:Key="Loc_Cat_EmptyCatalog">Каталог пуст. Добавьте первый товар.</sys:String>
+    <sys:String x:Key="Loc_Cat_EmptyFilter">По вашему запросу ничего не найдено. Измените поиск или категорию.</sys:String>
+    <sys:String x:Key="Loc_Cat_LoadError">Не удалось загрузить каталог. Проверьте подключение к базе данных.</sys:String>
+    <sys:String x:Key="Loc_Cat_WarnTitle">Каталог</sys:String>
+    <sys:String x:Key="Loc_Cat_NeedCategory">Сначала создайте хотя бы одну категорию через кнопку «Категории».</sys:String>
+    <sys:String x:Key="Loc_Cat_SelectItem">Выберите товар в таблице.</sys:String>
+    <sys:String x:Key="Loc_Cat_DeleteItemConfirm">Удалить товар «{0}» ({1})?</sys:String>
+    <sys:String x:Key="Loc_Cat_CreateError">Не удалось добавить товар. Проверьте подключение к базе данных.</sys:String>
+    <sys:String x:Key="Loc_Cat_UpdateError">Не удалось изменить товар. Проверьте подключение к базе данных.</sys:String>
+    <sys:String x:Key="Loc_Cat_DeleteError">Не удалось удалить товар. Проверьте подключение к базе данных.</sys:String>
+    <sys:String x:Key="Loc_Cat_XRayTitle">Рентген товара</sys:String>
+    <sys:String x:Key="Loc_Cat_XRaySubtitle">История всех движений выбранной позиции.</sys:String>
+    <sys:String x:Key="Loc_Cat_XRayNoItem">Товар не выбран</sys:String>
+    <sys:String x:Key="Loc_Cat_XRayNoItemHint">Кликните по строке таблицы, чтобы увидеть историю.</sys:String>
+    <sys:String x:Key="Loc_Cat_XRayLoading">Загрузка истории...</sys:String>
+    <sys:String x:Key="Loc_Cat_XRayEmptyHistory">У этого товара пока нет движений.</sys:String>
+    <sys:String x:Key="Loc_Cat_XRayHistoryError">Не удалось загрузить историю. Проверьте подключение к базе данных.</sys:String>
+    <sys:String x:Key="Loc_Cat_NoCategory">Без категории</sys:String>
+
+    <!-- Экран «Отчёт» -->
+    <sys:String x:Key="Loc_Rep_KpiTotalQuantity">Общий остаток</sys:String>
+    <sys:String x:Key="Loc_Rep_KpiTotalQuantityHint">единиц на всех складах</sys:String>
+    <sys:String x:Key="Loc_Rep_KpiTotalValue">Общая стоимость запасов</sys:String>
+    <sys:String x:Key="Loc_Rep_KpiTotalValueHint">по текущим остаткам</sys:String>
+    <sys:String x:Key="Loc_Rep_KpiLeader">Лидер оборота</sys:String>
+    <sys:String x:Key="Loc_Rep_LeaderPeriodHint">за выбранный период</sys:String>
+    <sys:String x:Key="Loc_Rep_StockTitle">Остатки по складам</sys:String>
+    <sys:String x:Key="Loc_Rep_StockSubtitle">Распределение запасов, количество позиций и стоимость хранения.</sys:String>
+    <sys:String x:Key="Loc_Rep_LeaderDetail">{0} · {1} ед. расхода</sys:String>
+    <sys:String x:Key="Loc_Rep_TopTitle">Топ активных товаров</sys:String>
+    <sys:String x:Key="Loc_Rep_TopSubtitle">Расход и перемещения за выбранный период.</sys:String>
+    <sys:String x:Key="Loc_Rep_RatingLabel">Рейтинг по расходу</sys:String>
+    <sys:String x:Key="Loc_Rep_HeaderValue">Стоимость, ₽</sys:String>
+    <sys:String x:Key="Loc_Rep_HeaderOut">Расход</sys:String>
+    <sys:String x:Key="Loc_Rep_HeaderTransfers">Перем.</sys:String>
+    <sys:String x:Key="Loc_Rep_HeaderMovements">Движ.</sys:String>
+    <sys:String x:Key="Loc_Rep_TopSummary">Показано: {0}</sys:String>
+    <sys:String x:Key="Loc_Rep_StockEmpty">Остатков пока нет.</sys:String>
+    <sys:String x:Key="Loc_Rep_StockError">Не удалось загрузить отчёт. Проверьте подключение к базе данных.</sys:String>
+    <sys:String x:Key="Loc_Rep_TopEmpty">За выбранный период движений не найдено.</sys:String>
+    <sys:String x:Key="Loc_Rep_TopError">Не удалось построить рейтинг. Проверьте подключение к базе данных.</sys:String>
+    <sys:String x:Key="Loc_Rep_LeaderNoData">нет данных</sys:String>
+    <sys:String x:Key="Loc_Rep_LeaderNoMovements">за выбранный период движений нет</sys:String>
+    <sys:String x:Key="Loc_Rep_LeaderInvalidPeriod">укажите корректный период</sys:String>
+
+    <!-- Диалог товара -->
+    <sys:String x:Key="Loc_ItemDialog_Title">Товар</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_New">Новый товар</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_Edit">Редактирование товара</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_Subtitle">Заполните карточку номенклатуры. SKU должен быть уникальным.</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_SkuLabel">SKU *</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_NameLabel">Название *</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_CategoryLabel">Категория *</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_UnitLabel">Единица *</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_PriceLabel">Цена</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_MinStockLabel">Мин. остаток</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_MinStockHint">Минимальный остаток используется «Светофором дефицита» как неснижаемый порог.</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_UnitDefault">шт.</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_WarnTitle">Проверьте данные</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_WarnRequired">Заполните обязательные поля: SKU, название и единицу измерения.</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_WarnNoCategory">Сначала создайте хотя бы одну категорию и выберите её.</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_WarnPrice">Цена должна быть неотрицательным числом.</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_WarnMinStock">Минимальный остаток должен быть неотрицательным целым числом.</sys:String>
+
+    <!-- Диалог категорий -->
+    <sys:String x:Key="Loc_CatDialog_Title">Категории товаров</sys:String>
+    <sys:String x:Key="Loc_CatDialog_Subtitle">Добавляйте, переименовывайте и удаляйте категории каталога.</sys:String>
+    <sys:String x:Key="Loc_CatDialog_NameTooltip">Название категории</sys:String>
+    <sys:String x:Key="Loc_CatDialog_ListTitle">Список категорий</sys:String>
+    <sys:String x:Key="Loc_CatDialog_Count">Категорий: {0}</sys:String>
+    <sys:String x:Key="Loc_CatDialog_LoadError">Не удалось загрузить категории. Проверьте подключение к базе данных.</sys:String>
+    <sys:String x:Key="Loc_CatDialog_WarnTitle">Категории</sys:String>
+    <sys:String x:Key="Loc_CatDialog_WarnNewName">Введите название новой категории.</sys:String>
+    <sys:String x:Key="Loc_CatDialog_WarnRenameName">Введите новое название категории.</sys:String>
+    <sys:String x:Key="Loc_CatDialog_WarnSelect">Выберите категорию в списке.</sys:String>
+    <sys:String x:Key="Loc_CatDialog_Rename">Переименовать</sys:String>
+    <sys:String x:Key="Loc_CatDialog_CreateError">Не удалось добавить категорию. Проверьте подключение к базе данных.</sys:String>
+    <sys:String x:Key="Loc_CatDialog_RenameError">Не удалось переименовать категорию. Проверьте подключение к базе данных.</sys:String>
+    <sys:String x:Key="Loc_CatDialog_DeleteError">Не удалось удалить категорию. Проверьте подключение к базе данных.</sys:String>
+    <sys:String x:Key="Loc_CatDialog_DeleteConfirm">Удалить категорию «{0}»?</sys:String>
+
+    <!-- Диалог авто-балансировки -->
+    <sys:String x:Key="Loc_AbDialog_Title">Авто-балансировка складов</sys:String>
+    <sys:String x:Key="Loc_AbDialog_DraftsTitle">Черновики авто-балансировки</sys:String>
+    <sys:String x:Key="Loc_AbDialog_Subtitle">Система подобрала перемещения с основного склада на торговые точки. Проверьте цифры перед проведением.</sys:String>
+    <sys:String x:Key="Loc_AbDialog_HeaderStore">Торговая точка</sys:String>
+    <sys:String x:Key="Loc_AbDialog_HeaderQuantity">Количество</sys:String>
+    <sys:String x:Key="Loc_AbDialog_PostAll">Провести все</sys:String>
+    <sys:String x:Key="Loc_AbDialog_Summary">Точек: {0} · строк: {1} · единиц: {2}</sys:String>
+
+</ResourceDictionary>

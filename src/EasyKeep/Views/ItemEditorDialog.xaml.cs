@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Windows;
 using EasyKeep.Data.Entities;
+using EasyKeep.Services;
 
 namespace EasyKeep.Views;
 
@@ -14,18 +15,21 @@ public partial class ItemEditorDialog : Window
     {
         InitializeComponent();
 
+        LocalizationManager.ApplyCulture(this);
+        Title = LocalizationManager.Get("ItemDialog_Title");
+
         CategoryCombo.ItemsSource = categories;
 
         if (item is null)
         {
-            UnitBox.Text = "шт.";
+            UnitBox.Text = LocalizationManager.Get("ItemDialog_UnitDefault");
             PriceBox.Text = "0";
             MinStockBox.Text = "0";
             CategoryCombo.SelectedIndex = categories.Count > 0 ? 0 : -1;
             return;
         }
 
-        HeaderText.Text = "Редактирование товара";
+        HeaderText.Text = LocalizationManager.Get("ItemDialog_Edit");
         SkuBox.Text = item.Sku;
         NameBox.Text = item.Name;
         CategoryCombo.SelectedValue = item.CategoryId;
@@ -58,27 +62,27 @@ public partial class ItemEditorDialog : Window
     {
         if (Sku.Length == 0 || ItemName.Length == 0 || Unit.Length == 0)
         {
-            ShowWarning("Заполните обязательные поля: SKU, название и единицу измерения.");
+            ShowWarning(LocalizationManager.Get("ItemDialog_WarnRequired"));
             return false;
         }
 
         if (CategoryId == 0)
         {
-            ShowWarning("Сначала создайте хотя бы одну категорию и выберите её.");
+            ShowWarning(LocalizationManager.Get("ItemDialog_WarnNoCategory"));
             return false;
         }
 
         if (!decimal.TryParse(PriceBox.Text, NumberStyles.Number, CultureInfo.CurrentCulture, out decimal price) ||
             price < 0)
         {
-            ShowWarning("Цена должна быть неотрицательным числом.");
+            ShowWarning(LocalizationManager.Get("ItemDialog_WarnPrice"));
             return false;
         }
 
         if (!int.TryParse(MinStockBox.Text, NumberStyles.Integer, CultureInfo.CurrentCulture, out int minStock) ||
             minStock < 0)
         {
-            ShowWarning("Минимальный остаток должен быть неотрицательным целым числом.");
+            ShowWarning(LocalizationManager.Get("ItemDialog_WarnMinStock"));
             return false;
         }
 
@@ -89,6 +93,6 @@ public partial class ItemEditorDialog : Window
 
     private static void ShowWarning(string message)
     {
-        MessageBox.Show(message, "Проверьте данные", MessageBoxButton.OK, MessageBoxImage.Warning);
+        MessageBox.Show(message, LocalizationManager.Get("ItemDialog_WarnTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
     }
 }

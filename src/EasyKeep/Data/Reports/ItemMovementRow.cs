@@ -1,6 +1,7 @@
 namespace EasyKeep.Data.Reports;
 
-/// <summary>Одно событие в истории выбранного товара («Рентген товара»).</summary>
+/// <summary>Одно событие в истории выбранного товара («Рентген товара»).
+/// Подпись типа задаётся в XAML-триггерах из словаря локализации.</summary>
 public record ItemMovementRow(
     int MovementId,
     DateTime CreatedAt,
@@ -11,14 +12,6 @@ public record ItemMovementRow(
     string? Comment)
 {
     public string DateText => CreatedAt.ToString("dd.MM.yyyy HH:mm");
-
-    public string TypeText => Type switch
-    {
-        "IN" => "Приход",
-        "OUT" => "Расход",
-        "TRANSFER" => "Перемещение",
-        _ => Type
-    };
 
     public string RouteText => Type switch
     {

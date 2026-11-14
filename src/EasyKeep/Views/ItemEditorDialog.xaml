@@ -20,8 +20,8 @@
         </Grid.RowDefinitions>
 
         <StackPanel>
-            <TextBlock x:Name="HeaderText" Text="Новый товар" Style="{StaticResource PageTitleText}" />
-            <TextBlock Text="Заполните карточку номенклатуры. SKU должен быть уникальным."
+            <TextBlock x:Name="HeaderText" Text="{DynamicResource Loc_ItemDialog_New}" Style="{StaticResource PageTitleText}" />
+            <TextBlock Text="{DynamicResource Loc_ItemDialog_Subtitle}"
                        Style="{StaticResource CaptionText}"
                        Margin="0,4,0,0" />
         </StackPanel>
@@ -35,13 +35,13 @@
                       Focusable="False">
             <Border Style="{StaticResource CardBorder}">
                 <StackPanel>
-                    <TextBlock Text="SKU *" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
+                    <TextBlock Text="{DynamicResource Loc_ItemDialog_SkuLabel}" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
                     <TextBox x:Name="SkuBox" Style="{StaticResource FieldTextBox}" MaxLength="50" />
 
-                    <TextBlock Text="Название *" Style="{StaticResource FieldLabelText}" Margin="0,12,0,6" />
+                    <TextBlock Text="{DynamicResource Loc_ItemDialog_NameLabel}" Style="{StaticResource FieldLabelText}" Margin="0,12,0,6" />
                     <TextBox x:Name="NameBox" Style="{StaticResource FieldTextBox}" MaxLength="200" />
 
-                    <TextBlock Text="Категория *" Style="{StaticResource FieldLabelText}" Margin="0,12,0,6" />
+                    <TextBlock Text="{DynamicResource Loc_ItemDialog_CategoryLabel}" Style="{StaticResource FieldLabelText}" Margin="0,12,0,6" />
                     <ComboBox x:Name="CategoryCombo"
                               Style="{StaticResource FieldComboBox}"
                               DisplayMemberPath="Name"
@@ -55,22 +55,22 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Margin="0,0,8,0">
-                            <TextBlock Text="Единица *" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
+                            <TextBlock Text="{DynamicResource Loc_ItemDialog_UnitLabel}" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
                             <TextBox x:Name="UnitBox" Style="{StaticResource FieldTextBox}" MaxLength="20" />
                         </StackPanel>
 
                         <StackPanel Grid.Column="1" Margin="0,0,8,0">
-                            <TextBlock Text="Цена" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
+                            <TextBlock Text="{DynamicResource Loc_ItemDialog_PriceLabel}" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
                             <TextBox x:Name="PriceBox" Style="{StaticResource FieldTextBox}" />
                         </StackPanel>
 
                         <StackPanel Grid.Column="2">
-                            <TextBlock Text="Мин. остаток" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
+                            <TextBlock Text="{DynamicResource Loc_ItemDialog_MinStockLabel}" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
                             <TextBox x:Name="MinStockBox" Style="{StaticResource FieldTextBox}" />
                         </StackPanel>
                     </Grid>
 
-                    <TextBlock Text="Минимальный остаток используется «Светофором дефицита» как неснижаемый порог."
+                    <TextBlock Text="{DynamicResource Loc_ItemDialog_MinStockHint}"
                                Style="{StaticResource CaptionText}"
                                Foreground="{DynamicResource TextMutedBrush}"
                                FontSize="{DynamicResource FontSizeSmall}"
@@ -80,11 +80,11 @@
         </ScrollViewer>
 
         <Grid Grid.Row="2" Margin="0,18,0,0">
-            <Button Content="Отмена"
+            <Button Content="{DynamicResource Loc_Common_Cancel}"
                     Style="{StaticResource SecondaryButton}"
                     HorizontalAlignment="Left"
                     IsCancel="True" />
-            <Button Content="Сохранить"
+            <Button Content="{DynamicResource Loc_Common_Save}"
                     Style="{StaticResource PrimaryButton}"
                     HorizontalAlignment="Right"
                     IsDefault="True"

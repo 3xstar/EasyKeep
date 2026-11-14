@@ -2,6 +2,8 @@ namespace EasyKeep.Services;
 
 /// <summary>
 /// Строка «Светофора дефицита» по конкретному товару на конкретном складе.
+/// Подписи статусов задаются в XAML-триггерах из словаря локализации,
+/// чтобы переключение языка происходило мгновенно.
 /// </summary>
 public record DeficitRow(
     int WarehouseId,
@@ -15,16 +17,6 @@ public record DeficitRow(
     decimal? DaysLeft,
     DeficitStatus Status)
 {
-    /// <summary>Подпись статуса с цветовым маркером для интерфейса.</summary>
-    public string StatusText => Status switch
-    {
-        DeficitStatus.Normal => "🟢 Норма",
-        DeficitStatus.Warning => "🟡 Внимание",
-        DeficitStatus.Critical => "🔴 Критично",
-        DeficitStatus.NonLiquid => "⚪ Неликвид",
-        _ => "—"
-    };
-
-    /// <summary>Прогноз в днях в виде текста.</summary>
-    public string DaysLeftText => DaysLeft is null ? "—" : $"{DaysLeft:0.#} дн.";
+    /// <summary>Прогноз в днях в виде текста; единица — по текущему языку.</summary>
+    public string DaysLeftText => DaysLeft is null ? "—" : $"{DaysLeft:0.#} {LocalizationManager.Get("Common_DaysShort")}";
 }

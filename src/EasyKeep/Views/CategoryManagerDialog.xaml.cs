@@ -14,6 +14,9 @@ public partial class CategoryManagerDialog : Window
     public CategoryManagerDialog()
     {
         InitializeComponent();
+
+        LocalizationManager.ApplyCulture(this);
+        Title = LocalizationManager.Get("CatDialog_Title");
     }
 
     private async void CategoryManagerDialog_Loaded(object sender, RoutedEventArgs e)
@@ -32,7 +35,7 @@ public partial class CategoryManagerDialog : Window
             }
 
             CategoriesList.ItemsSource = categories;
-            CategoryCountText.Text = $"Категорий: {categories.Count}";
+            CategoryCountText.Text = string.Format(LocalizationManager.Get("CatDialog_Count"), categories.Count);
 
             if (selectId is not null)
                 CategoriesList.SelectedItem = categories.FirstOrDefault(category => category.Id == selectId);
@@ -40,8 +43,8 @@ public partial class CategoryManagerDialog : Window
         catch (Exception)
         {
             MessageBox.Show(
-                "Не удалось загрузить категории. Проверьте подключение к базе данных.",
-                "Категории",
+                LocalizationManager.Get("CatDialog_LoadError"),
+                LocalizationManager.Get("CatDialog_WarnTitle"),
                 MessageBoxButton.OK,
                 MessageBoxImage.Warning);
         }
@@ -52,7 +55,7 @@ public partial class CategoryManagerDialog : Window
         string name = NameBox.Text.Trim();
         if (name.Length == 0)
         {
-            ShowWarning("Введите название новой категории.");
+            ShowWarning(LocalizationManager.Get("CatDialog_WarnNewName"));
             return;
         }
 
@@ -69,7 +72,7 @@ public partial class CategoryManagerDialog : Window
         }
         catch (Exception)
         {
-            ShowWarning("Не удалось добавить категорию. Проверьте подключение к базе данных.");
+            ShowWarning(LocalizationManager.Get("CatDialog_CreateError"));
         }
     }
 
@@ -77,14 +80,14 @@ public partial class CategoryManagerDialog : Window
     {
         if (CategoriesList.SelectedItem is not Category category)
         {
-            ShowWarning("Выберите категорию в списке.");
+            ShowWarning(LocalizationManager.Get("CatDialog_WarnSelect"));
             return;
         }
 
         string name = NameBox.Text.Trim();
         if (name.Length == 0)
         {
-            ShowWarning("Введите новое название категории.");
+            ShowWarning(LocalizationManager.Get("CatDialog_WarnRenameName"));
             return;
         }
 
@@ -100,7 +103,7 @@ public partial class CategoryManagerDialog : Window
         }
         catch (Exception)
         {
-            ShowWarning("Не удалось переименовать категорию. Проверьте подключение к базе данных.");
+            ShowWarning(LocalizationManager.Get("CatDialog_RenameError"));
         }
     }
 
@@ -108,13 +111,14 @@ public partial class CategoryManagerDialog : Window
     {
         if (CategoriesList.SelectedItem is not Category category)
         {
-            ShowWarning("Выберите категорию в списке.");
+            ShowWarning(LocalizationManager.Get("CatDialog_WarnSelect"));
             return;
         }
 
         MessageBoxResult answer = MessageBox.Show(
-            $"Удалить категорию «{category.Name}»?\nЭто действие необратимо.",
-            "Подтверждение удаления",
+            string.Format(LocalizationManager.Get("CatDialog_DeleteConfirm"), category.Name) + "\n" +
+            LocalizationManager.Get("Common_DeleteIrreversible"),
+            LocalizationManager.Get("Common_ConfirmDeleteTitle"),
             MessageBoxButton.YesNo,
             MessageBoxImage.Warning);
 
@@ -134,7 +138,7 @@ public partial class CategoryManagerDialog : Window
         }
         catch (Exception)
         {
-            ShowWarning("Не удалось удалить категорию. Проверьте подключение к базе данных.");
+            ShowWarning(LocalizationManager.Get("CatDialog_DeleteError"));
         }
     }
 
@@ -151,6 +155,6 @@ public partial class CategoryManagerDialog : Window
 
     private static void ShowWarning(string message)
     {
-        MessageBox.Show(message, "Категории", MessageBoxButton.OK, MessageBoxImage.Warning);
+        MessageBox.Show(message, LocalizationManager.Get("CatDialog_WarnTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
     }
 }

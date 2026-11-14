@@ -38,15 +38,15 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Margin="0,0,12,0">
-                        <TextBlock Text="Поиск по SKU или названию" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
+                        <TextBlock Text="{DynamicResource Loc_Common_SearchLabel}" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
                         <TextBox x:Name="SearchBox"
                                  Style="{StaticResource FieldTextBox}"
                                  TextChanged="SearchBox_TextChanged"
-                                 ToolTip="Введите артикул или часть названия товара" />
+                                 ToolTip="{DynamicResource Loc_Common_SearchTooltip}" />
                     </StackPanel>
 
                     <StackPanel Grid.Column="1">
-                        <TextBlock Text="Категория" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
+                        <TextBlock Text="{DynamicResource Loc_Cat_CategoryLabel}" Style="{StaticResource FieldLabelText}" Margin="0,0,0,6" />
                         <ComboBox x:Name="CategoryFilter"
                                   Style="{StaticResource FieldComboBox}"
                                   DisplayMemberPath="Name"
@@ -55,19 +55,19 @@
 
                     <WrapPanel Grid.Row="1" Grid.ColumnSpan="2"
                                Margin="0,10,0,0">
-                        <Button Content="Добавить товар"
+                        <Button Content="{DynamicResource Loc_Cat_AddItem}"
                                 Style="{StaticResource PrimaryButton}"
                                 Margin="0,0,8,8"
                                 Click="AddItemButton_Click" />
-                        <Button Content="Категории"
+                        <Button Content="{DynamicResource Loc_Cat_CategoriesButton}"
                                 Style="{StaticResource SecondaryButton}"
                                 Margin="0,0,8,8"
                                 Click="CategoriesButton_Click" />
-                        <Button Content="Изменить"
+                        <Button Content="{DynamicResource Loc_Common_Edit}"
                                 Style="{StaticResource SecondaryButton}"
                                 Margin="0,0,8,8"
                                 Click="EditItemButton_Click" />
-                        <Button Content="Удалить"
+                        <Button Content="{DynamicResource Loc_Common_Delete}"
                                 Style="{StaticResource DangerButton}"
                                 Margin="0,0,8,8"
                                 Click="DeleteItemButton_Click" />
@@ -91,7 +91,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Товары каталога"
+                        <TextBlock Text="{DynamicResource Loc_Cat_ItemsTitle}"
                                    Style="{StaticResource SectionTitleText}"
                                    TextWrapping="Wrap" />
                         <Border Grid.Column="1"
@@ -111,28 +111,28 @@
                                   MinHeight="180"
                                   SelectionChanged="ItemsGrid_SelectionChanged">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="SKU"
+                                <DataGridTextColumn Header="{DynamicResource Loc_Common_HeaderSku}"
                                                     Binding="{Binding Sku}"
                                                     Width="*"
                                                     MinWidth="70" />
-                                <DataGridTextColumn Header="Товар"
+                                <DataGridTextColumn Header="{DynamicResource Loc_Common_HeaderItem}"
                                                     Binding="{Binding Name}"
                                                     Width="2.5*"
                                                     MinWidth="150" />
-                                <DataGridTextColumn Header="Категория"
+                                <DataGridTextColumn Header="{DynamicResource Loc_Cat_HeaderCategory}"
                                                     Binding="{Binding Category.Name}"
                                                     Width="1.4*"
                                                     MinWidth="100" />
-                                <DataGridTextColumn Header="Ед."
+                                <DataGridTextColumn Header="{DynamicResource Loc_Common_UnitShort}"
                                                     Binding="{Binding Unit}"
                                                     Width="Auto" />
-                                <DataGridTextColumn Header="Цена, ₽"
+                                <DataGridTextColumn Header="{DynamicResource Loc_Cat_HeaderPrice}"
                                                     Binding="{Binding Price, StringFormat={}{0:0.00}}"
                                                     Width="*"
                                                     MinWidth="72"
                                                     HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                                     ElementStyle="{StaticResource NumberCellText}" />
-                                <DataGridTextColumn Header="Мин."
+                                <DataGridTextColumn Header="{DynamicResource Loc_Cat_HeaderMin}"
                                                     Binding="{Binding MinStock}"
                                                     Width="*"
                                                     MinWidth="54"
@@ -165,21 +165,21 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel>
-                    <TextBlock Text="Рентген товара" Style="{StaticResource SectionTitleText}" />
-                    <TextBlock Text="История всех движений выбранной позиции."
+                    <TextBlock Text="{DynamicResource Loc_Cat_XRayTitle}" Style="{StaticResource SectionTitleText}" />
+                    <TextBlock Text="{DynamicResource Loc_Cat_XRaySubtitle}"
                                Style="{StaticResource CaptionText}"
                                Margin="0,2,0,0" />
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Margin="0,14,0,0">
                     <TextBlock x:Name="XRayItemName"
-                               Text="Товар не выбран"
+                               Text="{DynamicResource Loc_Cat_XRayNoItem}"
                                FontSize="{DynamicResource FontSizeTitle}"
                                FontWeight="SemiBold"
                                Foreground="{DynamicResource TextPrimaryBrush}"
                                TextTrimming="CharacterEllipsis" />
                     <TextBlock x:Name="XRayMeta"
-                               Text="Кликните по строке таблицы, чтобы увидеть историю."
+                               Text="{DynamicResource Loc_Cat_XRayNoItemHint}"
                                Style="{StaticResource CaptionText}"
                                Margin="0,3,0,0" />
                     <Border Style="{StaticResource AppSeparator}" />
@@ -204,7 +204,6 @@
                                                         Padding="8,2"
                                                         HorizontalAlignment="Right">
                                                     <TextBlock x:Name="HistoryTypeLabel"
-                                                               Text="{Binding TypeText}"
                                                                FontSize="{DynamicResource FontSizeSmall}"
                                                                FontWeight="SemiBold"
                                                                Foreground="{DynamicResource BadgeNeutralForegroundBrush}" />
@@ -237,16 +236,19 @@
                                             <Setter TargetName="HistoryTypeBadge" Property="Background" Value="{DynamicResource BadgeSuccessBackgroundBrush}" />
                                             <Setter TargetName="HistoryTypeBadge" Property="Effect" Value="{DynamicResource GlowSuccessEffect}" />
                                             <Setter TargetName="HistoryTypeLabel" Property="Foreground" Value="{DynamicResource BadgeSuccessForegroundBrush}" />
+                                            <Setter TargetName="HistoryTypeLabel" Property="Text" Value="{DynamicResource Loc_Type_In}" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Type}" Value="OUT">
                                             <Setter TargetName="HistoryTypeBadge" Property="Background" Value="{DynamicResource BadgeCriticalBackgroundBrush}" />
                                             <Setter TargetName="HistoryTypeBadge" Property="Effect" Value="{DynamicResource GlowCriticalEffect}" />
                                             <Setter TargetName="HistoryTypeLabel" Property="Foreground" Value="{DynamicResource BadgeCriticalForegroundBrush}" />
+                                            <Setter TargetName="HistoryTypeLabel" Property="Text" Value="{DynamicResource Loc_Type_Out}" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Type}" Value="TRANSFER">
                                             <Setter TargetName="HistoryTypeBadge" Property="Background" Value="{DynamicResource BadgeInfoBackgroundBrush}" />
                                             <Setter TargetName="HistoryTypeBadge" Property="Effect" Value="{DynamicResource GlowSuccessEffect}" />
                                             <Setter TargetName="HistoryTypeLabel" Property="Foreground" Value="{DynamicResource BadgeInfoForegroundBrush}" />
+                                            <Setter TargetName="HistoryTypeLabel" Property="Text" Value="{DynamicResource Loc_Type_Transfer}" />
                                         </DataTrigger>
                                     </DataTemplate.Triggers>
                                 </DataTemplate>
@@ -256,7 +258,7 @@
 
                     <TextBlock x:Name="HistoryStateText"
                                Style="{StaticResource EmptyStateText}"
-                               Text="Выберите товар в таблице." />
+                               Text="{DynamicResource Loc_Cat_SelectItem}" />
                 </Grid>
             </Grid>
         </Border>

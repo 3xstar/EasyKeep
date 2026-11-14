@@ -1,6 +1,7 @@
 namespace EasyKeep.Data.Reports;
 
-/// <summary>Строка журнала движений для таблицы истории.</summary>
+/// <summary>Строка журнала движений для таблицы истории.
+/// Подпись типа задаётся в XAML-триггерах из словаря локализации.</summary>
 public record MovementJournalRow(
     int Id,
     string Type,
@@ -11,15 +12,6 @@ public record MovementJournalRow(
     int ItemsCount,
     int TotalQuantity)
 {
-    /// <summary>Понятная подпись типа операции для интерфейса.</summary>
-    public string TypeText => Type switch
-    {
-        "IN" => "Приход",
-        "OUT" => "Расход",
-        "TRANSFER" => "Перемещение",
-        _ => Type
-    };
-
     /// <summary>Маршрут документа: склад-источник и/или склад-получатель.</summary>
     public string RouteText => Type switch
     {

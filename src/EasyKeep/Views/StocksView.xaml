@@ -25,7 +25,6 @@
                     Padding="10,4"
                     HorizontalAlignment="Left">
                 <TextBlock x:Name="StatusLabel"
-                           Text="{Binding StatusText}"
                            FontSize="{DynamicResource FontSizeSmall}"
                            FontWeight="SemiBold"
                            Foreground="{DynamicResource BadgeNeutralForegroundBrush}" />
@@ -35,21 +34,25 @@
                     <Setter TargetName="StatusBadge" Property="Background" Value="{DynamicResource BadgeCriticalBackgroundBrush}" />
                     <Setter TargetName="StatusBadge" Property="Effect" Value="{DynamicResource GlowCriticalEffect}" />
                     <Setter TargetName="StatusLabel" Property="Foreground" Value="{DynamicResource BadgeCriticalForegroundBrush}" />
+                    <Setter TargetName="StatusLabel" Property="Text" Value="{DynamicResource Loc_Status_Critical}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Status}" Value="Warning">
                     <Setter TargetName="StatusBadge" Property="Background" Value="{DynamicResource BadgeWarningBackgroundBrush}" />
                     <Setter TargetName="StatusBadge" Property="Effect" Value="{DynamicResource GlowWarningEffect}" />
                     <Setter TargetName="StatusLabel" Property="Foreground" Value="{DynamicResource BadgeWarningForegroundBrush}" />
+                    <Setter TargetName="StatusLabel" Property="Text" Value="{DynamicResource Loc_Status_Warning}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Status}" Value="Normal">
                     <Setter TargetName="StatusBadge" Property="Background" Value="{DynamicResource BadgeSuccessBackgroundBrush}" />
                     <Setter TargetName="StatusBadge" Property="Effect" Value="{DynamicResource GlowSuccessEffect}" />
                     <Setter TargetName="StatusLabel" Property="Foreground" Value="{DynamicResource BadgeSuccessForegroundBrush}" />
+                    <Setter TargetName="StatusLabel" Property="Text" Value="{DynamicResource Loc_Status_Normal}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Status}" Value="NonLiquid">
                     <Setter TargetName="StatusBadge" Property="Background" Value="{DynamicResource BadgeMutedBackgroundBrush}" />
                     <Setter TargetName="StatusBadge" Property="Effect" Value="{DynamicResource GlowMutedEffect}" />
                     <Setter TargetName="StatusLabel" Property="Foreground" Value="{DynamicResource BadgeMutedForegroundBrush}" />
+                    <Setter TargetName="StatusLabel" Property="Text" Value="{DynamicResource Loc_Status_NonLiquid}" />
                 </DataTrigger>
             </DataTemplate.Triggers>
         </DataTemplate>
@@ -64,7 +67,7 @@
                      VerticalAlignment="Center">
                 <Ellipse.ToolTip>
                     <StackPanel>
-                        <TextBlock Text="{Binding StatusText}" FontWeight="SemiBold" />
+                        <TextBlock x:Name="CompactStatusText" FontWeight="SemiBold" />
                         <TextBlock Text="{Binding DaysLeftText}" />
                     </StackPanel>
                 </Ellipse.ToolTip>
@@ -72,12 +75,18 @@
             <DataTemplate.Triggers>
                 <DataTrigger Binding="{Binding Status}" Value="Critical">
                     <Setter TargetName="CompactDot" Property="Fill" Value="{DynamicResource DangerBrush}" />
+                    <Setter TargetName="CompactStatusText" Property="Text" Value="{DynamicResource Loc_Status_Critical}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Status}" Value="Warning">
                     <Setter TargetName="CompactDot" Property="Fill" Value="{DynamicResource WarningBrush}" />
+                    <Setter TargetName="CompactStatusText" Property="Text" Value="{DynamicResource Loc_Status_Warning}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Status}" Value="Normal">
                     <Setter TargetName="CompactDot" Property="Fill" Value="{DynamicResource SuccessBrush}" />
+                    <Setter TargetName="CompactStatusText" Property="Text" Value="{DynamicResource Loc_Status_Normal}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="NonLiquid">
+                    <Setter TargetName="CompactStatusText" Property="Text" Value="{DynamicResource Loc_Status_NonLiquid}" />
                 </DataTrigger>
             </DataTemplate.Triggers>
         </DataTemplate>
@@ -106,14 +115,14 @@
                          Tag="all"
                          IsChecked="True"
                          Margin="0,0,12,0"
-                         AutomationProperties.Name="Всего позиций"
+                         AutomationProperties.Name="{DynamicResource Loc_Stocks_KpiAll}"
                          Checked="KpiFilter_Checked">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Ellipse Width="7" Height="7"
                                  Fill="{DynamicResource AccentBrush}"
                                  VerticalAlignment="Center" />
-                        <TextBlock Text="Всего позиций"
+                        <TextBlock Text="{DynamicResource Loc_Stocks_KpiAll}"
                                    Style="{StaticResource KpiLabelText}"
                                    Margin="8,0,0,0" />
                     </StackPanel>
@@ -127,14 +136,14 @@
                          GroupName="StockKpi"
                          Tag="critical"
                          Margin="0,0,12,0"
-                         AutomationProperties.Name="Критичный дефицит"
+                         AutomationProperties.Name="{DynamicResource Loc_Stocks_KpiCritical}"
                          Checked="KpiFilter_Checked">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Ellipse Width="7" Height="7"
                                  Fill="{DynamicResource DangerBrush}"
                                  VerticalAlignment="Center" />
-                        <TextBlock Text="Критичный дефицит"
+                        <TextBlock Text="{DynamicResource Loc_Stocks_KpiCritical}"
                                    Style="{StaticResource KpiLabelText}"
                                    Margin="8,0,0,0" />
                     </StackPanel>
@@ -148,14 +157,14 @@
                          GroupName="StockKpi"
                          Tag="warning"
                          Margin="0,0,12,0"
-                         AutomationProperties.Name="Внимание"
+                         AutomationProperties.Name="{DynamicResource Loc_Stocks_KpiWarning}"
                          Checked="KpiFilter_Checked">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Ellipse Width="7" Height="7"
                                  Fill="{DynamicResource WarningBrush}"
                                  VerticalAlignment="Center" />
-                        <TextBlock Text="Внимание"
+                        <TextBlock Text="{DynamicResource Loc_Stocks_KpiWarning}"
                                    Style="{StaticResource KpiLabelText}"
                                    Margin="8,0,0,0" />
                     </StackPanel>
@@ -168,14 +177,14 @@
                          Style="{StaticResource KpiCard}"
                          GroupName="StockKpi"
                          Tag="nonliquid"
-                         AutomationProperties.Name="Неликвид"
+                         AutomationProperties.Name="{DynamicResource Loc_Stocks_KpiNonLiquid}"
                          Checked="KpiFilter_Checked">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Ellipse Width="7" Height="7"
                                  Fill="{DynamicResource TextMutedBrush}"
                                  VerticalAlignment="Center" />
-                        <TextBlock Text="Неликвид"
+                        <TextBlock Text="{DynamicResource Loc_Stocks_KpiNonLiquid}"
                                    Style="{StaticResource KpiLabelText}"
                                    Margin="8,0,0,0" />
                     </StackPanel>
@@ -202,12 +211,12 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0"
-                           Text="Поиск по SKU или названию"
+                           Text="{DynamicResource Loc_Common_SearchLabel}"
                            Style="{StaticResource FieldLabelText}"
                            VerticalAlignment="Bottom"
                            Margin="0,0,12,6" />
                 <TextBlock Grid.Row="0" Grid.Column="1"
-                           Text="Склад"
+                           Text="{DynamicResource Loc_Common_HeaderWarehouse}"
                            Style="{StaticResource FieldLabelText}"
                            VerticalAlignment="Bottom"
                            Margin="0,0,12,6" />
@@ -218,7 +227,7 @@
                          Height="{DynamicResource ControlHeight}"
                          Margin="0,0,12,0"
                          TextChanged="SearchBox_TextChanged"
-                         ToolTip="Введите артикул или часть названия товара" />
+                         ToolTip="{DynamicResource Loc_Common_SearchTooltip}" />
                 <ComboBox Grid.Row="1" Grid.Column="1"
                           x:Name="WarehouseFilter"
                           Style="{StaticResource FieldComboBox}"
@@ -228,7 +237,7 @@
                           SelectionChanged="WarehouseFilter_SelectionChanged" />
 
                 <Button Grid.Row="1" Grid.Column="2"
-                        Content="Обновить"
+                        Content="{DynamicResource Loc_Common_Refresh}"
                         Style="{StaticResource SecondaryButton}"
                         Height="{DynamicResource ControlHeight}"
                         VerticalAlignment="Bottom"
@@ -258,40 +267,40 @@
                           BorderThickness="0"
                           MinHeight="180">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="SKU"
+                        <DataGridTextColumn Header="{DynamicResource Loc_Common_HeaderSku}"
                                             Binding="{Binding Sku}"
                                             Width="*"
                                             MinWidth="70"
                                             ElementStyle="{StaticResource CellText}" />
-                        <DataGridTextColumn Header="Товар"
+                        <DataGridTextColumn Header="{DynamicResource Loc_Common_HeaderItem}"
                                             Binding="{Binding ItemName}"
                                             Width="2.5*"
                                             MinWidth="150"
                                             ElementStyle="{StaticResource CellText}" />
-                        <DataGridTextColumn Header="Склад"
+                        <DataGridTextColumn Header="{DynamicResource Loc_Common_HeaderWarehouse}"
                                             Binding="{Binding WarehouseName}"
                                             Width="1.5*"
                                             MinWidth="110"
                                             ElementStyle="{StaticResource CellText}" />
-                        <DataGridTextColumn Header="Остаток"
+                        <DataGridTextColumn Header="{DynamicResource Loc_Stocks_HeaderQuantity}"
                                             Binding="{Binding Quantity}"
                                             Width="*"
                                             MinWidth="70"
                                             HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                             ElementStyle="{StaticResource NumberCellText}" />
-                        <DataGridTextColumn Header="Минимум"
+                        <DataGridTextColumn Header="{DynamicResource Loc_Stocks_HeaderMin}"
                                             Binding="{Binding MinStock}"
                                             Width="*"
                                             MinWidth="76"
                                             HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                             ElementStyle="{StaticResource NumberCellText}" />
-                        <DataGridTextColumn Header="Расход/день"
+                        <DataGridTextColumn Header="{DynamicResource Loc_Stocks_HeaderRate}"
                                             Binding="{Binding AverageDailyConsumption, StringFormat={}{0:0.##}}"
                                             Width="*"
                                             MinWidth="84"
                                             HeaderStyle="{StaticResource GridColumnHeaderRightStyle}"
                                             ElementStyle="{StaticResource NumberCellText}" />
-                        <DataGridTextColumn Header="Прогноз"
+                        <DataGridTextColumn Header="{DynamicResource Loc_Stocks_HeaderForecast}"
                                             Binding="{Binding DaysLeftText}"
                                             Width="*"
                                             MinWidth="76"
@@ -314,8 +323,8 @@
                                         Margin="0"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
-                                        ToolTip="Переключить вид светофора"
-                                        AutomationProperties.Name="Переключить вид светофора"
+                                        ToolTip="{DynamicResource Loc_Stocks_TrafficTooltip}"
+                                        AutomationProperties.Name="{DynamicResource Loc_Stocks_TrafficTooltip}"
                                         Click="CompactModeButton_Click">
                                     <Grid Width="18" Height="12">
                                         <Canvas x:Name="MultiDotIcon" Width="18" Height="12">

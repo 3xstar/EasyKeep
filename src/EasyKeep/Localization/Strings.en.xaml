@@ -1,0 +1,262 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!-- ============================================================
+         Interface strings: English. Same Loc_ keys as Strings.ru.xaml;
+         swapping this dictionary translates the whole UI instantly.
+         ============================================================ -->
+
+    <!-- Common strings -->
+    <sys:String x:Key="Loc_Common_Refresh">Refresh</sys:String>
+    <sys:String x:Key="Loc_Common_Show">Apply</sys:String>
+    <sys:String x:Key="Loc_Common_Build">Build</sys:String>
+    <sys:String x:Key="Loc_Common_Cancel">Cancel</sys:String>
+    <sys:String x:Key="Loc_Common_Save">Save</sys:String>
+    <sys:String x:Key="Loc_Common_Done">Done</sys:String>
+    <sys:String x:Key="Loc_Common_Add">Add</sys:String>
+    <sys:String x:Key="Loc_Common_Delete">Delete</sys:String>
+    <sys:String x:Key="Loc_Common_Edit">Edit</sys:String>
+    <sys:String x:Key="Loc_Common_Clear">Clear</sys:String>
+    <sys:String x:Key="Loc_Common_NoData">No data</sys:String>
+    <sys:String x:Key="Loc_Common_DaysShort">d</sys:String>
+    <sys:String x:Key="Loc_Common_WarehousesCount">Warehouses:</sys:String>
+    <sys:String x:Key="Loc_Common_InvalidPeriod">The start date must be earlier than the end date.</sys:String>
+    <sys:String x:Key="Loc_Common_ConfirmDeleteTitle">Confirm deletion</sys:String>
+    <sys:String x:Key="Loc_Common_DeleteIrreversible">This action cannot be undone.</sys:String>
+    <sys:String x:Key="Loc_Common_WarehouseAll">All warehouses</sys:String>
+    <sys:String x:Key="Loc_Common_CategoryAll">All categories</sys:String>
+    <sys:String x:Key="Loc_Common_SearchLabel">Search by SKU or name</sys:String>
+    <sys:String x:Key="Loc_Common_SearchTooltip">Enter an item SKU or part of its name</sys:String>
+    <sys:String x:Key="Loc_Common_HeaderSku">SKU</sys:String>
+    <sys:String x:Key="Loc_Common_HeaderItem">Item</sys:String>
+    <sys:String x:Key="Loc_Common_HeaderWarehouse">Warehouse</sys:String>
+    <sys:String x:Key="Loc_Common_HeaderItems">Items</sys:String>
+    <sys:String x:Key="Loc_Common_HeaderUnits">Units</sys:String>
+    <sys:String x:Key="Loc_Common_HeaderComment">Comment</sys:String>
+    <sys:String x:Key="Loc_Common_UnitShort">Unit</sys:String>
+
+    <!-- Shell: menu, brand card, personalization -->
+    <sys:String x:Key="Loc_Nav_Stocks">Stock</sys:String>
+    <sys:String x:Key="Loc_Nav_Movements">Movements</sys:String>
+    <sys:String x:Key="Loc_Nav_Catalog">Catalog</sys:String>
+    <sys:String x:Key="Loc_Nav_Reports">Reports</sys:String>
+    <sys:String x:Key="Loc_Nav_SectionsHeader">SECTIONS</sys:String>
+    <sys:String x:Key="Loc_Nav_ToggleTooltip">Collapse or expand menu</sys:String>
+    <sys:String x:Key="Loc_Shell_DbTitle">Local database</sys:String>
+    <sys:String x:Key="Loc_Shell_DbSubtitle">SQL Server • EasyKeep</sys:String>
+    <sys:String x:Key="Loc_Shell_Personalization">Personalization</sys:String>
+    <sys:String x:Key="Loc_Shell_PersonalizationTooltip">Theme and UI scale</sys:String>
+    <sys:String x:Key="Loc_Shell_Placeholder">This section will be connected in a future step.</sys:String>
+    <sys:String x:Key="Loc_Popup_Theme">THEME</sys:String>
+    <sys:String x:Key="Loc_Popup_Light">Light</sys:String>
+    <sys:String x:Key="Loc_Popup_Dark">Dark</sys:String>
+    <sys:String x:Key="Loc_Popup_Language">LANGUAGE</sys:String>
+    <sys:String x:Key="Loc_Popup_Scale">SCALE</sys:String>
+    <sys:String x:Key="Loc_Popup_ScaleHint">Ctrl + / Ctrl − / Ctrl 0 — like in code editors</sys:String>
+    <sys:String x:Key="Loc_Popup_ZoomInTooltip">Increase scale (Ctrl +)</sys:String>
+    <sys:String x:Key="Loc_Popup_ZoomOutTooltip">Decrease scale (Ctrl −)</sys:String>
+    <sys:String x:Key="Loc_Popup_ZoomResetTooltip">Reset to 100% (Ctrl 0)</sys:String>
+    <sys:String x:Key="Loc_PickerCulture">en-US</sys:String>
+
+    <!-- Section titles -->
+    <sys:String x:Key="Loc_Section_Stocks_Title">Stock</sys:String>
+    <sys:String x:Key="Loc_Section_Stocks_Subtitle">Current stock levels and the deficit traffic light.</sys:String>
+    <sys:String x:Key="Loc_Section_Movements_Title">Movements</sys:String>
+    <sys:String x:Key="Loc_Section_Movements_Subtitle">Operation journal and posting of receipts, issues and transfers.</sys:String>
+    <sys:String x:Key="Loc_Section_Catalog_Title">Catalog</sys:String>
+    <sys:String x:Key="Loc_Section_Catalog_Subtitle">Items, categories and the full movement history per item.</sys:String>
+    <sys:String x:Key="Loc_Section_Reports_Title">Reports</sys:String>
+    <sys:String x:Key="Loc_Section_Reports_Subtitle">Stock summary per warehouse and a rating of the most active items.</sys:String>
+
+    <!-- Traffic light statuses -->
+    <sys:String x:Key="Loc_Status_Normal">🟢 Normal</sys:String>
+    <sys:String x:Key="Loc_Status_Warning">🟡 Warning</sys:String>
+    <sys:String x:Key="Loc_Status_Critical">🔴 Critical</sys:String>
+    <sys:String x:Key="Loc_Status_NonLiquid">⚪ Stagnant</sys:String>
+
+    <!-- Movement types -->
+    <sys:String x:Key="Loc_Type_In">Receipt</sys:String>
+    <sys:String x:Key="Loc_Type_Out">Issue</sys:String>
+    <sys:String x:Key="Loc_Type_Transfer">Transfer</sys:String>
+    <sys:String x:Key="Loc_Type_InCombo">Receipt (IN)</sys:String>
+    <sys:String x:Key="Loc_Type_OutCombo">Issue (OUT)</sys:String>
+    <sys:String x:Key="Loc_Type_TransferCombo">Transfer (TRANSFER)</sys:String>
+    <sys:String x:Key="Loc_Type_All">All operations</sys:String>
+
+    <!-- Stock screen -->
+    <sys:String x:Key="Loc_Stocks_KpiAll">Total items</sys:String>
+    <sys:String x:Key="Loc_Stocks_KpiCritical">Critical shortage</sys:String>
+    <sys:String x:Key="Loc_Stocks_KpiWarning">Warning</sys:String>
+    <sys:String x:Key="Loc_Stocks_KpiNonLiquid">Stagnant</sys:String>
+    <sys:String x:Key="Loc_Stocks_HeaderQuantity">On hand</sys:String>
+    <sys:String x:Key="Loc_Stocks_HeaderMin">Min</sys:String>
+    <sys:String x:Key="Loc_Stocks_HeaderRate">Usage/day</sys:String>
+    <sys:String x:Key="Loc_Stocks_HeaderForecast">Forecast</sys:String>
+    <sys:String x:Key="Loc_Stocks_SummaryAll">Items: {0} · critical: {1}</sys:String>
+    <sys:String x:Key="Loc_Stocks_SummaryFiltered">Shown: {0} of {1}</sys:String>
+    <sys:String x:Key="Loc_Stocks_EmptyWarehouse">The selected warehouse has no stock yet.</sys:String>
+    <sys:String x:Key="Loc_Stocks_EmptyFilter">Nothing matches your query. Change the search, warehouse or KPI filter.</sys:String>
+    <sys:String x:Key="Loc_Stocks_LoadError">Failed to load stock. Check the database connection.</sys:String>
+    <sys:String x:Key="Loc_Stocks_TrafficTooltip">Toggle traffic light view</sys:String>
+
+    <!-- Movements screen -->
+    <sys:String x:Key="Loc_Mov_DocTitle">New document</sys:String>
+    <sys:String x:Key="Loc_Mov_AutoBalance">Auto-balance</sys:String>
+    <sys:String x:Key="Loc_Mov_TypeLabel">Operation type</sys:String>
+    <sys:String x:Key="Loc_Mov_SourceLabel">Source warehouse</sys:String>
+    <sys:String x:Key="Loc_Mov_TargetLabel">Destination warehouse</sys:String>
+    <sys:String x:Key="Loc_Mov_CommandTitle">Warehouse command line</sys:String>
+    <sys:String x:Key="Loc_Mov_CommandTooltip">Type a SKU or part of a name and press Enter</sys:String>
+    <sys:String x:Key="Loc_Mov_CommandHint">Enter adds the item with +1. Typing it again increases the quantity.</sys:String>
+    <sys:String x:Key="Loc_Mov_LinesTitle">Document lines</sys:String>
+    <sys:String x:Key="Loc_Mov_RemoveTooltip">Remove line</sys:String>
+    <sys:String x:Key="Loc_Mov_CommentLabel">Comment (optional)</sys:String>
+    <sys:String x:Key="Loc_Mov_Post">Post document</sys:String>
+    <sys:String x:Key="Loc_Mov_LinesEmpty">Add items via the command line above.</sys:String>
+    <sys:String x:Key="Loc_Mov_JournalTitle">Operation journal</sys:String>
+    <sys:String x:Key="Loc_Mov_FromDate">From date</sys:String>
+    <sys:String x:Key="Loc_Mov_ToDate">To date</sys:String>
+    <sys:String x:Key="Loc_Mov_SearchLabel">Search by item</sys:String>
+    <sys:String x:Key="Loc_Mov_HeaderDate">Date</sys:String>
+    <sys:String x:Key="Loc_Mov_HeaderType">Type</sys:String>
+    <sys:String x:Key="Loc_Mov_HeaderRoute">Route</sys:String>
+    <sys:String x:Key="Loc_Mov_HeaderQuantity">Qty</sys:String>
+    <sys:String x:Key="Loc_Mov_CommandNotFound">Item “{0}” not found.</sys:String>
+    <sys:String x:Key="Loc_Mov_CommandAdded">Added: {0} (+1).</sys:String>
+    <sys:String x:Key="Loc_Mov_CommandError">Failed to find the item. Check the database connection.</sys:String>
+    <sys:String x:Key="Loc_Mov_SummaryFormat">Items: {0} · units: {1}</sys:String>
+    <sys:String x:Key="Loc_Mov_ConfirmTitle">Confirm operation</sys:String>
+    <sys:String x:Key="Loc_Mov_ConfirmCounts">Items: {0}, units: {1}.</sys:String>
+    <sys:String x:Key="Loc_Mov_ConfirmIn">Post the receipt to warehouse “{0}”?</sys:String>
+    <sys:String x:Key="Loc_Mov_ConfirmOut">Post the issue from warehouse “{0}”?</sys:String>
+    <sys:String x:Key="Loc_Mov_ConfirmTransfer">Move the items from warehouse “{0}” to “{1}”?</sys:String>
+    <sys:String x:Key="Loc_Mov_ConfirmTrailer">The document will update stock levels and be written to the journal.</sys:String>
+    <sys:String x:Key="Loc_Mov_PostedOk">Document #{0} posted successfully. Stock levels updated.</sys:String>
+    <sys:String x:Key="Loc_Mov_PostError">Failed to post the document. {0}</sys:String>
+    <sys:String x:Key="Loc_Mov_PostErrorTitle">Posting error</sys:String>
+    <sys:String x:Key="Loc_Mov_WarnTitle">Check the document</sys:String>
+    <sys:String x:Key="Loc_Mov_WarnNoLines">Add at least one line to the document.</sys:String>
+    <sys:String x:Key="Loc_Mov_WarnBadQuantity">The quantity in each line must be greater than zero.</sys:String>
+    <sys:String x:Key="Loc_Mov_WarnNoSource">Select the source warehouse.</sys:String>
+    <sys:String x:Key="Loc_Mov_WarnNoTarget">Select the destination warehouse.</sys:String>
+    <sys:String x:Key="Loc_Mov_WarnSameWarehouses">The source and destination warehouses must be different.</sys:String>
+    <sys:String x:Key="Loc_Mov_ShortageTitle">Stock shortage</sys:String>
+    <sys:String x:Key="Loc_Mov_ShortageHeader">Not enough of item “{0}”.</sys:String>
+    <sys:String x:Key="Loc_Mov_ShortageAvailable">Available: {0}, requested: {1}.</sys:String>
+    <sys:String x:Key="Loc_Mov_AskSubstitute">Substitute the available maximum of {0}?</sys:String>
+    <sys:String x:Key="Loc_Mov_AskRemoveLine">No stock is available. Remove the line from the document?</sys:String>
+    <sys:String x:Key="Loc_Mov_Substituted">The quantity was updated to the available maximum ({0}). Review the document.</sys:String>
+    <sys:String x:Key="Loc_Mov_LineRemoved">The line was removed: the warehouse has no available stock.</sys:String>
+    <sys:String x:Key="Loc_Mov_HintTitle">EasyKeep hint</sys:String>
+    <sys:String x:Key="Loc_Mov_JournalWrongPeriod">Invalid period</sys:String>
+    <sys:String x:Key="Loc_Mov_JournalSummary">Documents: {0}</sys:String>
+    <sys:String x:Key="Loc_Mov_JournalEmpty">Nothing was found for the selected period. Change the filters.</sys:String>
+    <sys:String x:Key="Loc_Mov_JournalError">Failed to load the journal. Check the database connection.</sys:String>
+    <sys:String x:Key="Loc_Mov_AutoBalanceError">Failed to run auto-balance. Check the database connection.</sys:String>
+    <sys:String x:Key="Loc_Mov_AutoBalanceNone">Auto-balance is not required: the stores have no critical shortage.</sys:String>
+    <sys:String x:Key="Loc_Mov_AutoBalanceDoneTitle">Auto-balance finished</sys:String>
+    <sys:String x:Key="Loc_Mov_AutoBalanceDone">Documents posted: {0} of {1}.</sys:String>
+    <sys:String x:Key="Loc_Mov_AutoBalanceFailedList">Failed to post:</sys:String>
+    <sys:String x:Key="Loc_Mov_ItemFallback">Item #{0}</sys:String>
+
+    <!-- Catalog screen -->
+    <sys:String x:Key="Loc_Cat_ItemsTitle">Catalog items</sys:String>
+    <sys:String x:Key="Loc_Cat_CategoryLabel">Category</sys:String>
+    <sys:String x:Key="Loc_Cat_AddItem">Add item</sys:String>
+    <sys:String x:Key="Loc_Cat_CategoriesButton">Categories</sys:String>
+    <sys:String x:Key="Loc_Cat_HeaderCategory">Category</sys:String>
+    <sys:String x:Key="Loc_Cat_HeaderPrice">Price, ₽</sys:String>
+    <sys:String x:Key="Loc_Cat_HeaderMin">Min</sys:String>
+    <sys:String x:Key="Loc_Cat_ItemsSummary">Items: {0}</sys:String>
+    <sys:String x:Key="Loc_Cat_EmptyCatalog">The catalog is empty. Add the first item.</sys:String>
+    <sys:String x:Key="Loc_Cat_EmptyFilter">Nothing matches your query. Change the search or category.</sys:String>
+    <sys:String x:Key="Loc_Cat_LoadError">Failed to load the catalog. Check the database connection.</sys:String>
+    <sys:String x:Key="Loc_Cat_WarnTitle">Catalog</sys:String>
+    <sys:String x:Key="Loc_Cat_NeedCategory">Create at least one category via the “Categories” button first.</sys:String>
+    <sys:String x:Key="Loc_Cat_SelectItem">Select an item in the table.</sys:String>
+    <sys:String x:Key="Loc_Cat_DeleteItemConfirm">Delete item “{0}” ({1})?</sys:String>
+    <sys:String x:Key="Loc_Cat_CreateError">Failed to add the item. Check the database connection.</sys:String>
+    <sys:String x:Key="Loc_Cat_UpdateError">Failed to update the item. Check the database connection.</sys:String>
+    <sys:String x:Key="Loc_Cat_DeleteError">Failed to delete the item. Check the database connection.</sys:String>
+    <sys:String x:Key="Loc_Cat_XRayTitle">Item X-ray</sys:String>
+    <sys:String x:Key="Loc_Cat_XRaySubtitle">The full movement history of the selected item.</sys:String>
+    <sys:String x:Key="Loc_Cat_XRayNoItem">No item selected</sys:String>
+    <sys:String x:Key="Loc_Cat_XRayNoItemHint">Click a table row to see its history.</sys:String>
+    <sys:String x:Key="Loc_Cat_XRayLoading">Loading history...</sys:String>
+    <sys:String x:Key="Loc_Cat_XRayEmptyHistory">This item has no movements yet.</sys:String>
+    <sys:String x:Key="Loc_Cat_XRayHistoryError">Failed to load the history. Check the database connection.</sys:String>
+    <sys:String x:Key="Loc_Cat_NoCategory">No category</sys:String>
+
+    <!-- Reports screen -->
+    <sys:String x:Key="Loc_Rep_KpiTotalQuantity">Total stock</sys:String>
+    <sys:String x:Key="Loc_Rep_KpiTotalQuantityHint">units across all warehouses</sys:String>
+    <sys:String x:Key="Loc_Rep_KpiTotalValue">Total stock value</sys:String>
+    <sys:String x:Key="Loc_Rep_KpiTotalValueHint">at current stock levels</sys:String>
+    <sys:String x:Key="Loc_Rep_KpiLeader">Top mover</sys:String>
+    <sys:String x:Key="Loc_Rep_LeaderPeriodHint">for the selected period</sys:String>
+    <sys:String x:Key="Loc_Rep_StockTitle">Stock by warehouse</sys:String>
+    <sys:String x:Key="Loc_Rep_StockSubtitle">Stock distribution, item counts and storage value.</sys:String>
+    <sys:String x:Key="Loc_Rep_LeaderDetail">{0} · {1} units issued</sys:String>
+    <sys:String x:Key="Loc_Rep_TopTitle">Top active items</sys:String>
+    <sys:String x:Key="Loc_Rep_TopSubtitle">Issues and transfers for the selected period.</sys:String>
+    <sys:String x:Key="Loc_Rep_RatingLabel">Usage rating</sys:String>
+    <sys:String x:Key="Loc_Rep_HeaderValue">Value, ₽</sys:String>
+    <sys:String x:Key="Loc_Rep_HeaderOut">Issued</sys:String>
+    <sys:String x:Key="Loc_Rep_HeaderTransfers">Transfers</sys:String>
+    <sys:String x:Key="Loc_Rep_HeaderMovements">Moves</sys:String>
+    <sys:String x:Key="Loc_Rep_TopSummary">Shown: {0}</sys:String>
+    <sys:String x:Key="Loc_Rep_StockEmpty">No stock yet.</sys:String>
+    <sys:String x:Key="Loc_Rep_StockError">Failed to load the report. Check the database connection.</sys:String>
+    <sys:String x:Key="Loc_Rep_TopEmpty">No movements found for the selected period.</sys:String>
+    <sys:String x:Key="Loc_Rep_TopError">Failed to build the rating. Check the database connection.</sys:String>
+    <sys:String x:Key="Loc_Rep_LeaderNoData">no data</sys:String>
+    <sys:String x:Key="Loc_Rep_LeaderNoMovements">no movements in the selected period</sys:String>
+    <sys:String x:Key="Loc_Rep_LeaderInvalidPeriod">specify a valid period</sys:String>
+
+    <!-- Item dialog -->
+    <sys:String x:Key="Loc_ItemDialog_Title">Item</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_New">New item</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_Edit">Edit item</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_Subtitle">Fill in the item card. The SKU must be unique.</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_SkuLabel">SKU *</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_NameLabel">Name *</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_CategoryLabel">Category *</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_UnitLabel">Unit *</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_PriceLabel">Price</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_MinStockLabel">Min stock</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_MinStockHint">The minimum stock is used by the deficit traffic light as its floor threshold.</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_UnitDefault">pcs</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_WarnTitle">Check the input</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_WarnRequired">Fill in the required fields: SKU, name and unit.</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_WarnNoCategory">Create at least one category and select it first.</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_WarnPrice">The price must be a non-negative number.</sys:String>
+    <sys:String x:Key="Loc_ItemDialog_WarnMinStock">The minimum stock must be a non-negative integer.</sys:String>
+
+    <!-- Categories dialog -->
+    <sys:String x:Key="Loc_CatDialog_Title">Item categories</sys:String>
+    <sys:String x:Key="Loc_CatDialog_Subtitle">Add, rename and delete catalog categories.</sys:String>
+    <sys:String x:Key="Loc_CatDialog_NameTooltip">Category name</sys:String>
+    <sys:String x:Key="Loc_CatDialog_ListTitle">Category list</sys:String>
+    <sys:String x:Key="Loc_CatDialog_Count">Categories: {0}</sys:String>
+    <sys:String x:Key="Loc_CatDialog_LoadError">Failed to load the categories. Check the database connection.</sys:String>
+    <sys:String x:Key="Loc_CatDialog_WarnTitle">Categories</sys:String>
+    <sys:String x:Key="Loc_CatDialog_WarnNewName">Enter the new category name.</sys:String>
+    <sys:String x:Key="Loc_CatDialog_WarnRenameName">Enter the new category name.</sys:String>
+    <sys:String x:Key="Loc_CatDialog_WarnSelect">Select a category in the list.</sys:String>
+    <sys:String x:Key="Loc_CatDialog_Rename">Rename</sys:String>
+    <sys:String x:Key="Loc_CatDialog_CreateError">Failed to add the category. Check the database connection.</sys:String>
+    <sys:String x:Key="Loc_CatDialog_RenameError">Failed to rename the category. Check the database connection.</sys:String>
+    <sys:String x:Key="Loc_CatDialog_DeleteError">Failed to delete the category. Check the database connection.</sys:String>
+    <sys:String x:Key="Loc_CatDialog_DeleteConfirm">Delete category “{0}”?</sys:String>
+
+    <!-- Auto-balance dialog -->
+    <sys:String x:Key="Loc_AbDialog_Title">Warehouse auto-balance</sys:String>
+    <sys:String x:Key="Loc_AbDialog_DraftsTitle">Auto-balance drafts</sys:String>
+    <sys:String x:Key="Loc_AbDialog_Subtitle">The system prepared transfers from the main warehouse to the stores. Review the numbers before posting.</sys:String>
+    <sys:String x:Key="Loc_AbDialog_HeaderStore">Store</sys:String>
+    <sys:String x:Key="Loc_AbDialog_HeaderQuantity">Quantity</sys:String>
+    <sys:String x:Key="Loc_AbDialog_PostAll">Post all</sys:String>
+    <sys:String x:Key="Loc_AbDialog_Summary">Stores: {0} · lines: {1} · units: {2}</sys:String>
+
+</ResourceDictionary>
