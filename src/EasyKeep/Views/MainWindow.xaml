@@ -25,8 +25,8 @@
 
         <!-- Боковое меню навигации -->
         <Border Grid.Column="0"
-                Background="{DynamicResource NavBackgroundBrush}"
-                BorderBrush="{DynamicResource CardBorderBrush}"
+                Background="{DynamicResource SidebarBackgroundBrush}"
+                BorderBrush="{DynamicResource SidebarBorderBrush}"
                 BorderThickness="0,0,1,0">
             <Grid x:Name="NavPanel" Margin="16,22,16,16">
                 <Grid.RowDefinitions>

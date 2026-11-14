@@ -57,6 +57,10 @@ public partial class StylesResources : ResourceDictionary
         if (grid is null)
             return;
 
+        // Незавершённая правка ячейки должна попасть в данные до сортировки.
+        grid.CommitEdit(DataGridEditingUnit.Cell, true);
+        grid.CommitEdit(DataGridEditingUnit.Row, true);
+
         ListSortDirection? nextDirection = column.SortDirection switch
         {
             ListSortDirection.Ascending => ListSortDirection.Descending,

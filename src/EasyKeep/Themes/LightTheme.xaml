@@ -2,9 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- ============================================================
-         Светлая тема: Poolrooms.
-         Бесконечный плиточный бассейн, залитый мягким солнцем:
-         молочная керамика, бирюзовая вода и тонкие швы плитки.
+         Светлая тема: «Дневной плиточный бассейн (Poolrooms)».
+         Солнечные арки и комнаты из кремово-известковой мелкой
+         квадратной плитки с чёткими швами и прозрачной
+         бирюзово-аквамариновой водой.
          Только палитра, градиенты и векторные кисти. Никаких
          растровых эффектов и привязок внутри кистей, поэтому
          все ресурсы остаются свободно замораживаемыми (Freezable),
@@ -12,16 +13,15 @@
          ============================================================ -->
 
     <!-- ============================================================
-         ФОН ОКНА: единый векторный слой.
-         BackgroundTileBrush — один кэшированный тайл 28×28 px:
-         тонкий шов цвета #123A4A44 (≈7 % прозрачности).
+         ФОН ОКНА: один кэшированный тайл 24×24 px.
+         Тонкий шов #1A3B544F (≈10 % прозрачности) поверх воды.
          Viewport фиксирован в абсолютных единицах, поэтому GPU
          рисует тайл один раз и мгновенно замостит фон при ресайзе.
          ============================================================ -->
     <DrawingBrush x:Key="BackgroundTileBrush"
-                  Viewbox="0,0,28,28"
+                  Viewbox="0,0,24,24"
                   ViewboxUnits="Absolute"
-                  Viewport="0,0,28,28"
+                  Viewport="0,0,24,24"
                   ViewportUnits="Absolute"
                   TileMode="Tile"
                   Stretch="Fill"
@@ -30,17 +30,17 @@
             <DrawingGroup>
                 <GeometryDrawing Brush="Transparent">
                     <GeometryDrawing.Geometry>
-                        <RectangleGeometry Rect="0,0,28,28" />
+                        <RectangleGeometry Rect="0,0,24,24" />
                     </GeometryDrawing.Geometry>
                 </GeometryDrawing>
                 <GeometryDrawing>
                     <GeometryDrawing.Pen>
-                        <Pen Brush="#123A4A44" Thickness="1" />
+                        <Pen Brush="#1A3B544F" Thickness="1" />
                     </GeometryDrawing.Pen>
                     <GeometryDrawing.Geometry>
                         <GeometryGroup>
-                            <LineGeometry StartPoint="0,0.5" EndPoint="28,0.5" />
-                            <LineGeometry StartPoint="0.5,0" EndPoint="0.5,28" />
+                            <LineGeometry StartPoint="0,0.5" EndPoint="24,0.5" />
+                            <LineGeometry StartPoint="0.5,0" EndPoint="0.5,24" />
                         </GeometryGroup>
                     </GeometryDrawing.Geometry>
                 </GeometryDrawing>
@@ -48,8 +48,9 @@
         </DrawingBrush.Drawing>
     </DrawingBrush>
 
-    <!-- Фон окна: тёплая керамика #F3F2EC с диагональным солнечным
-         градиентом #F7F6F0 → #E7ECE8 и плиточным швом сверху.
+    <!-- Фон окна: диагональный солнечный градиент от тёплого
+         известняка #F6F4EC (верх-лево) к мятно-серой тени
+         #E5EDE7 (низ-право) и кэшированный плиточный шов сверху.
          Базовый прямоугольник страхует область за пределами
          градиента, поэтому окно любого размера остаётся светлым. -->
     <DrawingBrush x:Key="WindowBackgroundBrush"
@@ -63,7 +64,7 @@
                   AlignmentY="Top">
         <DrawingBrush.Drawing>
             <DrawingGroup>
-                <GeometryDrawing Brush="#E7ECE8">
+                <GeometryDrawing Brush="#E5EDE7">
                     <GeometryDrawing.Geometry>
                         <RectangleGeometry Rect="0,0,4096,4096" />
                     </GeometryDrawing.Geometry>
@@ -73,9 +74,8 @@
                         <LinearGradientBrush StartPoint="0,0"
                                              EndPoint="1920,1080"
                                              MappingMode="Absolute">
-                            <GradientStop Color="#F7F6F0" Offset="0" />
-                            <GradientStop Color="#F3F2EC" Offset="0.52" />
-                            <GradientStop Color="#E7ECE8" Offset="1" />
+                            <GradientStop Color="#F6F4EC" Offset="0" />
+                            <GradientStop Color="#E5EDE7" Offset="1" />
                         </LinearGradientBrush>
                     </GeometryDrawing.Brush>
                     <GeometryDrawing.Geometry>
@@ -95,36 +95,58 @@
     <StaticResource x:Key="AppBackgroundBrush" ResourceKey="WindowBackgroundBrush" />
 
     <!-- ============================================================
-         Поверхности: слой 1 — плитка фона, слой 2 — фарфоровая
-         карточка, слой 3 — подсвеченное мелководье.
+         Поверхности: молочно-керамическая плитка навигации,
+         фарфоровые карточки и мелководная подсветка.
          ============================================================ -->
+    <SolidColorBrush x:Key="SidebarBackgroundBrush" Color="#FAF9F3" />
+    <SolidColorBrush x:Key="SidebarBorderBrush" Color="#CBD8D2" />
+    <StaticResource x:Key="NavBackgroundBrush" ResourceKey="SidebarBackgroundBrush" />
+
     <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FCFBF7" />
-    <SolidColorBrush x:Key="CardSurfaceBrush" Color="#FCFBF7" />
-    <SolidColorBrush x:Key="CardBorderBrush" Color="#D4DDD8" />
-    <SolidColorBrush x:Key="ElevatedSurfaceBrush" Color="#E6F4F1" />
+    <LinearGradientBrush x:Key="CardSurfaceBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFFFF" Offset="0" />
+        <GradientStop Color="#F5F8F6" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="CardBorderBrush" Color="#C5D3CD" />
+    <SolidColorBrush x:Key="ElevatedSurfaceBrush" Color="#E5F6F2" />
     <StaticResource x:Key="SurfaceRaisedBrush" ResourceKey="ElevatedSurfaceBrush" />
-    <SolidColorBrush x:Key="RowHoverBrush" Color="#EAF7F3" />
+    <SolidColorBrush x:Key="RowHoverBrush" Color="#E5F6F2" />
     <SolidColorBrush x:Key="SelectionBrush" Color="#CCFBF1" />
-    <SolidColorBrush x:Key="NavBackgroundBrush" Color="#F7F6F0" />
     <SolidColorBrush x:Key="PopupBackgroundBrush" Color="#FCFBF7" />
     <SolidColorBrush x:Key="InputBackgroundBrush" Color="#FFFFFF" />
-    <SolidColorBrush x:Key="DividerBrush" Color="#DCE5E0" />
+    <SolidColorBrush x:Key="InputBorderBrush" Color="#BFD0C9" />
+    <SolidColorBrush x:Key="DividerBrush" Color="#D3E1DB" />
     <SolidColorBrush x:Key="ScrollThumbBrush" Color="#A9C0BA" />
+
+    <!-- ============================================================
+         Шапка таблиц: светло-мятная вода с нижним швом.
+         ============================================================ -->
+    <SolidColorBrush x:Key="TableHeaderBackgroundBrush" Color="#E0F2EE" />
+    <SolidColorBrush x:Key="TableHeaderBorderBrush" Color="#B8CCC5" />
+    <SolidColorBrush x:Key="TableHeaderForegroundBrush" Color="#163330" />
 
     <!-- ============================================================
          Акцент: прозрачная вода бассейна.
          ============================================================ -->
     <SolidColorBrush x:Key="AccentBrush" Color="#0D9488" />
-    <SolidColorBrush x:Key="AccentHoverBrush" Color="#0F766E" />
+    <SolidColorBrush x:Key="AccentHoverBrush" Color="#0B7A70" />
     <SolidColorBrush x:Key="AccentSoftBrush" Color="#CCFBF1" />
     <SolidColorBrush x:Key="TextOnAccentBrush" Color="#FFFFFF" />
     <SolidColorBrush x:Key="FocusBrush" Color="#0D9488" />
 
+    <!-- Активная вкладка: капсула мелководья и глубокий бирюзовый текст. -->
+    <SolidColorBrush x:Key="NavActiveForegroundBrush" Color="#0F524B" />
+
+    <!-- Вторичная кнопка: матовая керамика под водой. -->
+    <SolidColorBrush x:Key="SecondaryButtonBackgroundBrush" Color="#F0F6F4" />
+    <SolidColorBrush x:Key="SecondaryButtonBorderBrush" Color="#BFD0C9" />
+    <SolidColorBrush x:Key="SecondaryButtonForegroundBrush" Color="#16302D" />
+
     <!-- ============================================================
          Текст: глубокий хвойный сланец вместо чистого чёрного.
          ============================================================ -->
-    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#162B29" />
-    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#5A706C" />
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#122927" />
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#546D6A" />
     <SolidColorBrush x:Key="TextMutedBrush" Color="#64748B" />
 
     <!-- ============================================================

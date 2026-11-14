@@ -189,15 +189,15 @@
     </Style>
 
     <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
-        <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}" />
-        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        <Setter Property="Background" Value="{DynamicResource SecondaryButtonBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource SecondaryButtonForegroundBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="Root"
                             Background="{TemplateBinding Background}"
-                            BorderBrush="{DynamicResource CardBorderBrush}"
+                            BorderBrush="{DynamicResource SecondaryButtonBorderBrush}"
                             BorderThickness="1"
                             CornerRadius="8"
                             Padding="{TemplateBinding Padding}">
@@ -342,7 +342,7 @@
                             </Trigger.ExitActions>
                         </Trigger>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource NavActiveForegroundBrush}" />
                             <Setter Property="FontWeight" Value="SemiBold" />
                             <Setter TargetName="Root" Property="Background" Value="{DynamicResource AccentSoftBrush}" />
                             <Trigger.EnterActions>
@@ -533,7 +533,7 @@
         <Setter Property="FontSize" Value="{DynamicResource FontSizeBase}" />
         <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
         <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CaretBrush" Value="{DynamicResource TextPrimaryBrush}" />
         <Setter Property="SelectionBrush" Value="{DynamicResource AccentBrush}" />
@@ -566,7 +566,7 @@
         <Setter Property="FontSize" Value="{DynamicResource FontSizeBase}" />
         <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
         <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CaretBrush" Value="{DynamicResource TextPrimaryBrush}" />
         <Setter Property="SelectionBrush" Value="{DynamicResource AccentBrush}" />
@@ -631,7 +631,7 @@
         <Setter Property="FontSize" Value="{DynamicResource FontSizeBase}" />
         <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
         <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
         <Setter Property="Padding" Value="10,0" />
@@ -787,7 +787,7 @@
         <Setter Property="FontSize" Value="{DynamicResource FontSizeBase}" />
         <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
         <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
         <Setter Property="Template">
@@ -947,13 +947,13 @@
              правый край колонки. Клик по самой шапке не сортирует:
              PreviewMouseLeftButtonDown гасит его в Styles.xaml.cs. -->
     <Style x:Key="GridColumnHeaderStyle" TargetType="DataGridColumnHeader">
-        <Setter Property="Background" Value="{DynamicResource ElevatedSurfaceBrush}" />
-        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
+        <Setter Property="Background" Value="{DynamicResource TableHeaderBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TableHeaderForegroundBrush}" />
         <Setter Property="FontSize" Value="{DynamicResource FontSizeSmall}" />
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Padding" Value="12,0" />
         <Setter Property="BorderThickness" Value="0,0,0,1" />
-        <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TableHeaderBorderBrush}" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ColumnHeader_PreviewMouseLeftButtonDown" />
