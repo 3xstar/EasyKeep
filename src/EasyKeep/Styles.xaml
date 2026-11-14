@@ -67,6 +67,14 @@
     <Thickness x:Key="TableHintMargin">16,44,16,16</Thickness>
 
     <!-- ============================================================
+         Шрифты: Onest — интерфейсный гротеск (заголовки, меню, текст),
+         JetBrains Mono — табличные данные (SKU, числа, даты).
+         Файлы встроены в сборку как Resource: работают без установки.
+         ============================================================ -->
+    <FontFamily x:Key="PrimaryFontFamily">pack://application:,,,/Assets/Fonts/#Onest</FontFamily>
+    <FontFamily x:Key="MonoFontFamily">pack://application:,,,/Assets/Fonts/#JetBrains Mono</FontFamily>
+
+    <!-- ============================================================
          Типографика
          ============================================================ -->
     <Style x:Key="PageTitleText" TargetType="TextBlock">
@@ -791,6 +799,7 @@
     </Style>
 
     <Style TargetType="DatePicker">
+        <Setter Property="FontFamily" Value="{DynamicResource MonoFontFamily}" />
         <Setter Property="FontSize" Value="{DynamicResource FontSizeBase}" />
         <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
         <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
@@ -876,6 +885,14 @@
     <!-- ============================================================
          Таблицы
          ============================================================ -->
+    <!-- Моноширинные данные таблиц: SKU и даты — цифры терминального
+             вида, идеально выровнены по колонке. -->
+    <Style x:Key="MonoCellText" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource MonoFontFamily}" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
     <!-- Кнопка-индикатор сортировки: 8 px в ширину, стоит вплотную к
          тексту заголовка. Три состояния по кругу: нейтральное ⇅,
          по возрастанию ▲ и по убыванию ▼ — оба в акцентном цвете.

@@ -5,6 +5,7 @@
 
     <UserControl.Resources>
         <Style x:Key="NumberCellText" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{DynamicResource MonoFontFamily}" />
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="TextAlignment" Value="Right" />
             <!-- Компенсация зоны индикатора сортировки в шапке (14 px) -->
@@ -132,7 +133,8 @@
                                                 Binding="{Binding Sku}"
                                                 IsReadOnly="True"
                                                 Width="*"
-                                                MinWidth="70" />
+                                                MinWidth="70"
+                                                ElementStyle="{StaticResource MonoCellText}" />
                             <DataGridTextColumn Header="{DynamicResource Loc_Common_HeaderItem}"
                                                 Binding="{Binding Name}"
                                                 IsReadOnly="True"
@@ -321,7 +323,8 @@
                                 <DataGridTextColumn Header="{DynamicResource Loc_Mov_HeaderDate}"
                                                     Binding="{Binding CreatedAt, StringFormat={}{0:dd.MM.yyyy HH:mm}}"
                                                     Width="*"
-                                                    MinWidth="108" />
+                                                    MinWidth="108"
+                                                    ElementStyle="{StaticResource MonoCellText}" />
                                 <DataGridTemplateColumn Header="{DynamicResource Loc_Mov_HeaderType}" Width="Auto" SortMemberPath="Type">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>

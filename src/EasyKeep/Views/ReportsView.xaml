@@ -5,6 +5,7 @@
 
     <UserControl.Resources>
         <Style x:Key="NumberCellText" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{DynamicResource MonoFontFamily}" />
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="TextAlignment" Value="Right" />
             <!-- Компенсация зоны индикатора сортировки в шапке (14 px) -->
@@ -51,7 +52,8 @@
                     </StackPanel>
                     <TextBlock x:Name="TotalQuantityText"
                                Text="—"
-                               Style="{StaticResource KpiValueText}" />
+                               Style="{StaticResource KpiValueText}"
+                               FontFamily="{DynamicResource MonoFontFamily}" />
                     <TextBlock Text="{DynamicResource Loc_Rep_KpiTotalQuantityHint}"
                                Style="{StaticResource KpiHintText}" />
                 </StackPanel>
@@ -72,6 +74,7 @@
                     <TextBlock x:Name="TotalValueText"
                                Text="—"
                                Style="{StaticResource KpiValueText}"
+                               FontFamily="{DynamicResource MonoFontFamily}"
                                Foreground="{DynamicResource AccentBrush}" />
                     <TextBlock Text="{DynamicResource Loc_Rep_KpiTotalValueHint}"
                                Style="{StaticResource KpiHintText}" />
@@ -270,7 +273,7 @@
                                                         Binding="{Binding Sku}"
                                                         Width="*"
                                                         MinWidth="56"
-                                                        ElementStyle="{StaticResource CellText}" />
+                                                        ElementStyle="{StaticResource MonoCellText}" />
                                     <DataGridTextColumn Header="{DynamicResource Loc_Common_HeaderItem}"
                                                         Binding="{Binding Name}"
                                                         Width="2*"

@@ -5,6 +5,7 @@
 
     <UserControl.Resources>
         <Style x:Key="NumberCellText" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{DynamicResource MonoFontFamily}" />
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="TextAlignment" Value="Right" />
             <!-- Компенсация зоны индикатора сортировки в шапке (14 px) -->
@@ -126,7 +127,7 @@
                                    Style="{StaticResource KpiLabelText}"
                                    Margin="8,0,0,0" />
                     </StackPanel>
-                    <TextBlock x:Name="KpiAllText" Text="—" Style="{StaticResource KpiValueText}" />
+                    <TextBlock x:Name="KpiAllText" Text="—" Style="{StaticResource KpiValueText}" FontFamily="{DynamicResource MonoFontFamily}" />
                 </StackPanel>
             </RadioButton>
 
@@ -147,7 +148,7 @@
                                    Style="{StaticResource KpiLabelText}"
                                    Margin="8,0,0,0" />
                     </StackPanel>
-                    <TextBlock x:Name="KpiCriticalText" Text="—" Style="{StaticResource KpiValueText}" />
+                    <TextBlock x:Name="KpiCriticalText" Text="—" Style="{StaticResource KpiValueText}" FontFamily="{DynamicResource MonoFontFamily}" />
                 </StackPanel>
             </RadioButton>
 
@@ -168,7 +169,7 @@
                                    Style="{StaticResource KpiLabelText}"
                                    Margin="8,0,0,0" />
                     </StackPanel>
-                    <TextBlock x:Name="KpiWarningText" Text="—" Style="{StaticResource KpiValueText}" />
+                    <TextBlock x:Name="KpiWarningText" Text="—" Style="{StaticResource KpiValueText}" FontFamily="{DynamicResource MonoFontFamily}" />
                 </StackPanel>
             </RadioButton>
 
@@ -188,7 +189,7 @@
                                    Style="{StaticResource KpiLabelText}"
                                    Margin="8,0,0,0" />
                     </StackPanel>
-                    <TextBlock x:Name="KpiNonLiquidText" Text="—" Style="{StaticResource KpiValueText}" />
+                    <TextBlock x:Name="KpiNonLiquidText" Text="—" Style="{StaticResource KpiValueText}" FontFamily="{DynamicResource MonoFontFamily}" />
                 </StackPanel>
             </RadioButton>
         </Grid>
@@ -271,7 +272,7 @@
                                             Binding="{Binding Sku}"
                                             Width="*"
                                             MinWidth="70"
-                                            ElementStyle="{StaticResource CellText}" />
+                                            ElementStyle="{StaticResource MonoCellText}" />
                         <DataGridTextColumn Header="{DynamicResource Loc_Common_HeaderItem}"
                                             Binding="{Binding ItemName}"
                                             Width="2.5*"

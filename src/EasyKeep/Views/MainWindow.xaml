@@ -5,7 +5,7 @@
         Height="800" Width="1280"
         MinHeight="640" MinWidth="1080"
         WindowStartupLocation="CenterScreen"
-        FontFamily="Segoe UI"
+        FontFamily="{DynamicResource PrimaryFontFamily}"
         UseLayoutRounding="True"
         SnapsToDevicePixels="True"
         TextOptions.TextFormattingMode="Ideal"
@@ -307,6 +307,7 @@
                                             Click="ZoomResetButton_Click">
                                         <TextBlock x:Name="ScalePercentText"
                                                    Text="100%"
+                                                   FontFamily="{DynamicResource MonoFontFamily}"
                                                    FontSize="{DynamicResource FontSizeSmall}"
                                                    FontWeight="SemiBold"
                                                    HorizontalAlignment="Center" />

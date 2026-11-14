@@ -6,7 +6,7 @@
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         ShowInTaskbar="False"
-        FontFamily="Segoe UI"
+        FontFamily="{DynamicResource PrimaryFontFamily}"
         UseLayoutRounding="True"
         SnapsToDevicePixels="True"
         TextOptions.TextFormattingMode="Ideal"
@@ -14,6 +14,7 @@
 
     <Window.Resources>
         <Style x:Key="NumberCellText" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{DynamicResource MonoFontFamily}" />
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="TextAlignment" Value="Right" />
             <!-- Компенсация зоны индикатора сортировки в шапке (14 px) -->
@@ -53,7 +54,8 @@
                     <DataGridTextColumn Header="{DynamicResource Loc_Common_HeaderSku}"
                                         Binding="{Binding Sku}"
                                         Width="*"
-                                        MinWidth="80" />
+                                        MinWidth="80"
+                                        ElementStyle="{StaticResource MonoCellText}" />
                     <DataGridTextColumn Header="{DynamicResource Loc_Common_HeaderItem}"
                                         Binding="{Binding ItemName}"
                                         Width="2*"
