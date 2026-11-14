@@ -994,6 +994,12 @@
         <Setter Property="HorizontalContentAlignment" Value="Right" />
     </Style>
 
+    <!-- Компактные иконочные колонки (светофор): заголовок по центру -->
+    <Style x:Key="GridColumnHeaderCenterStyle" TargetType="DataGridColumnHeader" BasedOn="{StaticResource GridColumnHeaderStyle}">
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+
     <Style x:Key="ModernDataGrid" TargetType="DataGrid">
         <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}" />
         <Setter Property="BorderThickness" Value="0" />

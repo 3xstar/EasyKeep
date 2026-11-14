@@ -169,7 +169,11 @@ public partial class StocksView : UserControl
 
     private bool _isCompactTrafficLight;
 
-    /// <summary>Переключает «Светофор» между бейджами и компактными индикаторами.</summary>
+    /// <summary>
+    /// Переключает «Светофор» между бейджами и компактными индикаторами.
+    /// Колонка физически сужается/расширяется, поэтому освободившиеся
+    /// пиксели сразу забирают соседние *-колонки «Товар» и «Склад».
+    /// </summary>
     private void CompactModeButton_Click(object sender, RoutedEventArgs e)
     {
         _isCompactTrafficLight = !_isCompactTrafficLight;
@@ -178,16 +182,19 @@ public partial class StocksView : UserControl
         TrafficLightColumn.CellTemplate = (DataTemplate)FindResource(
             _isCompactTrafficLight ? "CompactTrafficLightTemplate" : "FullTrafficLightTemplate");
 
-        // Компактная колонка сужается до кружочка: освободившееся место
-        // сразу забирают соседние звёздные колонки.
-        TrafficLightColumn.MinWidth = _isCompactTrafficLight ? 48 : 135;
-        TrafficLightTitle.Visibility = _isCompactTrafficLight
-            ? Visibility.Collapsed
-            : Visibility.Visible;
+        // Пиксельная ширина вместо Auto: DataGrid пересчитывает *-колонки
+        // только при фактическом изменении Width, поэтому меняем и MinWidth.
+        TrafficLightColumn.MinWidth = _isCompactTrafficLight ? 44 : 136;
+        TrafficLightColumn.Width = new DataGridLength(
+            _isCompactTrafficLight ? 44 : 136,
+            DataGridLengthUnitType.Pixel);
+        StocksGrid.UpdateLayout();
 
-        CompactModeButton.ToolTip = _isCompactTrafficLight
-            ? "Показать подписи светофора"
-            : "Компактный вид светофора (только индикаторы)";
+        // В полном режиме — три кружка, в компактном — один.
+        MultiDotIcon.Visibility = _isCompactTrafficLight ? Visibility.Collapsed : Visibility.Visible;
+        SingleDotIcon.Visibility = _isCompactTrafficLight ? Visibility.Visible : Visibility.Collapsed;
+
+        CompactModeButton.ToolTip = "Переключить вид светофора";
         CompactModeButton.Foreground = _isCompactTrafficLight
             ? (Brush)FindResource("AccentBrush")
             : (Brush)FindResource("TextSecondaryBrush");
