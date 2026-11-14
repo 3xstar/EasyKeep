@@ -4,9 +4,12 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <!-- ============================================================
-         Дизайн-система EasyKeep: лиминальный минимализм + iOS.
+         Дизайн-система EasyKeep: Poolrooms / Mallrooms + iOS.
          Все цвета берутся из активной темы через DynamicResource,
          поэтому переключение Light/Dark мгновенное.
+         Глубина — только 1-px обводки и лёгкие градиенты: никаких
+         BlurEffect/DropShadowEffect на таблицах и динамических
+         элементах, чтобы сохранить аппаратное ускорение WPF.
          ============================================================ -->
 
     <!-- ============================================================
@@ -119,8 +122,11 @@
     <!-- ============================================================
          Карточки и панели
          ============================================================ -->
+    <!-- Карточки: фарфоровая поверхность с плиточным швом 1 px.
+         CardSurfaceBrush добавляет едва заметный верхний блик только
+         в тёмной теме; в светлой это чистый #FCFBF7. -->
     <Style x:Key="CardBorder" TargetType="Border">
-        <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource CardSurfaceBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="12" />
@@ -128,13 +134,11 @@
     </Style>
 
     <Style x:Key="StatCard" TargetType="Border">
-        <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource CardSurfaceBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="12" />
         <Setter Property="Padding" Value="{DynamicResource CardPadding}" />
-        <!-- Тень только на статичных карточках: карточки с DataGrid остаются без эффектов. -->
-        <Setter Property="Effect" Value="{DynamicResource CardShadowEffect}" />
     </Style>
 
     <Style x:Key="PillBorder" TargetType="Border">
@@ -201,7 +205,7 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource SurfaceRaisedBrush}" />
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource ElevatedSurfaceBrush}" />
                             <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
@@ -218,7 +222,32 @@
 
     <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
         <Setter Property="Background" Value="{DynamicResource DangerBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextOnDangerBrush}" />
         <Setter Property="Padding" Value="14,8" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Root"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="8"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource DangerHoverBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Root" Property="Opacity" Value="0.85" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Root" Property="Opacity" Value="0.45" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!-- Компактная кнопка без рамки: масштаб, служебные действия. -->
@@ -241,8 +270,8 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource SurfaceRaisedBrush}" />
-                            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource ElevatedSurfaceBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="Root" Property="Opacity" Value="0.7" />
@@ -294,7 +323,7 @@
                                         <DoubleAnimation Storyboard.TargetName="HoverLayer"
                                                          Storyboard.TargetProperty="Opacity"
                                                          To="1"
-                                                         Duration="0:0:0.1" />
+                                                         Duration="0:0:0.12" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
@@ -304,7 +333,7 @@
                                         <DoubleAnimation Storyboard.TargetName="HoverLayer"
                                                          Storyboard.TargetProperty="Opacity"
                                                          To="0"
-                                                         Duration="0:0:0.1" />
+                                                         Duration="0:0:0.12" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
@@ -337,11 +366,11 @@
                                         <DoubleAnimation Storyboard.TargetName="Indicator"
                                                          Storyboard.TargetProperty="Opacity"
                                                          To="0"
-                                                         Duration="0:0:0.1" />
+                                                         Duration="0:0:0.12" />
                                         <DoubleAnimation Storyboard.TargetName="Indicator"
                                                          Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
                                                          To="-5"
-                                                         Duration="0:0:0.1" />
+                                                         Duration="0:0:0.12" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
@@ -398,7 +427,7 @@
                                         <DoubleAnimation Storyboard.TargetName="Thumb"
                                                          Storyboard.TargetProperty="Opacity"
                                                          To="0"
-                                                         Duration="0:0:0.1" />
+                                                         Duration="0:0:0.12" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
@@ -421,13 +450,12 @@
                 <ControlTemplate TargetType="RadioButton">
                     <Grid>
                         <Border x:Name="Root"
-                                Background="{DynamicResource CardBackgroundBrush}"
+                                Background="{DynamicResource CardSurfaceBrush}"
                                 BorderBrush="{DynamicResource CardBorderBrush}"
                                 BorderThickness="1"
-                                CornerRadius="12"
-                                Effect="{DynamicResource CardShadowEffect}" />
+                                CornerRadius="12" />
                         <Border x:Name="HoverLayer"
-                                Background="{DynamicResource SurfaceRaisedBrush}"
+                                Background="{DynamicResource ElevatedSurfaceBrush}"
                                 CornerRadius="12"
                                 Opacity="0" />
                         <Border x:Name="ActiveLayer"
@@ -448,7 +476,7 @@
                                         <DoubleAnimation Storyboard.TargetName="HoverLayer"
                                                          Storyboard.TargetProperty="Opacity"
                                                          To="1"
-                                                         Duration="0:0:0.1" />
+                                                         Duration="0:0:0.12" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
@@ -458,7 +486,7 @@
                                         <DoubleAnimation Storyboard.TargetName="HoverLayer"
                                                          Storyboard.TargetProperty="Opacity"
                                                          To="0"
-                                                         Duration="0:0:0.1" />
+                                                         Duration="0:0:0.12" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
@@ -484,7 +512,7 @@
                                         <DoubleAnimation Storyboard.TargetName="ActiveLayer"
                                                          Storyboard.TargetProperty="Opacity"
                                                          To="0"
-                                                         Duration="0:0:0.1" />
+                                                         Duration="0:0:0.12" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
@@ -510,13 +538,22 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
-                    <Border Background="{TemplateBinding Background}"
+                    <Border x:Name="Root"
+                            Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="6"
+                            CornerRadius="8"
                             Padding="{TemplateBinding Padding}">
                         <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" />
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource FocusBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Root" Property="Opacity" Value="0.55" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -546,7 +583,7 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsKeyboardFocused" Value="True">
-                            <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource FocusBrush}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="Root" Property="Opacity" Value="0.55" />
@@ -568,7 +605,7 @@
                 <ControlTemplate TargetType="ComboBoxItem">
                     <Border x:Name="Root"
                             Background="Transparent"
-                            CornerRadius="6"
+                            CornerRadius="8"
                             Padding="{TemplateBinding Padding}"
                             Margin="2,1">
                         <ContentPresenter />
@@ -654,11 +691,10 @@
                             <Border Background="{DynamicResource PopupBackgroundBrush}"
                                     BorderBrush="{DynamicResource CardBorderBrush}"
                                     BorderThickness="1"
-                                    CornerRadius="10"
+                                    CornerRadius="12"
                                     Margin="0,4,0,0"
                                     MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
-                                    MaxHeight="{TemplateBinding MaxDropDownHeight}"
-                                    Effect="{DynamicResource PopupShadowEffect}">
+                                    MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                 <ScrollViewer Margin="4" VerticalScrollBarVisibility="Auto">
                                     <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" />
                                 </ScrollViewer>
@@ -667,10 +703,10 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsDropDownOpen" Value="True">
-                            <Setter TargetName="ToggleButton" Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
+                            <Setter TargetName="ToggleButton" Property="BorderBrush" Value="{DynamicResource FocusBrush}" />
                         </Trigger>
                         <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                            <Setter TargetName="ToggleButton" Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
+                            <Setter TargetName="ToggleButton" Property="BorderBrush" Value="{DynamicResource FocusBrush}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Opacity" Value="0.55" />
@@ -701,7 +737,7 @@
                 <ControlTemplate TargetType="ListBoxItem">
                     <Border x:Name="Root"
                             Background="Transparent"
-                            CornerRadius="6"
+                            CornerRadius="8"
                             Padding="{TemplateBinding Padding}">
                         <ContentPresenter />
                     </Border>
@@ -803,10 +839,9 @@
                                 <Border Background="{DynamicResource PopupBackgroundBrush}"
                                         BorderBrush="{DynamicResource CardBorderBrush}"
                                         BorderThickness="1"
-                                        CornerRadius="10"
+                                        CornerRadius="12"
                                         Padding="6"
-                                        Margin="0,4,0,0"
-                                        Effect="{DynamicResource PopupShadowEffect}">
+                                        Margin="0,4,0,0">
                                     <Calendar x:Name="PART_Calendar"
                                               Background="Transparent"
                                               BorderThickness="0"
@@ -817,7 +852,7 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                            <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource FocusBrush}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="Root" Property="Opacity" Value="0.55" />
@@ -834,7 +869,7 @@
     <!-- Шапка колонки: отступы (12,0) совпадают с ячейками, поэтому
              заголовок стоит строго над значением при любой ширине. -->
     <Style x:Key="GridColumnHeaderStyle" TargetType="DataGridColumnHeader">
-        <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource ElevatedSurfaceBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
         <Setter Property="FontSize" Value="{DynamicResource FontSizeSmall}" />
         <Setter Property="FontWeight" Value="SemiBold" />
@@ -998,7 +1033,7 @@
                                                     <DoubleAnimation Storyboard.TargetName="HoverLayer"
                                                                      Storyboard.TargetProperty="Opacity"
                                                                      To="1"
-                                                                     Duration="0:0:0.1" />
+                                                                     Duration="0:0:0.12" />
                                                 </Storyboard>
                                             </BeginStoryboard>
                                         </Trigger.EnterActions>
@@ -1008,7 +1043,7 @@
                                                     <DoubleAnimation Storyboard.TargetName="HoverLayer"
                                                                      Storyboard.TargetProperty="Opacity"
                                                                      To="0"
-                                                                     Duration="0:0:0.1" />
+                                                                     Duration="0:0:0.12" />
                                                 </Storyboard>
                                             </BeginStoryboard>
                                         </Trigger.ExitActions>
@@ -1034,7 +1069,7 @@
                                                     <DoubleAnimation Storyboard.TargetName="SelectionLayer"
                                                                      Storyboard.TargetProperty="Opacity"
                                                                      To="0"
-                                                                     Duration="0:0:0.1" />
+                                                                     Duration="0:0:0.12" />
                                                 </Storyboard>
                                             </BeginStoryboard>
                                         </Trigger.ExitActions>
