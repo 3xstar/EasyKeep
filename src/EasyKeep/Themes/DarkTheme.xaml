@@ -2,84 +2,179 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- ============================================================
-         Тёмная тема: ночной склад под холодным люминесцентным
-         светом. Глубокий многоуровневый сине-чёрный фон (без
-         грязно-серого), карточки с контрастной тонкой рамкой и
-         мягкой теневой глубиной, холодные неоновые блики на
-         акцентах. Только палитра и эффекты; элементы интерфейса
-         используют DynamicResource.
+         Тёмная тема: Mallrooms.
+         Пустой вечерний торговый центр: графитовый бетон, холодный
+         свет зенитных фонарей, отражения на плитке пола и редкие
+         неоновые вывески. Только палитра, градиенты и векторные
+         кисти — без растровых эффектов и привязок внутри кистей.
          ============================================================ -->
 
-    <!-- Поверхности: от глубокой ночи к приподнятым уровням -->
-    <SolidColorBrush x:Key="AppBackgroundBrush" Color="#06090F" />
-    <SolidColorBrush x:Key="CardBackgroundBrush" Color="#101724" />
-    <SolidColorBrush x:Key="CardBorderBrush" Color="#33415E" Opacity="0.85" />
-    <SolidColorBrush x:Key="SurfaceRaisedBrush" Color="#182130" />
-    <SolidColorBrush x:Key="RowHoverBrush" Color="#161F2E" />
-    <SolidColorBrush x:Key="SelectionBrush" Color="#14233B" />
-    <SolidColorBrush x:Key="NavBackgroundBrush" Color="#090D15" />
-    <SolidColorBrush x:Key="PopupBackgroundBrush" Color="#121B2B" />
-    <SolidColorBrush x:Key="InputBackgroundBrush" Color="#0C1220" />
-    <SolidColorBrush x:Key="DividerBrush" Color="#1B2534" />
-    <SolidColorBrush x:Key="ScrollThumbBrush" Color="#2E3C55" />
+    <!-- ============================================================
+         ФОН ОКНА: архитектурная сетка 48×48 px.
+         Один кэшированный тайл, абсолютный Viewport и
+         RenderOptions.CachingHint="Cache" — GPU не пересчитывает
+         паттерн при изменении размера окна.
+         ============================================================ -->
+    <DrawingBrush x:Key="BackgroundTileBrush"
+                  Viewbox="0,0,48,48"
+                  ViewboxUnits="Absolute"
+                  Viewport="0,0,48,48"
+                  ViewportUnits="Absolute"
+                  TileMode="Tile"
+                  Stretch="Fill"
+                  RenderOptions.CachingHint="Cache">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="Transparent">
+                    <GeometryDrawing.Geometry>
+                        <RectangleGeometry Rect="0,0,48,48" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing>
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="#0DFFFFFF" Thickness="1" />
+                    </GeometryDrawing.Pen>
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <LineGeometry StartPoint="0,0.5" EndPoint="48,0.5" />
+                            <LineGeometry StartPoint="0.5,0" EndPoint="0.5,48" />
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
 
-    <!-- Акцент: холодный флуоресцентный блик -->
-    <SolidColorBrush x:Key="AccentBrush" Color="#4C9AFF" />
-    <SolidColorBrush x:Key="AccentHoverBrush" Color="#3A8CF0" />
-    <SolidColorBrush x:Key="AccentSoftBrush" Color="#132039" />
-    <SolidColorBrush x:Key="TextOnAccentBrush" Color="#FFFFFF" />
+    <!-- Фон окна: сумеречный графит с холодным верхним отблеском
+         зенитных фонарей (#1B2028 → #11141A) и сеткой балок. -->
+    <DrawingBrush x:Key="WindowBackgroundBrush"
+                  Viewbox="0,0,4096,4096"
+                  ViewboxUnits="Absolute"
+                  Viewport="0,0,4096,4096"
+                  ViewportUnits="Absolute"
+                  TileMode="Tile"
+                  Stretch="Fill"
+                  AlignmentX="Left"
+                  AlignmentY="Top">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="#11141A">
+                    <GeometryDrawing.Geometry>
+                        <RectangleGeometry Rect="0,0,4096,4096" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing>
+                    <GeometryDrawing.Brush>
+                        <LinearGradientBrush StartPoint="0,0"
+                                             EndPoint="0,1080"
+                                             MappingMode="Absolute">
+                            <GradientStop Color="#1B2028" Offset="0" />
+                            <GradientStop Color="#161A21" Offset="0.55" />
+                            <GradientStop Color="#11141A" Offset="1" />
+                        </LinearGradientBrush>
+                    </GeometryDrawing.Brush>
+                    <GeometryDrawing.Geometry>
+                        <RectangleGeometry Rect="0,0,1920,1080" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="{StaticResource BackgroundTileBrush}">
+                    <GeometryDrawing.Geometry>
+                        <RectangleGeometry Rect="0,0,4096,4096" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
 
-    <!-- Текст: холодный свет на тёмном бетоне -->
-    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#E9EFF7" />
-    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#97A9C4" />
-    <SolidColorBrush x:Key="TextMutedBrush" Color="#5F7292" />
+    <!-- Совместимый ключ: все экраны и диалоги используют его. -->
+    <StaticResource x:Key="AppBackgroundBrush" ResourceKey="WindowBackgroundBrush" />
 
-    <!-- Светофор дефицита -->
-    <SolidColorBrush x:Key="SuccessBrush" Color="#34D399" />
-    <SolidColorBrush x:Key="WarningBrush" Color="#FBBF24" />
-    <SolidColorBrush x:Key="DangerBrush" Color="#FB7185" />
-    <SolidColorBrush x:Key="InfoBrush" Color="#7CC4FF" />
+    <!-- ============================================================
+         Поверхности: матовый бетон, металлическая обводка,
+         подсвеченная витрина. CardSurfaceBrush даёт лёгкий верхний
+         блик отражённых ламп без DropShadowEffect.
+         ============================================================ -->
+    <SolidColorBrush x:Key="CardBackgroundBrush" Color="#181C24" />
+    <LinearGradientBrush x:Key="CardSurfaceBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#1E232C" Offset="0" />
+        <GradientStop Color="#181C24" Offset="0.12" />
+        <GradientStop Color="#181C24" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="CardBorderBrush" Color="#2A313D" />
+    <SolidColorBrush x:Key="ElevatedSurfaceBrush" Color="#222834" />
+    <StaticResource x:Key="SurfaceRaisedBrush" ResourceKey="ElevatedSurfaceBrush" />
+    <SolidColorBrush x:Key="RowHoverBrush" Color="#202632" />
+    <SolidColorBrush x:Key="SelectionBrush" Color="#2410B981" />
+    <SolidColorBrush x:Key="NavBackgroundBrush" Color="#151920" />
+    <LinearGradientBrush x:Key="PopupBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#1E232C" Offset="0" />
+        <GradientStop Color="#181C24" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="InputBackgroundBrush" Color="#14181F" />
+    <SolidColorBrush x:Key="DividerBrush" Color="#262C36" />
+    <SolidColorBrush x:Key="ScrollThumbBrush" Color="#3A4351" />
 
-    <!-- Бейджи -->
-    <SolidColorBrush x:Key="BadgeNeutralBackgroundBrush" Color="#1A2332" />
-    <SolidColorBrush x:Key="BadgeNeutralForegroundBrush" Color="#C3D0E2" />
-    <SolidColorBrush x:Key="BadgeCriticalBackgroundBrush" Color="#2A1219" />
-    <SolidColorBrush x:Key="BadgeCriticalForegroundBrush" Color="#FB7185" />
-    <SolidColorBrush x:Key="BadgeWarningBackgroundBrush" Color="#2A210F" />
-    <SolidColorBrush x:Key="BadgeWarningForegroundBrush" Color="#FBBF24" />
-    <SolidColorBrush x:Key="BadgeSuccessBackgroundBrush" Color="#0F2419" />
+    <!-- ============================================================
+         Акцент: изумрудная навигационная стела ТЦ.
+         AccentSoftBrush — мягкая подложка активной вкладки,
+         FocusBrush — тёплый янтарный неон старой вывески.
+         ============================================================ -->
+    <SolidColorBrush x:Key="AccentBrush" Color="#10B981" />
+    <SolidColorBrush x:Key="AccentHoverBrush" Color="#059669" />
+    <SolidColorBrush x:Key="AccentSoftBrush" Color="#1A10B981" />
+    <SolidColorBrush x:Key="TextOnAccentBrush" Color="#041B14" />
+    <SolidColorBrush x:Key="FocusBrush" Color="#F59E0B" />
+
+    <!-- ============================================================
+         Текст: холодный люминесцентный белый и бетонно-серые
+         подписи.
+         ============================================================ -->
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#ECEFF4" />
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#8C96A6" />
+    <SolidColorBrush x:Key="TextMutedBrush" Color="#7C889A" />
+
+    <!-- ============================================================
+         Светофор дефицита и служебные акценты.
+         ============================================================ -->
+    <SolidColorBrush x:Key="SuccessBrush" Color="#10B981" />
+    <SolidColorBrush x:Key="WarningBrush" Color="#F59E0B" />
+    <SolidColorBrush x:Key="DangerBrush" Color="#F87171" />
+    <SolidColorBrush x:Key="DangerHoverBrush" Color="#EF4444" />
+    <SolidColorBrush x:Key="InfoBrush" Color="#22D3EE" />
+    <SolidColorBrush x:Key="TextOnDangerBrush" Color="#1A0B0B" />
+
+    <!-- ============================================================
+         Бейджи: неоновые вывески на тёмном бетоне.
+         ============================================================ -->
+    <SolidColorBrush x:Key="BadgeNeutralBackgroundBrush" Color="#202631" />
+    <SolidColorBrush x:Key="BadgeNeutralForegroundBrush" Color="#B8C1CE" />
+    <SolidColorBrush x:Key="BadgeCriticalBackgroundBrush" Color="#2A1518" />
+    <SolidColorBrush x:Key="BadgeCriticalForegroundBrush" Color="#F87171" />
+    <SolidColorBrush x:Key="BadgeWarningBackgroundBrush" Color="#2A2110" />
+    <SolidColorBrush x:Key="BadgeWarningForegroundBrush" Color="#F59E0B" />
+    <SolidColorBrush x:Key="BadgeSuccessBackgroundBrush" Color="#0F2A20" />
     <SolidColorBrush x:Key="BadgeSuccessForegroundBrush" Color="#34D399" />
-    <SolidColorBrush x:Key="BadgeInfoBackgroundBrush" Color="#14263F" />
-    <SolidColorBrush x:Key="BadgeInfoForegroundBrush" Color="#7CC4FF" />
-    <SolidColorBrush x:Key="BadgeMutedBackgroundBrush" Color="#141B28" />
-    <SolidColorBrush x:Key="BadgeMutedForegroundBrush" Color="#97A9C4" />
+    <SolidColorBrush x:Key="BadgeInfoBackgroundBrush" Color="#102A2E" />
+    <SolidColorBrush x:Key="BadgeInfoForegroundBrush" Color="#22D3EE" />
+    <SolidColorBrush x:Key="BadgeMutedBackgroundBrush" Color="#1B2028" />
+    <SolidColorBrush x:Key="BadgeMutedForegroundBrush" Color="#8C96A6" />
 
-    <!-- Сегментированный переключатель темы -->
-    <SolidColorBrush x:Key="SegmentTrackBrush" Color="#0C111B" />
-    <SolidColorBrush x:Key="SegmentThumbBrush" Color="#263248" />
+    <!-- ============================================================
+         Сегментированный переключатель темы.
+         ============================================================ -->
+    <SolidColorBrush x:Key="SegmentTrackBrush" Color="#14181F" />
+    <SolidColorBrush x:Key="SegmentThumbBrush" Color="#26303A" />
 
-    <!-- Мягкое неоновое свечение индикаторов «Светофора». -->
-    <DropShadowEffect x:Key="GlowCriticalEffect" Color="#FB7185" BlurRadius="10" ShadowDepth="0" Opacity="0.3" />
-    <DropShadowEffect x:Key="GlowWarningEffect" Color="#FBBF24" BlurRadius="10" ShadowDepth="0" Opacity="0.28" />
-    <DropShadowEffect x:Key="GlowSuccessEffect" Color="#34D399" BlurRadius="10" ShadowDepth="0" Opacity="0.28" />
-    <DropShadowEffect x:Key="GlowMutedEffect" Color="#7C90B2" BlurRadius="8" ShadowDepth="0" Opacity="0.2" />
-
-    <!-- Мягкая теневая глубина статичных карточек: чёрная, чтобы
-             отделить приподнятую поверхность от фона. Быстрый GPU-эффект
-             с малым радиусом; на карточки с таблицами не вешается. -->
-    <DropShadowEffect x:Key="CardShadowEffect"
-                      Color="#000000"
-                      BlurRadius="14"
-                      ShadowDepth="4"
-                      Direction="270"
-                      Opacity="0.45" />
-
-    <!-- Тень всплывающих панелей -->
-    <DropShadowEffect x:Key="PopupShadowEffect"
-                      Color="#000000"
-                      BlurRadius="32"
-                      ShadowDepth="8"
-                      Direction="270"
-                      Opacity="0.6" />
+    <!-- ============================================================
+         Растровые эффекты отключены: глубина создаётся градиентом,
+         1-px металлической обводкой и неоновыми акцентами.
+         Ключи сохранены для существующих DataTrigger'ов.
+         ============================================================ -->
+    <x:Null x:Key="GlowCriticalEffect" />
+    <x:Null x:Key="GlowWarningEffect" />
+    <x:Null x:Key="GlowSuccessEffect" />
+    <x:Null x:Key="GlowMutedEffect" />
+    <x:Null x:Key="CardShadowEffect" />
+    <x:Null x:Key="PopupShadowEffect" />
 
 </ResourceDictionary>
