@@ -178,8 +178,15 @@ public partial class StocksView : UserControl
         TrafficLightColumn.CellTemplate = (DataTemplate)FindResource(
             _isCompactTrafficLight ? "CompactTrafficLightTemplate" : "FullTrafficLightTemplate");
 
+        // Компактная колонка сужается до кружочка: освободившееся место
+        // сразу забирают соседние звёздные колонки.
+        TrafficLightColumn.MinWidth = _isCompactTrafficLight ? 48 : 135;
+        TrafficLightTitle.Visibility = _isCompactTrafficLight
+            ? Visibility.Collapsed
+            : Visibility.Visible;
+
         CompactModeButton.ToolTip = _isCompactTrafficLight
-            ? "Обычный вид светофора (бейджи со статусами)"
+            ? "Показать подписи светофора"
             : "Компактный вид светофора (только индикаторы)";
         CompactModeButton.Foreground = _isCompactTrafficLight
             ? (Brush)FindResource("AccentBrush")

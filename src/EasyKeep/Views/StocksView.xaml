@@ -60,7 +60,7 @@
                      Width="11"
                      Height="11"
                      Fill="{DynamicResource TextMutedBrush}"
-                     HorizontalAlignment="Left"
+                     HorizontalAlignment="Center"
                      VerticalAlignment="Center">
                 <Ellipse.ToolTip>
                     <StackPanel>
@@ -301,10 +301,11 @@
                         <DataGridTemplateColumn x:Name="TrafficLightColumn"
                                                 SortMemberPath="Status"
                                                 Width="Auto"
+                                                MinWidth="135"
                                                 CellTemplate="{StaticResource FullTrafficLightTemplate}">
                             <DataGridTemplateColumn.Header>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Светофор" VerticalAlignment="Center" />
+                                    <TextBlock x:Name="TrafficLightTitle" Text="Светофор" VerticalAlignment="Center" />
                                     <Button x:Name="CompactModeButton"
                                             Style="{StaticResource GhostButton}"
                                             Padding="3,2"
