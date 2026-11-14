@@ -28,6 +28,10 @@ public static class ThemeService
         string source = theme == AppTheme.Dark ? DarkThemeSource : LightThemeSource;
         ResourceDictionary replacement = new() { Source = new Uri(source, UriKind.Relative) };
 
+        // Замороженные кисти/эффекты не требуют отслеживания изменений
+        // и рендерятся быстрее.
+        FreezeThemeBrushes(replacement);
+
         var dictionaries = Application.Current.Resources.MergedDictionaries;
         for (int index = 0; index < dictionaries.Count; index++)
         {
@@ -41,6 +45,16 @@ public static class ThemeService
         }
 
         dictionaries.Insert(0, replacement);
+    }
+
+    /// <summary>Замораживает все замораживаемые значения словаря темы.</summary>
+    private static void FreezeThemeBrushes(ResourceDictionary dictionary)
+    {
+        foreach (object? value in dictionary.Values)
+        {
+            if (value is Freezable freezable && !freezable.IsFrozen && freezable.CanFreeze)
+                freezable.Freeze();
+        }
     }
 
     public static AppTheme Parse(string? value)

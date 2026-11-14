@@ -294,11 +294,11 @@ public partial class CatalogView : UserControl
         HistoryStateText.Visibility = Visibility.Visible;
     }
 
-    /// <summary>Панель истории мягко выезжает справа за 140 мс.</summary>
+    /// <summary>Панель истории мягко выезжает справа за 200 мс (кривая iOS).</summary>
     private void AnimateXRayPanel()
     {
-        CubicEase easing = new() { EasingMode = EasingMode.EaseOut };
-        TimeSpan duration = TimeSpan.FromMilliseconds(140);
+        QuinticEase easing = new() { EasingMode = EasingMode.EaseOut };
+        TimeSpan duration = TimeSpan.FromMilliseconds(200);
 
         XRayPanel.BeginAnimation(OpacityProperty, new DoubleAnimation(0.7, 1, duration)
         {

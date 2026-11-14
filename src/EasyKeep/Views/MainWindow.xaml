@@ -18,6 +18,10 @@
          layout с *-колонками сам ужимается под окно без «мыла» и
          горизонтальных полос прокрутки. -->
     <Grid x:Name="LayoutRoot">
+        <Grid.RenderTransform>
+            <!-- Подъём контейнера при запуске окна (10 px → 0, см. .cs) -->
+            <TranslateTransform x:Name="WindowRise" Y="0" />
+        </Grid.RenderTransform>
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="NavColumn" Width="248" />
             <ColumnDefinition Width="*" />

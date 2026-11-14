@@ -44,8 +44,31 @@ public partial class MainWindow : Window
 
         _isInitializing = false;
 
+        AnimateWindowEntrance();
+
         // По умолчанию открываем самый важный раздел — остатки.
         StocksNav.IsChecked = true;
+    }
+
+    /// <summary>
+    /// Плавное проявление окна при старте: 220 мс CubicEase EaseOut
+    /// и лёгкий подъём контейнера 10 px → 0 за 240 мс, без отскока.
+    /// Анимируются только GPU-свойства (Opacity, RenderTransform).
+    /// </summary>
+    private void AnimateWindowEntrance()
+    {
+        Opacity = 0;
+        WindowRise.Y = 10;
+
+        BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(220))
+        {
+            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+        });
+
+        WindowRise.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(10, 0, TimeSpan.FromMilliseconds(240))
+        {
+            EasingFunction = new QuinticEase { EasingMode = EasingMode.EaseOut }
+        });
     }
 
     /// <summary>Переключает экран по пункту меню.</summary>
@@ -104,20 +127,23 @@ public partial class MainWindow : Window
     };
 
     /// <summary>
-    /// Мгновенный, но мягкий вход экрана: 120 мс, прозрачность 0.6 → 1
-    /// и сдвиг на 4 px вниз с CubicEase EaseOut.
+    /// Фирменный вход экрана: 180 мс, прозрачность 0.35 → 1 и микросдвиг
+    /// на 6 px вниз с QuinticEase EaseOut — мгновенный старт и мягкое
+    /// торможение в конце. Анимируются только GPU-свойства (Opacity,
+    /// RenderTransform); итоговое значение удерживается, поэтому текст
+    /// остаётся бритвенно чётким.
     /// </summary>
     private void AnimateContentEntrance()
     {
-        CubicEase easing = new() { EasingMode = EasingMode.EaseOut };
-        TimeSpan duration = TimeSpan.FromMilliseconds(120);
+        QuinticEase easing = new() { EasingMode = EasingMode.EaseOut };
+        TimeSpan duration = TimeSpan.FromMilliseconds(180);
 
-        ContentArea.BeginAnimation(OpacityProperty, new DoubleAnimation(0.6, 1, duration)
+        ContentArea.BeginAnimation(OpacityProperty, new DoubleAnimation(0.35, 1, duration)
         {
             EasingFunction = easing
         });
 
-        ContentShift.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(4, 0, duration)
+        ContentShift.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(6, 0, duration)
         {
             EasingFunction = easing
         });
@@ -139,7 +165,19 @@ public partial class MainWindow : Window
     {
         _isNavCompact = compact;
 
-        NavColumn.Width = new GridLength(compact ? CompactNavWidth : ExpandedNavWidth);
+        // Ширина колонки анимируется плавно (в WPF нет встроенной
+        // анимации GridLength — см. GridLengthAnimation); остальное
+        // содержимое меню переключается мгновенно.
+        NavColumn.BeginAnimation(
+            ColumnDefinition.WidthProperty,
+            new GridLengthAnimation
+            {
+                From = NavColumn.Width,
+                To = new GridLength(compact ? CompactNavWidth : ExpandedNavWidth),
+                Duration = TimeSpan.FromMilliseconds(200),
+                EasingFunction = new QuinticEase { EasingMode = EasingMode.EaseOut }
+            });
+
         NavPanel.Margin = compact
             ? new Thickness(8, 18, 8, 14)
             : new Thickness(16, 22, 16, 16);
