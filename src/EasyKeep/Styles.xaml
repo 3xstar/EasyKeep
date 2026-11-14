@@ -49,6 +49,7 @@
     <sys:Double x:Key="FontSizeBase">13</sys:Double>
     <sys:Double x:Key="FontSizeTitle">15</sys:Double>
     <sys:Double x:Key="FontSizeSubtitle">20</sys:Double>
+    <sys:Double x:Key="FontSizeBrand">18</sys:Double>
     <sys:Double x:Key="FontSizePageTitle">24</sys:Double>
     <sys:Double x:Key="FontSizeKpi">30</sys:Double>
     <sys:Double x:Key="ControlHeight">36</sys:Double>
@@ -288,6 +289,7 @@
         <Setter Property="FontSize" Value="{DynamicResource FontSizeBase}" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Margin" Value="0,2" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RadioButton">
@@ -299,7 +301,8 @@
                                         CornerRadius="8"
                                         Margin="-14,-10"
                                         Opacity="0" />
-                                <ContentPresenter VerticalAlignment="Center" />
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="Center" />
                             </Grid>
                         </Border>
                         <Border x:Name="Indicator"
@@ -308,7 +311,7 @@
                                 Background="{DynamicResource AccentBrush}"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
-                                Margin="-10,0,0,0"
+                                Margin="-7,0,0,0"
                                 Opacity="0">
                             <Border.RenderTransform>
                                 <TranslateTransform X="-5" />

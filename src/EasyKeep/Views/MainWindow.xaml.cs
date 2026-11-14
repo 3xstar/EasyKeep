@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -14,9 +15,12 @@ namespace EasyKeep.Views;
 public partial class MainWindow : Window
 {
     private static readonly int[] ScaleSteps = { 85, 95, 100, 110, 120, 130, 140 };
+    private const double ExpandedNavWidth = 248;
+    private const double CompactNavWidth = 64;
 
     private int _scalePercent = 100;
     private bool _isInitializing;
+    private bool _isNavCompact;
 
     public MainWindow()
     {
@@ -106,6 +110,61 @@ public partial class MainWindow : Window
 
     // ==================== Персонализация ====================
 
+    /// <summary>
+    /// Компактный режим навигации: 248 → 64 px. Освободившиеся пиксели
+    /// мгновенно получает рабочая область; подписи скрываются, остаются
+    /// крупные центрированные иконки с подсказками.
+    /// </summary>
+    private void NavToggleButton_Click(object sender, RoutedEventArgs e)
+    {
+        ApplyNavMode(!_isNavCompact);
+    }
+
+    private void ApplyNavMode(bool compact)
+    {
+        _isNavCompact = compact;
+
+        NavColumn.Width = new GridLength(compact ? CompactNavWidth : ExpandedNavWidth);
+        NavPanel.Margin = compact
+            ? new Thickness(8, 18, 8, 14)
+            : new Thickness(16, 22, 16, 16);
+
+        Visibility textVisibility = compact ? Visibility.Collapsed : Visibility.Visible;
+        BrandText.Visibility = textVisibility;
+        SectionsHeaderText.Visibility = textVisibility;
+        DatabaseStatusCard.Visibility = textVisibility;
+        PersonalizationLabel.Visibility = textVisibility;
+        StocksNavText.Visibility = textVisibility;
+        MovementsNavText.Visibility = textVisibility;
+        CatalogNavText.Visibility = textVisibility;
+        ReportsNavText.Visibility = textVisibility;
+
+        LogoPanel.HorizontalAlignment = compact ? HorizontalAlignment.Center : HorizontalAlignment.Left;
+        LogoImage.Width = compact ? 32 : 40;
+        LogoImage.Height = compact ? 32 : 40;
+
+        NavToggleRotation.Angle = compact ? 180 : 0;
+        NavToggleButton.HorizontalAlignment = compact ? HorizontalAlignment.Center : HorizontalAlignment.Right;
+        Grid.SetColumnSpan(NavToggleButton, compact ? 2 : 1);
+
+        HorizontalAlignment navContentAlignment = compact
+            ? HorizontalAlignment.Center
+            : HorizontalAlignment.Stretch;
+        StocksNav.HorizontalContentAlignment = navContentAlignment;
+        MovementsNav.HorizontalContentAlignment = navContentAlignment;
+        CatalogNav.HorizontalContentAlignment = navContentAlignment;
+        ReportsNav.HorizontalContentAlignment = navContentAlignment;
+
+        PersonalizationButton.HorizontalContentAlignment = compact
+            ? HorizontalAlignment.Center
+            : HorizontalAlignment.Left;
+
+        // В компактном меню попап раскрывается вправо, чтобы не уехать за край окна.
+        PersonalizationPopup.Placement = compact ? PlacementMode.Right : PlacementMode.Top;
+        PersonalizationPopup.HorizontalOffset = compact ? 8 : 0;
+        PersonalizationPopup.VerticalOffset = compact ? 0 : -8;
+    }
+
     private void PersonalizationButton_Click(object sender, RoutedEventArgs e)
     {
         PersonalizationPopup.IsOpen = !PersonalizationPopup.IsOpen;
@@ -192,6 +251,7 @@ public partial class MainWindow : Window
         resources["FontSizeBase"] = 13.0 * factor;
         resources["FontSizeTitle"] = 15.0 * factor;
         resources["FontSizeSubtitle"] = 20.0 * factor;
+        resources["FontSizeBrand"] = 18.0 * factor;
         resources["FontSizePageTitle"] = 24.0 * factor;
         resources["FontSizeKpi"] = 30.0 * factor;
         resources["ControlHeight"] = 36.0 * factor;

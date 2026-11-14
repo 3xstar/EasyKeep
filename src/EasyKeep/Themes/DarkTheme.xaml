@@ -134,6 +134,18 @@
     <SolidColorBrush x:Key="TextMutedBrush" Color="#7C889A" />
 
     <!-- ============================================================
+         Вывеска EasyKeep: светящаяся ледяная лампа ночного бассейна.
+         ShadowDepth=0 — не тень, а источник света вокруг текста.
+         ============================================================ -->
+    <SolidColorBrush x:Key="BrandSignForegroundBrush" Color="#E0F2FE" />
+    <DropShadowEffect x:Key="BrandSignEffect"
+                      BlurRadius="12"
+                      ShadowDepth="0"
+                      Direction="270"
+                      Opacity="0.85"
+                      Color="#38BDF8" />
+
+    <!-- ============================================================
          Светофор дефицита и служебные акценты.
          ============================================================ -->
     <SolidColorBrush x:Key="SuccessBrush" Color="#10B981" />
