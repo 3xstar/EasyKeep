@@ -162,6 +162,17 @@
                       Color="#163834" />
 
     <!-- ============================================================
+         Логотип-ромб Poolrooms Light: светлый кафель бортика и
+         чистая бирюзовая гладь воды.
+         ============================================================ -->
+    <SolidColorBrush x:Key="LogoRimBrush" Color="#FCFBF7" />
+    <SolidColorBrush x:Key="LogoRimBorderBrush" Color="#B8CCC5" />
+    <LinearGradientBrush x:Key="LogoWaterBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#14B8A6" Offset="0" />
+        <GradientStop Color="#0D9488" Offset="1" />
+    </LinearGradientBrush>
+
+    <!-- ============================================================
          Светофор дефицита: бирюза, янтарь, терракота, серый.
          ============================================================ -->
     <SolidColorBrush x:Key="SuccessBrush" Color="#0D9488" />

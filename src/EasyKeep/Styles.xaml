@@ -13,30 +13,38 @@
          ============================================================ -->
 
     <!-- ============================================================
-         Логотип: синяя плитка со светлым изометрическим кубом.
+         Логотип EasyKeep: плоский изометрический ромб-бассейн — вид
+         сверху под углом 45°, всего два примитива: бортик и гладь
+         воды. Чистый вектор в сетке 36×36 внутри Viewbox, поэтому
+         ромб кристально чёткий на любом масштабе, а цвета приходят
+         из активной темы через DynamicResource.
          ============================================================ -->
-    <DrawingImage x:Key="EasyKeepLogo">
-        <DrawingImage.Drawing>
-            <DrawingGroup>
-                <GeometryDrawing>
-                    <GeometryDrawing.Brush>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Color="#3B82F6" Offset="0" />
-                            <GradientStop Color="#2563EB" Offset="1" />
-                        </LinearGradientBrush>
-                    </GeometryDrawing.Brush>
-                    <GeometryDrawing.Geometry>
-                        <RectangleGeometry Rect="0,0,40,40" RadiusX="11" RadiusY="11" />
-                    </GeometryDrawing.Geometry>
-                </GeometryDrawing>
-                <GeometryDrawing Geometry="M 9.5,14 L 20,8.7 L 30.5,14 L 30.5,26 L 20,31.3 L 9.5,26 Z M 9.5,14 L 20,19.3 L 30.5,14 M 20,19.3 L 20,31.3">
-                    <GeometryDrawing.Pen>
-                        <Pen Brush="White" Thickness="2.2" LineJoin="Round" StartLineCap="Round" EndLineCap="Round" />
-                    </GeometryDrawing.Pen>
-                </GeometryDrawing>
-            </DrawingGroup>
-        </DrawingImage.Drawing>
-    </DrawingImage>
+    <Style x:Key="EasyKeepLogo" TargetType="ContentControl">
+        <Setter Property="Width" Value="40" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ContentControl">
+                    <Viewbox Stretch="Uniform">
+                        <Canvas Width="36" Height="36">
+                            <!-- Внешний ромб-бортик бассейна -->
+                            <Polygon Points="18,3 33,18 18,33 3,18"
+                                     Fill="{DynamicResource LogoRimBrush}"
+                                     Stroke="{DynamicResource LogoRimBorderBrush}"
+                                     StrokeThickness="1.5"
+                                     StrokeLineJoin="Round" />
+                            <!-- Внутренний ромб-гладь воды -->
+                            <Polygon Points="18,7.5 28.5,18 18,28.5 7.5,18"
+                                     Fill="{DynamicResource LogoWaterBrush}"
+                                     StrokeLineJoin="Round" />
+                        </Canvas>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <!-- ============================================================
          Базовые метрики масштаба. Пересчитываются MainWindow при

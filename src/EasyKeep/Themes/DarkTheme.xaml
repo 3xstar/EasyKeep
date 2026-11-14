@@ -160,6 +160,17 @@
                       Color="#38BDF8" />
 
     <!-- ============================================================
+         Логотип-ромб Night Poolrooms Dark: тёмный кафель бортика и
+         светящаяся ледяная гладь воды.
+         ============================================================ -->
+    <SolidColorBrush x:Key="LogoRimBrush" Color="#0E1B2B" />
+    <SolidColorBrush x:Key="LogoRimBorderBrush" Color="#234463" />
+    <LinearGradientBrush x:Key="LogoWaterBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#7DD3FC" Offset="0" />
+        <GradientStop Color="#0EA5E9" Offset="1" />
+    </LinearGradientBrush>
+
+    <!-- ============================================================
          Светофор дефицита и служебные акценты.
          ============================================================ -->
     <SolidColorBrush x:Key="SuccessBrush" Color="#2DD4BF" />

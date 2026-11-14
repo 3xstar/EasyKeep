@@ -40,9 +40,9 @@
                 <StackPanel x:Name="LogoPanel"
                             Orientation="Horizontal"
                             HorizontalAlignment="Left">
-                    <Image x:Name="LogoImage"
-                           Source="{StaticResource EasyKeepLogo}"
-                           Width="40" Height="40" />
+                    <ContentControl x:Name="LogoImage"
+                                    Style="{StaticResource EasyKeepLogo}"
+                                    Width="40" Height="40" />
                     <TextBlock x:Name="BrandText"
                                Text="EasyKeep"
                                FontSize="{DynamicResource FontSizeBrand}"
@@ -330,9 +330,9 @@
                         <!-- Заглушка для разделов, которые ещё не подключены -->
                         <Border x:Name="PlaceholderPanel" Style="{StaticResource CardBorder}">
                             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="440">
-                                <Image Source="{StaticResource EasyKeepLogo}"
-                                       Width="64" Height="64"
-                                       HorizontalAlignment="Center" />
+                                <ContentControl Style="{StaticResource EasyKeepLogo}"
+                                                Width="64" Height="64"
+                                                HorizontalAlignment="Center" />
                                 <TextBlock x:Name="PlaceholderTitle"
                                            Style="{StaticResource SectionTitleText}"
                                            HorizontalAlignment="Center"
