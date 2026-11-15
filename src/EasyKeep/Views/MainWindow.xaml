@@ -102,12 +102,19 @@
                         <Border x:Name="NavActivePill"
                                 Height="36"
                                 CornerRadius="8"
-                                Background="{DynamicResource AccentSoftBrush}"
+                                Background="{DynamicResource NavActivePillBrush}"
                                 VerticalAlignment="Top"
                                 IsHitTestVisible="False">
                             <Border.RenderTransform>
                                 <TranslateTransform x:Name="NavActivePillShift" Y="0" />
                             </Border.RenderTransform>
+                            <!-- Ледяная неоновая полоска активной вкладки. -->
+                            <Border Width="3"
+                                    Height="18"
+                                    CornerRadius="2"
+                                    Background="{DynamicResource NavActiveStripBrush}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center" />
                         </Border>
 
                         <StackPanel>

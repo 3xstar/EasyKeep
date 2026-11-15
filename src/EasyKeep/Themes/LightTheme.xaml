@@ -134,7 +134,13 @@
     <SolidColorBrush x:Key="TextOnAccentBrush" Color="#FFFFFF" />
     <SolidColorBrush x:Key="FocusBrush" Color="#0D9488" />
 
+    <!-- Главная кнопка: насыщенная вода бассейна. -->
+    <SolidColorBrush x:Key="PrimaryButtonBrush" Color="#0D9488" />
+    <SolidColorBrush x:Key="PrimaryButtonHoverBrush" Color="#0B7A70" />
+
     <!-- Активная вкладка: капсула мелководья и глубокий бирюзовый текст. -->
+    <SolidColorBrush x:Key="NavActivePillBrush" Color="#CCFBF1" />
+    <SolidColorBrush x:Key="NavActiveStripBrush" Color="Transparent" />
     <SolidColorBrush x:Key="NavActiveForegroundBrush" Color="#0F524B" />
 
     <!-- Вторичная кнопка: матовая керамика под водой. -->

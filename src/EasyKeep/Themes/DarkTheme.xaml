@@ -2,19 +2,19 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- ============================================================
-         Тёмная тема: «Ночной бассейн с ледяными лампами
-         (Night Poolrooms)».
-         Ночной пустой зал с тёмной глубокой сине-графитовой плиткой,
-         тёмной водой и яркими вертикальными ледяными
-         люминесцентными светильниками. Только палитра, градиенты
-         и векторные кисти — без растровых эффектов и привязок
-         внутри кистей.
+         Тёмная тема: «Ночной зал с чёрным кафелем и ледяными
+         неоновыми лампами».
+         Почти чёрное угольное пространство, матовый графит
+         поверхностей и редкие холодные сине-голубые акценты —
+         как точечные светильники в тёмном пустом зале. Только
+         палитра, градиенты и векторные кисти — без растровых
+         эффектов и привязок внутри кистей.
          ============================================================ -->
 
     <!-- ============================================================
          ФОН ОКНА: один кэшированный тайл 24×24 px.
-         Тонкая ледяная сетка швов #1838BDF8 — слабый холодный
-         отблеск на влажном кафеле.
+         Едва заметные тёмно-графитовые швы #14FFFFFF — сетка
+         чёрного кафеля, без синего свечения на всей площади.
          ============================================================ -->
     <DrawingBrush x:Key="BackgroundTileBrush"
                   Viewbox="0,0,24,24"
@@ -33,7 +33,7 @@
                 </GeometryDrawing>
                 <GeometryDrawing>
                     <GeometryDrawing.Pen>
-                        <Pen Brush="#1838BDF8" Thickness="1" />
+                        <Pen Brush="#14FFFFFF" Thickness="1" />
                     </GeometryDrawing.Pen>
                     <GeometryDrawing.Geometry>
                         <GeometryGroup>
@@ -46,8 +46,9 @@
         </DrawingBrush.Drawing>
     </DrawingBrush>
 
-    <!-- Фон окна: глубокий ночной океанически-графитовый градиент
-         #0A1524 сверху → #04080F снизу и ледяная сетка швов. -->
+    <!-- Фон окна: глубокий угольно-чёрный градиент #0B0D11
+         сверху → #050608 снизу. Нейтральный чёрный с еле уловимым
+         холодным оттенком и сеткой швов чёрного кафеля. -->
     <DrawingBrush x:Key="WindowBackgroundBrush"
                   Viewbox="0,0,4096,4096"
                   ViewboxUnits="Absolute"
@@ -59,7 +60,7 @@
                   AlignmentY="Top">
         <DrawingBrush.Drawing>
             <DrawingGroup>
-                <GeometryDrawing Brush="#04080F">
+                <GeometryDrawing Brush="#050608">
                     <GeometryDrawing.Geometry>
                         <RectangleGeometry Rect="0,0,4096,4096" />
                     </GeometryDrawing.Geometry>
@@ -69,8 +70,8 @@
                         <LinearGradientBrush StartPoint="0,0"
                                              EndPoint="0,1080"
                                              MappingMode="Absolute">
-                            <GradientStop Color="#0A1524" Offset="0" />
-                            <GradientStop Color="#04080F" Offset="1" />
+                            <GradientStop Color="#0B0D11" Offset="0" />
+                            <GradientStop Color="#050608" Offset="1" />
                         </LinearGradientBrush>
                     </GeometryDrawing.Brush>
                     <GeometryDrawing.Geometry>
@@ -90,68 +91,77 @@
     <StaticResource x:Key="AppBackgroundBrush" ResourceKey="WindowBackgroundBrush" />
 
     <!-- ============================================================
-         Поверхности: тёмный мокрый кафель навигации, влажный сланец
-         карточек и холодная металлическая обводка.
+         Поверхности: матовый чёрный навигации, угольно-графитовые
+         карточки и нейтральная тёмно-серая обводка.
          ============================================================ -->
-    <SolidColorBrush x:Key="SidebarBackgroundBrush" Color="#08111D" />
-    <SolidColorBrush x:Key="SidebarBorderBrush" Color="#152A42" />
+    <SolidColorBrush x:Key="SidebarBackgroundBrush" Color="#08090C" />
+    <SolidColorBrush x:Key="SidebarBorderBrush" Color="#1A1E26" />
     <StaticResource x:Key="NavBackgroundBrush" ResourceKey="SidebarBackgroundBrush" />
 
-    <SolidColorBrush x:Key="CardBackgroundBrush" Color="#0D1928" />
+    <SolidColorBrush x:Key="CardBackgroundBrush" Color="#0F1218" />
     <LinearGradientBrush x:Key="CardSurfaceBrush" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#132438" Offset="0" />
-        <GradientStop Color="#0B1624" Offset="1" />
+        <GradientStop Color="#151922" Offset="0" />
+        <GradientStop Color="#0D1015" Offset="1" />
     </LinearGradientBrush>
-    <SolidColorBrush x:Key="CardBorderBrush" Color="#1C3752" />
-    <SolidColorBrush x:Key="ElevatedSurfaceBrush" Color="#152B44" />
+    <SolidColorBrush x:Key="CardBorderBrush" Color="#1F242E" />
+    <SolidColorBrush x:Key="ElevatedSurfaceBrush" Color="#0F1218" />
     <StaticResource x:Key="SurfaceRaisedBrush" ResourceKey="ElevatedSurfaceBrush" />
-    <SolidColorBrush x:Key="RowHoverBrush" Color="#152B44" />
-    <SolidColorBrush x:Key="SelectionBrush" Color="#1F38BDF8" />
+    <SolidColorBrush x:Key="RowHoverBrush" Color="#152232" />
+    <SolidColorBrush x:Key="SelectionBrush" Color="#2E38BDF8" />
     <LinearGradientBrush x:Key="PopupBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#132438" Offset="0" />
-        <GradientStop Color="#0B1624" Offset="1" />
+        <GradientStop Color="#141820" Offset="0" />
+        <GradientStop Color="#0D1015" Offset="1" />
     </LinearGradientBrush>
-    <SolidColorBrush x:Key="InputBackgroundBrush" Color="#07101A" />
-    <SolidColorBrush x:Key="InputBorderBrush" Color="#1F3E5C" />
-    <SolidColorBrush x:Key="DividerBrush" Color="#152A42" />
-    <SolidColorBrush x:Key="ScrollThumbBrush" Color="#2A4A66" />
+    <SolidColorBrush x:Key="InputBackgroundBrush" Color="#07080B" />
+    <SolidColorBrush x:Key="InputBorderBrush" Color="#222733" />
+    <SolidColorBrush x:Key="DividerBrush" Color="#181C24" />
+    <SolidColorBrush x:Key="ScrollThumbBrush" Color="#2A303D" />
 
     <!-- ============================================================
-         Шапка таблиц: глубокая ночная вода с холодным нижним швом.
+         Шапка таблиц: плотный тёмный обсидиан с графитовым швом.
          ============================================================ -->
-    <SolidColorBrush x:Key="TableHeaderBackgroundBrush" Color="#112236" />
-    <SolidColorBrush x:Key="TableHeaderBorderBrush" Color="#204060" />
-    <SolidColorBrush x:Key="TableHeaderForegroundBrush" Color="#CBE3F7" />
+    <SolidColorBrush x:Key="TableHeaderBackgroundBrush" Color="#141820" />
+    <SolidColorBrush x:Key="TableHeaderBorderBrush" Color="#232936" />
+    <SolidColorBrush x:Key="TableHeaderForegroundBrush" Color="#CBD5E1" />
 
     <!-- ============================================================
-         Акцент: яркий ледяной циан вертикальных ламп бассейна.
+         Акцент: ледяной неон точечных светильников в тёмном зале.
          ============================================================ -->
     <SolidColorBrush x:Key="AccentBrush" Color="#38BDF8" />
-    <SolidColorBrush x:Key="AccentHoverBrush" Color="#0EA5E9" />
-    <SolidColorBrush x:Key="AccentSoftBrush" Color="#1F38BDF8" />
-    <SolidColorBrush x:Key="TextOnAccentBrush" Color="#04101C" />
+    <SolidColorBrush x:Key="AccentHoverBrush" Color="#0284C7" />
+    <SolidColorBrush x:Key="AccentSoftBrush" Color="#141923" />
+    <SolidColorBrush x:Key="TextOnAccentBrush" Color="#040B14" />
     <SolidColorBrush x:Key="FocusBrush" Color="#38BDF8" />
 
-    <!-- Активная вкладка: ледяная подсветка и светящийся текст. -->
-    <SolidColorBrush x:Key="NavActiveForegroundBrush" Color="#E0F2FE" />
+    <!-- Главная кнопка: насыщенный холодный сине-голубой неон. -->
+    <LinearGradientBrush x:Key="PrimaryButtonBrush" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#0EA5E9" Offset="0" />
+        <GradientStop Color="#38BDF8" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="PrimaryButtonHoverBrush" Color="#0284C7" />
 
-    <!-- Вторичная кнопка: мокрый тёмный кафель под лампой. -->
-    <SolidColorBrush x:Key="SecondaryButtonBackgroundBrush" Color="#102033" />
-    <SolidColorBrush x:Key="SecondaryButtonBorderBrush" Color="#214261" />
-    <SolidColorBrush x:Key="SecondaryButtonForegroundBrush" Color="#D8EBF8" />
+    <!-- Активная вкладка: угольная капсула с ледяной полоской слева. -->
+    <SolidColorBrush x:Key="NavActivePillBrush" Color="#141923" />
+    <SolidColorBrush x:Key="NavActiveStripBrush" Color="#38BDF8" />
+    <SolidColorBrush x:Key="NavActiveForegroundBrush" Color="#F1F5F9" />
+
+    <!-- Вторичная кнопка: графитово-чёрная поверхность под лампой. -->
+    <SolidColorBrush x:Key="SecondaryButtonBackgroundBrush" Color="#141820" />
+    <SolidColorBrush x:Key="SecondaryButtonBorderBrush" Color="#262C3A" />
+    <SolidColorBrush x:Key="SecondaryButtonForegroundBrush" Color="#E2E8F0" />
 
     <!-- ============================================================
-         Текст: светящийся ледяной белый и приглушённые подписи.
+         Текст: чистый холодный белый и нейтральные серые подписи.
          ============================================================ -->
-    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#E6F2FA" />
-    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#7E9BB5" />
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#F1F5F9" />
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#8B94A5" />
     <SolidColorBrush x:Key="TextMutedBrush" Color="#64748B" />
 
     <!-- ============================================================
-         Вывеска EasyKeep: светящаяся ледяная лампа ночного бассейна.
-         ShadowDepth=0 — не тень, а источник света вокруг текста.
+         Вывеска EasyKeep: холодный неоновый блик вокруг текста.
+         ShadowDepth=0 — не тень, а источник света.
          ============================================================ -->
-    <SolidColorBrush x:Key="BrandSignForegroundBrush" Color="#E0F2FE" />
+    <SolidColorBrush x:Key="BrandSignForegroundBrush" Color="#F1F5F9" />
     <DropShadowEffect x:Key="BrandSignEffect"
                       BlurRadius="12"
                       ShadowDepth="0"
@@ -160,51 +170,51 @@
                       Color="#38BDF8" />
 
     <!-- ============================================================
-         Логотип-ромб Night Poolrooms Dark: тёмный кафель бортика и
-         светящаяся ледяная гладь воды.
+         Логотип-ромб EasyKeep Dark: чёрно-графитовый бортик и
+         яркая светящаяся сине-голубая гладь воды.
          ============================================================ -->
-    <SolidColorBrush x:Key="LogoRimBrush" Color="#0E1B2B" />
-    <SolidColorBrush x:Key="LogoRimBorderBrush" Color="#234463" />
+    <SolidColorBrush x:Key="LogoRimBrush" Color="#0D1015" />
+    <SolidColorBrush x:Key="LogoRimBorderBrush" Color="#262C3A" />
     <LinearGradientBrush x:Key="LogoWaterBrush" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Color="#7DD3FC" Offset="0" />
-        <GradientStop Color="#0EA5E9" Offset="1" />
+        <GradientStop Color="#38BDF8" Offset="0" />
+        <GradientStop Color="#0284C7" Offset="1" />
     </LinearGradientBrush>
 
     <!-- ============================================================
          Светофор дефицита и служебные акценты.
          ============================================================ -->
-    <SolidColorBrush x:Key="SuccessBrush" Color="#2DD4BF" />
-    <SolidColorBrush x:Key="WarningBrush" Color="#FBBF24" />
-    <SolidColorBrush x:Key="DangerBrush" Color="#F87171" />
-    <SolidColorBrush x:Key="DangerHoverBrush" Color="#EF4444" />
-    <SolidColorBrush x:Key="InfoBrush" Color="#22D3EE" />
+    <SolidColorBrush x:Key="SuccessBrush" Color="#10B981" />
+    <SolidColorBrush x:Key="WarningBrush" Color="#F59E0B" />
+    <SolidColorBrush x:Key="DangerBrush" Color="#EF4444" />
+    <SolidColorBrush x:Key="DangerHoverBrush" Color="#DC2626" />
+    <SolidColorBrush x:Key="InfoBrush" Color="#38BDF8" />
     <SolidColorBrush x:Key="TextOnDangerBrush" Color="#1A0B0B" />
 
     <!-- ============================================================
-         Бейджи: ледяные индикаторы на тёмном сланце.
+         Бейджи: нейтральные графитовые подложки и цветные метки.
          ============================================================ -->
-    <SolidColorBrush x:Key="BadgeNeutralBackgroundBrush" Color="#152B44" />
-    <SolidColorBrush x:Key="BadgeNeutralForegroundBrush" Color="#CBE3F7" />
+    <SolidColorBrush x:Key="BadgeNeutralBackgroundBrush" Color="#1A1F29" />
+    <SolidColorBrush x:Key="BadgeNeutralForegroundBrush" Color="#CBD5E1" />
     <SolidColorBrush x:Key="BadgeCriticalBackgroundBrush" Color="#2A1518" />
-    <SolidColorBrush x:Key="BadgeCriticalForegroundBrush" Color="#F87171" />
+    <SolidColorBrush x:Key="BadgeCriticalForegroundBrush" Color="#EF4444" />
     <SolidColorBrush x:Key="BadgeWarningBackgroundBrush" Color="#2A2110" />
-    <SolidColorBrush x:Key="BadgeWarningForegroundBrush" Color="#FBBF24" />
-    <SolidColorBrush x:Key="BadgeSuccessBackgroundBrush" Color="#0F2A28" />
-    <SolidColorBrush x:Key="BadgeSuccessForegroundBrush" Color="#2DD4BF" />
-    <SolidColorBrush x:Key="BadgeInfoBackgroundBrush" Color="#102A3A" />
+    <SolidColorBrush x:Key="BadgeWarningForegroundBrush" Color="#F59E0B" />
+    <SolidColorBrush x:Key="BadgeSuccessBackgroundBrush" Color="#0F2A22" />
+    <SolidColorBrush x:Key="BadgeSuccessForegroundBrush" Color="#10B981" />
+    <SolidColorBrush x:Key="BadgeInfoBackgroundBrush" Color="#10222E" />
     <SolidColorBrush x:Key="BadgeInfoForegroundBrush" Color="#38BDF8" />
-    <SolidColorBrush x:Key="BadgeMutedBackgroundBrush" Color="#101B2A" />
+    <SolidColorBrush x:Key="BadgeMutedBackgroundBrush" Color="#15181F" />
     <SolidColorBrush x:Key="BadgeMutedForegroundBrush" Color="#64748B" />
 
     <!-- ============================================================
          Сегментированный переключатель темы.
          ============================================================ -->
-    <SolidColorBrush x:Key="SegmentTrackBrush" Color="#102033" />
-    <SolidColorBrush x:Key="SegmentThumbBrush" Color="#1C3752" />
+    <SolidColorBrush x:Key="SegmentTrackBrush" Color="#0E1116" />
+    <SolidColorBrush x:Key="SegmentThumbBrush" Color="#1F242E" />
 
     <!-- ============================================================
          Растровые эффекты отключены: глубину создают градиент,
-         1-px металлическая обводка и ледяные акценты.
+         1-px графитовая обводка и редкие ледяные акценты.
          Ключи сохранены для существующих DataTrigger'ов.
          ============================================================ -->
     <x:Null x:Key="GlowCriticalEffect" />
