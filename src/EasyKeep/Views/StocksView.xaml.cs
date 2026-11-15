@@ -11,7 +11,7 @@ namespace EasyKeep.Views;
 /// Экран «Остатки»: таблица остатков и «Светофор дефицита»
 /// с фильтром по складу и поиском по SKU/названию.
 /// </summary>
-public partial class StocksView : UserControl
+public partial class StocksView : UserControl, IRefreshableScreen
 {
     private List<DeficitRow> _rows = new();
     private bool _isReady;
@@ -22,7 +22,8 @@ public partial class StocksView : UserControl
         InitializeComponent();
 
         // XAML-строки переключаются словарём сами; кодовые сводки — по событию.
-        LocalizationManager.LanguageChanged += OnLanguageChanged;
+        // Подписка обновляется в Loaded: экран кэшируется и при повторном
+        // показе снова должен реагировать на смену языка.
         Unloaded += (_, _) => LocalizationManager.LanguageChanged -= OnLanguageChanged;
     }
 
@@ -45,6 +46,10 @@ public partial class StocksView : UserControl
 
     private async void StocksView_Loaded(object sender, RoutedEventArgs e)
     {
+        // Экран кэшируется: при повторном показе снова подписываемся на язык.
+        LocalizationManager.LanguageChanged -= OnLanguageChanged;
+        LocalizationManager.LanguageChanged += OnLanguageChanged;
+
         if (_isReady)
             return;
 
@@ -60,15 +65,25 @@ public partial class StocksView : UserControl
         }
     }
 
+    /// <summary>Повторный вход в раздел: обновляем данные без пересоздания XAML.</summary>
+    public async Task RefreshAsync()
+    {
+        if (!_isReady)
+            return;
+
+        await LoadRowsAsync();
+    }
+
     /// <summary>Загружает склады и добавляет пункт «Все склады».</summary>
     private async Task LoadWarehousesAsync()
     {
-        List<Warehouse> warehouses;
-
-        using (EasyKeepContext context = new())
+        // Контекст EF создаётся и используется целиком в фоновом потоке:
+        // UI-поток свободен и анимация перехода не прерывается.
+        List<Warehouse> warehouses = await Task.Run(async () =>
         {
-            warehouses = await new WarehouseService(context).GetWarehousesAsync();
-        }
+            using EasyKeepContext context = new();
+            return await new WarehouseService(context).GetWarehousesAsync();
+        });
 
         warehouses.Insert(0, new Warehouse { Id = 0, Name = LocalizationManager.Get("Common_WarehouseAll") });
         WarehouseFilter.ItemsSource = warehouses;
@@ -83,8 +98,12 @@ public partial class StocksView : UserControl
 
         try
         {
-            using EasyKeepContext context = new();
-            _rows = await new DeficitService(context).GetDeficitRowsAsync(warehouseId);
+            _rows = await Task.Run(async () =>
+            {
+                using EasyKeepContext context = new();
+                return await new DeficitService(context).GetDeficitRowsAsync(warehouseId);
+            });
+
             ApplyFilter();
         }
         catch (Exception)

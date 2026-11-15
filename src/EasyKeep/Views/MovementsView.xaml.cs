@@ -16,7 +16,7 @@ namespace EasyKeep.Views;
 /// Экран «Движения»: журнал операций, проведение IN/OUT/TRANSFER,
 /// «Командная строка склада» и авто-балансировка.
 /// </summary>
-public partial class MovementsView : UserControl
+public partial class MovementsView : UserControl, IRefreshableScreen
 {
     private readonly ObservableCollection<MovementLineModel> _lines = new();
     private List<Warehouse> _warehouses = new();
@@ -36,7 +36,8 @@ public partial class MovementsView : UserControl
         UpdateDocumentSummary();
 
         // XAML-строки переключаются словарём сами; кодовые — по событию.
-        LocalizationManager.LanguageChanged += OnLanguageChanged;
+        // Подписка обновляется в Loaded: экран кэшируется и при повторном
+        // показе снова должен реагировать на смену языка.
         Unloaded += (_, _) => LocalizationManager.LanguageChanged -= OnLanguageChanged;
     }
 
@@ -57,11 +58,15 @@ public partial class MovementsView : UserControl
         UpdateDocumentSummary();
 
         if (_isReady && IsLoaded)
-            LoadJournal();
+            _ = LoadJournalAsync();
     }
 
     private async void MovementsView_Loaded(object sender, RoutedEventArgs e)
     {
+        // Экран кэшируется: при повторном показе снова подписываемся на язык.
+        LocalizationManager.LanguageChanged -= OnLanguageChanged;
+        LocalizationManager.LanguageChanged += OnLanguageChanged;
+
         if (_isReady)
             return;
 
@@ -72,7 +77,7 @@ public partial class MovementsView : UserControl
         {
             await LoadWarehousesAsync();
             _isReady = true;
-            LoadJournal();
+            await LoadJournalAsync();
             CommandLineBox.Focus();
         }
         catch (Exception)
@@ -81,13 +86,23 @@ public partial class MovementsView : UserControl
         }
     }
 
+    /// <summary>Повторный вход в раздел: обновляем журнал без пересоздания XAML.</summary>
+    public async Task RefreshAsync()
+    {
+        if (!_isReady)
+            return;
+
+        await LoadJournalAsync();
+    }
+
     /// <summary>Загружает склады для формы, фильтра журнала и подписей.</summary>
     private async Task LoadWarehousesAsync()
     {
-        using (EasyKeepContext context = new())
+        _warehouses = await Task.Run(async () =>
         {
-            _warehouses = await new WarehouseService(context).GetWarehousesAsync();
-        }
+            using EasyKeepContext context = new();
+            return await new WarehouseService(context).GetWarehousesAsync();
+        });
 
         SourceWarehouse.ItemsSource = _warehouses;
         TargetWarehouse.ItemsSource = _warehouses;
@@ -307,7 +322,7 @@ public partial class MovementsView : UserControl
                 MessageBoxImage.Information);
 
             ClearDocument();
-            LoadJournal();
+            await LoadJournalAsync();
         }
         catch (InsufficientStockException shortage)
         {
@@ -541,12 +556,12 @@ public partial class MovementsView : UserControl
             MessageBoxButton.OK,
             failures.Count == 0 ? MessageBoxImage.Information : MessageBoxImage.Warning);
 
-        LoadJournal();
+        await LoadJournalAsync();
     }
 
     // ==================== Журнал операций ====================
 
-    private void LoadJournal()
+    private async Task LoadJournalAsync()
     {
         DateTime from = FromDatePicker.SelectedDate?.Date ?? DateTime.Today.AddDays(-30);
         DateTime to = (ToDatePicker.SelectedDate?.Date ?? DateTime.Today).AddDays(1);
@@ -568,11 +583,17 @@ public partial class MovementsView : UserControl
         if (warehouseId == 0)
             warehouseId = null;
 
+        string search = JournalSearchBox.Text;
+
         try
         {
-            using EasyKeepContext context = new();
-            List<MovementJournalRow> rows = new MovementService(context)
-                .GetJournal(from, to, type, warehouseId, JournalSearchBox.Text);
+            // ADO.NET-запрос синхронный, поэтому уходим в фоновый поток
+            // целиком: UI-поток в этот момент рисует анимацию перехода.
+            List<MovementJournalRow> rows = await Task.Run(() =>
+            {
+                using EasyKeepContext context = new();
+                return new MovementService(context).GetJournal(from, to, type, warehouseId, search);
+            });
 
             JournalGrid.ItemsSource = rows;
             JournalSummaryText.Text = string.Format(LocalizationManager.Get("Mov_JournalSummary"), rows.Count);
@@ -590,7 +611,7 @@ public partial class MovementsView : UserControl
         if (!_isReady || !IsLoaded)
             return;
 
-        LoadJournal();
+        _ = LoadJournalAsync();
     }
 
     private void JournalSearchBox_KeyDown(object sender, KeyEventArgs e)
@@ -599,12 +620,12 @@ public partial class MovementsView : UserControl
             return;
 
         e.Handled = true;
-        LoadJournal();
+        _ = LoadJournalAsync();
     }
 
-    private void RefreshJournalButton_Click(object sender, RoutedEventArgs e)
+    private async void RefreshJournalButton_Click(object sender, RoutedEventArgs e)
     {
-        LoadJournal();
+        await LoadJournalAsync();
     }
 
     // ==================== Вспомогательные методы ====================

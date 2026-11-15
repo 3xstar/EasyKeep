@@ -1052,6 +1052,8 @@
         <Setter Property="EnableColumnVirtualization" Value="True" />
         <Setter Property="VirtualizingPanel.IsVirtualizing" Value="True" />
         <Setter Property="VirtualizingPanel.VirtualizationMode" Value="Recycling" />
+        <!-- Попиксельная прокрутка: строки не прыгают целыми шагами. -->
+        <Setter Property="VirtualizingPanel.ScrollUnit" Value="Pixel" />
         <!-- Сквозная прокрутка страницы: у границы внутренней прокрутки
                  событие колеса уходит родительскому ScrollViewer страницы. -->
         <EventSetter Event="PreviewMouseWheel" Handler="DataGrid_PreviewMouseWheel" />

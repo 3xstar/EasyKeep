@@ -23,6 +23,10 @@ public partial class MainWindow : Window
     private bool _isNavCompact;
     private string _currentSection = "stocks";
 
+    // Экраны создаются один раз: парсинг XAML и построение визуального
+    // дерева больше не повторяются при каждом переключении вкладки.
+    private readonly Dictionary<string, UserControl> _screens = new();
+
     public MainWindow()
     {
         InitializeComponent();
@@ -85,14 +89,15 @@ public partial class MainWindow : Window
         _currentSection = section;
         ApplySectionTitle(section);
 
-        UserControl? view = section switch
+        bool isCached = _screens.TryGetValue(section, out UserControl? view);
+
+        if (!isCached)
         {
-            "stocks" => new StocksView(),
-            "movements" => new MovementsView(),
-            "catalog" => new CatalogView(),
-            "reports" => new ReportsView(),
-            _ => null
-        };
+            view = CreateSectionView(section);
+
+            if (view is not null)
+                _screens[section] = view;
+        }
 
         if (view is not null)
         {
@@ -100,6 +105,12 @@ public partial class MainWindow : Window
             ContentArea.Content = view;
             ContentArea.Visibility = Visibility.Visible;
             AnimateContentEntrance();
+
+            // Повторный вход: визуальное дерево уже готово, а данные
+            // обновляются в фоне — анимация не ждёт запрос к БД.
+            if (isCached && view is IRefreshableScreen refreshable)
+                _ = refreshable.RefreshAsync();
+
             return;
         }
 
@@ -109,6 +120,15 @@ public partial class MainWindow : Window
         PlaceholderPanel.Visibility = Visibility.Visible;
         PlaceholderTitle.Text = PageTitleText.Text;
     }
+
+    private static UserControl? CreateSectionView(string section) => section switch
+    {
+        "stocks" => new StocksView(),
+        "movements" => new MovementsView(),
+        "catalog" => new CatalogView(),
+        "reports" => new ReportsView(),
+        _ => null
+    };
 
     /// <summary>Заголовок и подзаголовок раздела — по текущему языку.</summary>
     private void ApplySectionTitle(string section)

@@ -13,7 +13,7 @@ namespace EasyKeep.Views;
 /// <summary>
 /// Экран «Каталог»: CRUD товаров и категорий, поиск и панель «Рентген товара».
 /// </summary>
-public partial class CatalogView : UserControl
+public partial class CatalogView : UserControl, IRefreshableScreen
 {
     private List<Item> _items = new();
     private List<Category> _categories = new();
@@ -24,7 +24,8 @@ public partial class CatalogView : UserControl
         InitializeComponent();
 
         // XAML-строки переключаются словарём сами; кодовые — по событию.
-        LocalizationManager.LanguageChanged += OnLanguageChanged;
+        // Подписка обновляется в Loaded: экран кэшируется и при повторном
+        // показе снова должен реагировать на смену языка.
         Unloaded += (_, _) => LocalizationManager.LanguageChanged -= OnLanguageChanged;
     }
 
@@ -59,7 +60,20 @@ public partial class CatalogView : UserControl
 
     private async void CatalogView_Loaded(object sender, RoutedEventArgs e)
     {
+        // Экран кэшируется: при повторном показе снова подписываемся на язык.
+        LocalizationManager.LanguageChanged -= OnLanguageChanged;
+        LocalizationManager.LanguageChanged += OnLanguageChanged;
+
         if (_isReady)
+            return;
+
+        await ReloadAsync();
+    }
+
+    /// <summary>Повторный вход в раздел: обновляем данные без пересоздания XAML.</summary>
+    public async Task RefreshAsync()
+    {
+        if (!_isReady)
             return;
 
         await ReloadAsync();
@@ -70,17 +84,32 @@ public partial class CatalogView : UserControl
     {
         try
         {
-            using EasyKeepContext context = new();
-            CatalogService service = new(context);
+            // Контекст EF создаётся и используется целиком в фоновом потоке.
+            (List<Category> categories, List<Item> items) = await Task.Run(async () =>
+            {
+                using EasyKeepContext context = new();
+                CatalogService service = new(context);
 
-            _categories = await service.GetCategoriesAsync();
-            _items = await service.GetItemsAsync();
+                List<Category> loadedCategories = await service.GetCategoriesAsync();
+                List<Item> loadedItems = await service.GetItemsAsync();
+                return (loadedCategories, loadedItems);
+            });
+
+            _categories = categories;
+            _items = items;
+
+            int? selectedCategoryId = (CategoryFilter.SelectedItem as Category)?.Id;
 
             List<Category> filterCategories = new(_categories);
             filterCategories.Insert(0, new Category { Id = 0, Name = LocalizationManager.Get("Common_CategoryAll") });
 
             CategoryFilter.ItemsSource = filterCategories;
-            CategoryFilter.SelectedIndex = 0;
+
+            int selectedIndex = selectedCategoryId is > 0
+                ? filterCategories.FindIndex(category => category.Id == selectedCategoryId.Value)
+                : 0;
+
+            CategoryFilter.SelectedIndex = selectedIndex >= 0 ? selectedIndex : 0;
 
             _isReady = true;
             ApplyFilter();
@@ -263,11 +292,11 @@ public partial class CatalogView : UserControl
 
         try
         {
-            List<ItemMovementRow> history;
-            using (EasyKeepContext context = new())
+            List<ItemMovementRow> history = await Task.Run(() =>
             {
-                history = new CatalogService(context).GetItemHistory(item.Id);
-            }
+                using EasyKeepContext context = new();
+                return new CatalogService(context).GetItemHistory(item.Id);
+            });
 
             // Пользователь мог выбрать другой товар, пока шла загрузка.
             if (ItemsGrid.SelectedItem is not Item current || current.Id != item.Id)

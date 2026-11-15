@@ -8,7 +8,7 @@ namespace EasyKeep.Views;
 /// <summary>
 /// Экран «Отчёт»: сводка остатков по складам и рейтинг активных товаров.
 /// </summary>
-public partial class ReportsView : UserControl
+public partial class ReportsView : UserControl, IRefreshableScreen
 {
     private bool _isReady;
 
@@ -17,7 +17,8 @@ public partial class ReportsView : UserControl
         InitializeComponent();
 
         // XAML-строки переключаются словарём сами; кодовые — по событию.
-        LocalizationManager.LanguageChanged += OnLanguageChanged;
+        // Подписка обновляется в Loaded: экран кэшируется и при повторном
+        // показе снова должен реагировать на смену языка.
         Unloaded += (_, _) => LocalizationManager.LanguageChanged -= OnLanguageChanged;
     }
 
@@ -27,12 +28,16 @@ public partial class ReportsView : UserControl
         if (!_isReady || !IsLoaded)
             return;
 
-        LoadStockReport();
-        LoadTopItems();
+        _ = LoadStockReportAsync();
+        _ = LoadTopItemsAsync();
     }
 
-    private void ReportsView_Loaded(object sender, RoutedEventArgs e)
+    private async void ReportsView_Loaded(object sender, RoutedEventArgs e)
     {
+        // Экран кэшируется: при повторном показе снова подписываемся на язык.
+        LocalizationManager.LanguageChanged -= OnLanguageChanged;
+        LocalizationManager.LanguageChanged += OnLanguageChanged;
+
         if (_isReady)
             return;
 
@@ -40,15 +45,27 @@ public partial class ReportsView : UserControl
         FromDatePicker.SelectedDate = DateTime.Today.AddDays(-30);
         ToDatePicker.SelectedDate = DateTime.Today;
 
-        LoadStockReport();
-        LoadTopItems();
+        await LoadStockReportAsync();
+        await LoadTopItemsAsync();
     }
 
-    private void LoadStockReport()
+    /// <summary>Повторный вход в раздел: обновляем отчёты без пересоздания XAML.</summary>
+    public async Task RefreshAsync()
+    {
+        if (!_isReady)
+            return;
+
+        await LoadStockReportAsync();
+        await LoadTopItemsAsync();
+    }
+
+    private async Task LoadStockReportAsync()
     {
         try
         {
-            List<WarehouseStockRow> rows = new ReportService().GetStockReport();
+            // ADO.NET-запрос синхронный: выполняем его в фоновом потоке,
+            // чтобы не задерживать кадр анимации перехода.
+            List<WarehouseStockRow> rows = await Task.Run(() => new ReportService().GetStockReport());
 
             StockGrid.ItemsSource = rows;
             WarehouseCountText.Text = rows.Count.ToString("N0");
@@ -64,7 +81,7 @@ public partial class ReportsView : UserControl
         }
     }
 
-    private void LoadTopItems()
+    private async Task LoadTopItemsAsync()
     {
         DateTime from = FromDatePicker.SelectedDate?.Date ?? DateTime.Today.AddDays(-30);
         DateTime to = (ToDatePicker.SelectedDate?.Date ?? DateTime.Today).AddDays(1);
@@ -81,7 +98,7 @@ public partial class ReportsView : UserControl
 
         try
         {
-            List<TopItemRow> rows = new ReportService().GetTopItems(from, to);
+            List<TopItemRow> rows = await Task.Run(() => new ReportService().GetTopItems(from, to));
 
             TopItemsGrid.ItemsSource = rows;
             TopSummaryText.Text = string.Format(LocalizationManager.Get("Rep_TopSummary"), rows.Count);
@@ -134,13 +151,13 @@ public partial class ReportsView : UserControl
         LeaderDetailText.Text = hint;
     }
 
-    private void RefreshStockButton_Click(object sender, RoutedEventArgs e)
+    private async void RefreshStockButton_Click(object sender, RoutedEventArgs e)
     {
-        LoadStockReport();
+        await LoadStockReportAsync();
     }
 
-    private void BuildTopButton_Click(object sender, RoutedEventArgs e)
+    private async void BuildTopButton_Click(object sender, RoutedEventArgs e)
     {
-        LoadTopItems();
+        await LoadTopItemsAsync();
     }
 }

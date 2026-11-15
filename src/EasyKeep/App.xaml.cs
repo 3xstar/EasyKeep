@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Media.Animation;
 using EasyKeep.Services;
 
 namespace EasyKeep;
@@ -12,6 +13,12 @@ public partial class App : Application
 {
     protected override void OnStartup(StartupEventArgs e)
     {
+        // Все анимации идут на 120 Гц: переходы остаются плавными даже
+        // на 120-герцовых экранах и не пропускают кадры при скролле.
+        Timeline.DesiredFrameRateProperty.OverrideMetadata(
+            typeof(Timeline),
+            new FrameworkPropertyMetadata { DefaultValue = 120 });
+
         UserPreferences preferences = PreferencesService.Load();
         ThemeService.Apply(ThemeService.Parse(preferences.Theme));
         LocalizationManager.Apply(LocalizationManager.Parse(preferences.Language));
