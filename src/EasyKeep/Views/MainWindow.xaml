@@ -97,83 +97,99 @@
                         </Button>
                     </Grid>
 
-                    <RadioButton x:Name="StocksNav"
-                                 GroupName="Sections"
-                                 Style="{StaticResource NavButton}"
-                                 Tag="stocks"
-                                 ToolTip="{DynamicResource Loc_Nav_Stocks}"
-                                 AutomationProperties.Name="Остатки"
-                                 Checked="NavButton_Checked">
-                        <StackPanel Orientation="Horizontal">
-                            <Path Data="M4,20 H20 M6,20 V13 H9 V20 M11,20 V8 H14 V20 M16,20 V10 H19 V20"
-                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
-                                  StrokeThickness="1.7"
-                                  StrokeLineJoin="Round"
-                                  StrokeStartLineCap="Round"
-                                  StrokeEndLineCap="Round"
-                                  Width="19" Height="19"
-                                  Stretch="Uniform" />
-                            <TextBlock x:Name="StocksNavText" Text="{DynamicResource Loc_Nav_Stocks}" Margin="12,0,0,0" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </RadioButton>
+                    <!-- Общая капсула активного пункта: скользит между вкладками. -->
+                    <Grid x:Name="NavItemsHost">
+                        <Border x:Name="NavActivePill"
+                                Height="36"
+                                CornerRadius="8"
+                                Background="{DynamicResource AccentSoftBrush}"
+                                VerticalAlignment="Top"
+                                IsHitTestVisible="False">
+                            <Border.RenderTransform>
+                                <TranslateTransform x:Name="NavActivePillShift" Y="0" />
+                            </Border.RenderTransform>
+                        </Border>
 
-                    <RadioButton x:Name="MovementsNav"
-                                 GroupName="Sections"
-                                 Style="{StaticResource NavButton}"
-                                 Tag="movements"
-                                 ToolTip="{DynamicResource Loc_Nav_Movements}"
-                                 AutomationProperties.Name="Движения"
-                                 Checked="NavButton_Checked">
-                        <StackPanel Orientation="Horizontal">
-                            <Path Data="M4,7 H16 M13,4 L17,7 L13,10 M20,17 H8 M11,14 L7,17 L11,20"
-                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
-                                  StrokeThickness="1.7"
-                                  StrokeLineJoin="Round"
-                                  StrokeStartLineCap="Round"
-                                  StrokeEndLineCap="Round"
-                                  Width="19" Height="19"
-                                  Stretch="Uniform" />
-                            <TextBlock x:Name="MovementsNavText" Text="{DynamicResource Loc_Nav_Movements}" Margin="12,0,0,0" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </RadioButton>
+                        <StackPanel>
+                            <RadioButton x:Name="StocksNav"
+                                         GroupName="Sections"
+                                         Style="{StaticResource NavButton}"
+                                         Tag="stocks"
+                                         ToolTip="{DynamicResource Loc_Nav_Stocks}"
+                                         AutomationProperties.Name="Остатки"
+                                         Checked="NavButton_Checked">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M4,20 H20 M6,20 V13 H9 V20 M11,20 V8 H14 V20 M16,20 V10 H19 V20"
+                                          Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
+                                          StrokeThickness="1.7"
+                                          StrokeLineJoin="Round"
+                                          StrokeStartLineCap="Round"
+                                          StrokeEndLineCap="Round"
+                                          Width="19" Height="19"
+                                          Stretch="Uniform" />
+                                    <TextBlock x:Name="StocksNavText" Text="{DynamicResource Loc_Nav_Stocks}" Margin="12,0,0,0" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </RadioButton>
 
-                    <RadioButton x:Name="CatalogNav"
-                                 GroupName="Sections"
-                                 Style="{StaticResource NavButton}"
-                                 Tag="catalog"
-                                 ToolTip="{DynamicResource Loc_Nav_Catalog}"
-                                 AutomationProperties.Name="Каталог"
-                                 Checked="NavButton_Checked">
-                        <StackPanel Orientation="Horizontal">
-                            <Path Data="M4,7 L12,3 L20,7 V17 L12,21 L4,17 Z M4,7 L12,11 L20,7 M12,11 V21"
-                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
-                                  StrokeThickness="1.6"
-                                  StrokeLineJoin="Round"
-                                  StrokeStartLineCap="Round"
-                                  StrokeEndLineCap="Round"
-                                  Width="19" Height="19"
-                                  Stretch="Uniform" />
-                            <TextBlock x:Name="CatalogNavText" Text="{DynamicResource Loc_Nav_Catalog}" Margin="12,0,0,0" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </RadioButton>
+                            <RadioButton x:Name="MovementsNav"
+                                         GroupName="Sections"
+                                         Style="{StaticResource NavButton}"
+                                         Tag="movements"
+                                         ToolTip="{DynamicResource Loc_Nav_Movements}"
+                                         AutomationProperties.Name="Движения"
+                                         Checked="NavButton_Checked">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M4,7 H16 M13,4 L17,7 L13,10 M20,17 H8 M11,14 L7,17 L11,20"
+                                          Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
+                                          StrokeThickness="1.7"
+                                          StrokeLineJoin="Round"
+                                          StrokeStartLineCap="Round"
+                                          StrokeEndLineCap="Round"
+                                          Width="19" Height="19"
+                                          Stretch="Uniform" />
+                                    <TextBlock x:Name="MovementsNavText" Text="{DynamicResource Loc_Nav_Movements}" Margin="12,0,0,0" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </RadioButton>
 
-                    <RadioButton x:Name="ReportsNav"
-                                 GroupName="Sections"
-                                 Style="{StaticResource NavButton}"
-                                 Tag="reports"
-                                 ToolTip="{DynamicResource Loc_Nav_Reports}"
-                                 AutomationProperties.Name="Отчёт"
-                                 Checked="NavButton_Checked">
-                        <StackPanel Orientation="Horizontal">
-                            <Path Data="M12,3 A9,9 0 1 0 21,12 H12 Z M12,3 V12 H21 A9,9 0 0 0 12,3"
-                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
-                                  StrokeThickness="1.6"
-                                  StrokeLineJoin="Round"
-                                  Width="19" Height="19"
-                                  Stretch="Uniform" />
-                            <TextBlock x:Name="ReportsNavText" Text="{DynamicResource Loc_Nav_Reports}" Margin="12,0,0,0" VerticalAlignment="Center" />
+                            <RadioButton x:Name="CatalogNav"
+                                         GroupName="Sections"
+                                         Style="{StaticResource NavButton}"
+                                         Tag="catalog"
+                                         ToolTip="{DynamicResource Loc_Nav_Catalog}"
+                                         AutomationProperties.Name="Каталог"
+                                         Checked="NavButton_Checked">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M4,7 L12,3 L20,7 V17 L12,21 L4,17 Z M4,7 L12,11 L20,7 M12,11 V21"
+                                          Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
+                                          StrokeThickness="1.6"
+                                          StrokeLineJoin="Round"
+                                          StrokeStartLineCap="Round"
+                                          StrokeEndLineCap="Round"
+                                          Width="19" Height="19"
+                                          Stretch="Uniform" />
+                                    <TextBlock x:Name="CatalogNavText" Text="{DynamicResource Loc_Nav_Catalog}" Margin="12,0,0,0" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </RadioButton>
+
+                            <RadioButton x:Name="ReportsNav"
+                                         GroupName="Sections"
+                                         Style="{StaticResource NavButton}"
+                                         Tag="reports"
+                                         ToolTip="{DynamicResource Loc_Nav_Reports}"
+                                         AutomationProperties.Name="Отчёт"
+                                         Checked="NavButton_Checked">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M12,3 A9,9 0 1 0 21,12 H12 Z M12,3 V12 H21 A9,9 0 0 0 12,3"
+                                          Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
+                                          StrokeThickness="1.6"
+                                          StrokeLineJoin="Round"
+                                          Width="19" Height="19"
+                                          Stretch="Uniform" />
+                                    <TextBlock x:Name="ReportsNavText" Text="{DynamicResource Loc_Nav_Reports}" Margin="12,0,0,0" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </RadioButton>
                         </StackPanel>
-                    </RadioButton>
+                    </Grid>
                 </StackPanel>
 
                 <!-- Подвал меню: состояние БД и отдельная зона персонализации -->
@@ -225,15 +241,20 @@
                        VerticalOffset="-8"
                        AllowsTransparency="True"
                        StaysOpen="False"
-                       PopupAnimation="Fade">
-                    <Border Width="278"
+                       Opened="PersonalizationPopup_Opened">
+                    <Border x:Name="PersonalizationCard"
+                            Width="278"
                             Background="{DynamicResource PopupBackgroundBrush}"
                             BorderBrush="{DynamicResource CardBorderBrush}"
                             BorderThickness="1"
                             CornerRadius="14"
                             Padding="16"
                             Effect="{DynamicResource PopupShadowEffect}"
+                            RenderTransformOrigin="0.5,1"
                             PreviewKeyDown="Window_PreviewKeyDown">
+                        <Border.RenderTransform>
+                            <ScaleTransform x:Name="PersonalizationScale" ScaleX="1" ScaleY="1" />
+                        </Border.RenderTransform>
                         <StackPanel>
                             <TextBlock Text="{DynamicResource Loc_Shell_Personalization}" Style="{StaticResource SectionTitleText}" />
                             <TextBlock Text="{DynamicResource Loc_Shell_PersonalizationTooltip}"
@@ -372,11 +393,17 @@
                             </StackPanel>
                         </Border>
 
-                        <ContentControl x:Name="ContentArea" Visibility="Collapsed">
+                        <!-- Новый экран: проявляется и мягко выезжает снизу. -->
+                        <ContentControl x:Name="CurrentViewHost" Visibility="Collapsed">
                             <ContentControl.RenderTransform>
                                 <TranslateTransform x:Name="ContentShift" Y="0" />
                             </ContentControl.RenderTransform>
                         </ContentControl>
+
+                        <!-- Уходящий экран: лежит сверху и плавно растворяется. -->
+                        <ContentControl x:Name="PreviousViewHost"
+                                        Opacity="0"
+                                        IsHitTestVisible="False" />
                     </Grid>
                 </Grid>
             </ScrollViewer>

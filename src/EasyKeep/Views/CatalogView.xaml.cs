@@ -329,7 +329,7 @@ public partial class CatalogView : UserControl, IRefreshableScreen
         QuinticEase easing = new() { EasingMode = EasingMode.EaseOut };
         TimeSpan duration = TimeSpan.FromMilliseconds(200);
 
-        XRayPanel.BeginAnimation(OpacityProperty, new DoubleAnimation(0.7, 1, duration)
+        XRayPanel.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, duration)
         {
             EasingFunction = easing
         });

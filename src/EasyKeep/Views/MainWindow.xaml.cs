@@ -4,6 +4,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 using EasyKeep.Services;
 
 namespace EasyKeep.Views;
@@ -82,6 +83,7 @@ public partial class MainWindow : Window
             return;
 
         ShowSection(section);
+        MoveActivePill(sender as RadioButton, animate: true);
     }
 
     private void ShowSection(string section)
@@ -99,26 +101,132 @@ public partial class MainWindow : Window
                 _screens[section] = view;
         }
 
-        if (view is not null)
+        if (view is null)
         {
-            PlaceholderPanel.Visibility = Visibility.Collapsed;
-            ContentArea.Content = view;
-            ContentArea.Visibility = Visibility.Visible;
-            AnimateContentEntrance();
-
-            // Повторный вход: визуальное дерево уже готово, а данные
-            // обновляются в фоне — анимация не ждёт запрос к БД.
-            if (isCached && view is IRefreshableScreen refreshable)
-                _ = refreshable.RefreshAsync();
-
+            // Остальные экраны подключаются отдельными шагами.
+            CurrentViewHost.Content = null;
+            PreviousViewHost.Content = null;
+            PreviousViewHost.Opacity = 0;
+            CurrentViewHost.Visibility = Visibility.Collapsed;
+            PlaceholderPanel.Visibility = Visibility.Visible;
+            PlaceholderTitle.Text = PageTitleText.Text;
             return;
         }
 
-        // Остальные экраны подключаются отдельными шагами.
-        ContentArea.Content = null;
-        ContentArea.Visibility = Visibility.Collapsed;
-        PlaceholderPanel.Visibility = Visibility.Visible;
-        PlaceholderTitle.Text = PageTitleText.Text;
+        PlaceholderPanel.Visibility = Visibility.Collapsed;
+
+        // Быстрое переключение туда-обратно: экран ещё затухает в
+        // PreviousViewHost — забираем его оттуда, чтобы не показать дважды.
+        if (ReferenceEquals(PreviousViewHost.Content, view))
+        {
+            PreviousViewHost.BeginAnimation(OpacityProperty, null);
+            PreviousViewHost.Opacity = 0;
+            PreviousViewHost.Content = null;
+        }
+
+        // Старый экран уходит на верхний слой и растворяется, новый
+        // занимает рабочую область и проявляется снизу.
+        object? outgoing = CurrentViewHost.Content;
+        if (outgoing is not null)
+        {
+            CurrentViewHost.Content = null;
+            PreviousViewHost.BeginAnimation(OpacityProperty, null);
+            PreviousViewHost.Opacity = 1;
+            PreviousViewHost.Content = outgoing;
+        }
+
+        CurrentViewHost.BeginAnimation(OpacityProperty, null);
+        CurrentViewHost.Content = view;
+        CurrentViewHost.Visibility = Visibility.Visible;
+        CurrentViewHost.Opacity = 0;
+
+        ContentShift.BeginAnimation(TranslateTransform.YProperty, null);
+        ContentShift.Y = 10;
+
+        // Повторный вход: визуальное дерево уже готово, а данные
+        // обновляются в фоне — анимация не ждёт запрос к БД.
+        if (isCached && view is IRefreshableScreen refreshable)
+            _ = refreshable.RefreshAsync();
+
+        // Кадр с новым экраном отрисовывается до старта анимации:
+        // переход начинается без рывка и без пустого кадра.
+        Dispatcher.BeginInvoke(DispatcherPriority.Render, new Action(AnimateSectionChange));
+    }
+
+    /// <summary>
+    /// Двухслойный переход: старый экран гаснет за 180 мс (CubicEase
+    /// EaseOut), новый проявляется и выезжает снизу за 220 мс
+    /// (QuinticEase EaseOut). Анимируются только GPU-свойства.
+    /// </summary>
+    private void AnimateSectionChange()
+    {
+        CurrentViewHost.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(220))
+        {
+            EasingFunction = new QuinticEase { EasingMode = EasingMode.EaseOut }
+        });
+
+        ContentShift.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(10, 0, TimeSpan.FromMilliseconds(220))
+        {
+            EasingFunction = new QuinticEase { EasingMode = EasingMode.EaseOut }
+        });
+
+        if (PreviousViewHost.Content is not { } fading)
+            return;
+
+        DoubleAnimation fadeOut = new(1, 0, TimeSpan.FromMilliseconds(180))
+        {
+            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+        };
+
+        fadeOut.Completed += (_, _) =>
+        {
+            // За время анимации пользователь мог переключиться ещё раз.
+            if (!ReferenceEquals(PreviousViewHost.Content, fading))
+                return;
+
+            PreviousViewHost.Content = null;
+            PreviousViewHost.BeginAnimation(OpacityProperty, null);
+            PreviousViewHost.Opacity = 0;
+        };
+
+        PreviousViewHost.BeginAnimation(OpacityProperty, fadeOut);
+    }
+
+    /// <summary>
+    /// Скользящая капсула активного пункта: 200 мс QuinticEase EaseOut.
+    /// Позиция берётся из реального расположения пункта в меню, поэтому
+    /// капсула остаётся точной при любом масштабе интерфейса.
+    /// </summary>
+    private void MoveActivePill(RadioButton? item, bool animate)
+    {
+        if (item is null)
+            return;
+
+        Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(() =>
+        {
+            if (item.IsChecked != true || !item.IsLoaded)
+                return;
+
+            GeneralTransform transform = item.TransformToAncestor(NavItemsHost);
+            Point origin = transform.Transform(new Point(0, 0));
+
+            NavActivePill.Height = item.ActualHeight;
+
+            DoubleAnimation slide = new(NavActivePillShift.Y, origin.Y, TimeSpan.FromMilliseconds(200))
+            {
+                EasingFunction = new QuinticEase { EasingMode = EasingMode.EaseOut }
+            };
+
+            if (animate)
+            {
+                NavActivePillShift.BeginAnimation(TranslateTransform.YProperty, slide);
+            }
+            else
+            {
+                NavActivePillShift.BeginAnimation(TranslateTransform.YProperty, null);
+                NavActivePillShift.Y = origin.Y;
+            }
+        }));
     }
 
     private static UserControl? CreateSectionView(string section) => section switch
@@ -146,29 +254,6 @@ public partial class MainWindow : Window
         _ => ("Section_Stocks_Title", "Section_Stocks_Subtitle")
     };
 
-    /// <summary>
-    /// Фирменный вход экрана: 180 мс, прозрачность 0.35 → 1 и микросдвиг
-    /// на 6 px вниз с QuinticEase EaseOut — мгновенный старт и мягкое
-    /// торможение в конце. Анимируются только GPU-свойства (Opacity,
-    /// RenderTransform); итоговое значение удерживается, поэтому текст
-    /// остаётся бритвенно чётким.
-    /// </summary>
-    private void AnimateContentEntrance()
-    {
-        QuinticEase easing = new() { EasingMode = EasingMode.EaseOut };
-        TimeSpan duration = TimeSpan.FromMilliseconds(180);
-
-        ContentArea.BeginAnimation(OpacityProperty, new DoubleAnimation(0.35, 1, duration)
-        {
-            EasingFunction = easing
-        });
-
-        ContentShift.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(6, 0, duration)
-        {
-            EasingFunction = easing
-        });
-    }
-
     // ==================== Персонализация ====================
 
     /// <summary>
@@ -194,9 +279,13 @@ public partial class MainWindow : Window
             {
                 From = NavColumn.Width,
                 To = new GridLength(compact ? CompactNavWidth : ExpandedNavWidth),
-                Duration = TimeSpan.FromMilliseconds(200),
+                Duration = TimeSpan.FromMilliseconds(160),
                 EasingFunction = new QuinticEase { EasingMode = EasingMode.EaseOut }
             });
+
+        // Высота пунктов не меняется, но после смены ширины колонки
+        // пересчитываем капсулу на тот же Loaded-приоритет.
+        MoveActivePill(GetCheckedNavItem(), animate: false);
 
         NavPanel.Margin = compact
             ? new Thickness(8, 18, 8, 14)
@@ -240,7 +329,44 @@ public partial class MainWindow : Window
 
     private void PersonalizationButton_Click(object sender, RoutedEventArgs e)
     {
+        if (!PersonalizationPopup.IsOpen)
+            ResetPersonalizationPopupAnimation();
+
         PersonalizationPopup.IsOpen = !PersonalizationPopup.IsOpen;
+    }
+
+    /// <summary>Сбрасывает капсулу попапа перед открытием: масштаб 0.95, прозрачность 0.</summary>
+    private void ResetPersonalizationPopupAnimation()
+    {
+        PersonalizationCard.BeginAnimation(OpacityProperty, null);
+        PersonalizationScale.BeginAnimation(ScaleTransform.ScaleXProperty, null);
+        PersonalizationScale.BeginAnimation(ScaleTransform.ScaleYProperty, null);
+
+        PersonalizationCard.Opacity = 0;
+        PersonalizationScale.ScaleX = 0.95;
+        PersonalizationScale.ScaleY = 0.95;
+    }
+
+    /// <summary>Попап персонализации проявляется и мягко увеличивается за 160 мс.</summary>
+    private void PersonalizationPopup_Opened(object? sender, EventArgs e)
+    {
+        QuinticEase easing = new() { EasingMode = EasingMode.EaseOut };
+        TimeSpan duration = TimeSpan.FromMilliseconds(160);
+
+        PersonalizationCard.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, duration)
+        {
+            EasingFunction = easing
+        });
+
+        PersonalizationScale.BeginAnimation(ScaleTransform.ScaleXProperty, new DoubleAnimation(0.95, 1, duration)
+        {
+            EasingFunction = easing
+        });
+
+        PersonalizationScale.BeginAnimation(ScaleTransform.ScaleYProperty, new DoubleAnimation(0.95, 1, duration)
+        {
+            EasingFunction = easing
+        });
     }
 
     private void ThemeOption_Checked(object sender, RoutedEventArgs e)
@@ -352,8 +478,26 @@ public partial class MainWindow : Window
         resources["TableHintMargin"] = new Thickness(16.0 * factor, 44.0 * factor, 16.0 * factor, 16.0 * factor);
         ScalePercentText.Text = $"{_scalePercent}%";
 
+        // Высоты пунктов меню зависят от шрифта — возвращаем капсулу на место.
+        MoveActivePill(GetCheckedNavItem(), animate: false);
+
         if (save)
             SavePreferences();
+    }
+
+    /// <summary>Текущий выбранный пункт меню — для позиционирования капсулы.</summary>
+    private RadioButton? GetCheckedNavItem()
+    {
+        if (StocksNav.IsChecked == true)
+            return StocksNav;
+        if (MovementsNav.IsChecked == true)
+            return MovementsNav;
+        if (CatalogNav.IsChecked == true)
+            return CatalogNav;
+        if (ReportsNav.IsChecked == true)
+            return ReportsNav;
+
+        return null;
     }
 
     private static int NearestStepIndex(int percent)

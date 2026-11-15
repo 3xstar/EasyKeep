@@ -299,7 +299,8 @@
         </Setter>
     </Style>
 
-    <!-- Пункт бокового меню: мягкая подсветка и выезжающий iOS-индикатор. -->
+    <!-- Пункт бокового меню: мягкая подсветка; активную капсулу
+         рисует общий слой NavActivePill в MainWindow.xaml. -->
     <Style x:Key="NavButton" TargetType="RadioButton">
         <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
         <Setter Property="FontSize" Value="{DynamicResource FontSizeBase}" />
@@ -320,18 +321,6 @@
                                 <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                   VerticalAlignment="Center" />
                             </Grid>
-                        </Border>
-                        <Border x:Name="Indicator"
-                                Width="3" Height="18"
-                                CornerRadius="2"
-                                Background="{DynamicResource AccentBrush}"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                Margin="-7,0,0,0"
-                                Opacity="0">
-                            <Border.RenderTransform>
-                                <TranslateTransform X="-5" />
-                            </Border.RenderTransform>
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -360,39 +349,6 @@
                         <Trigger Property="IsChecked" Value="True">
                             <Setter Property="Foreground" Value="{DynamicResource NavActiveForegroundBrush}" />
                             <Setter Property="FontWeight" Value="SemiBold" />
-                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource AccentSoftBrush}" />
-                            <Trigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="Indicator"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         To="1"
-                                                         Duration="0:0:0.12" />
-                                        <DoubleAnimation Storyboard.TargetName="Indicator"
-                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                                                         To="0"
-                                                         Duration="0:0:0.12">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CubicEase EasingMode="EaseOut" />
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.EnterActions>
-                            <Trigger.ExitActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="Indicator"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         To="0"
-                                                         Duration="0:0:0.12" />
-                                        <DoubleAnimation Storyboard.TargetName="Indicator"
-                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                                                         To="-5"
-                                                         Duration="0:0:0.12" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.ExitActions>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
